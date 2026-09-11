@@ -1,0 +1,32 @@
+# Source-domain policy for the evidence pass (PROMPTS.md D3). Data, not
+# prompt text: src/coursec/passes/evidence.py loads this file rather than
+# describing tiers to an LLM.
+#
+# A pattern starting with "*." matches that suffix (e.g. "*.edu" matches
+# mit.edu, ocw.mit.edu); anything else must match the registrable domain
+# exactly.
+tier1:
+  - openstax.org
+  - nptel.ac.in
+  - ocw.mit.edu
+  - khanacademy.org
+  - en.wikipedia.org
+  - commons.wikimedia.org
+  - arxiv.org
+  - "*.edu"
+  - "*.gov"
+
+tier2:
+  - "*.ac.uk"
+  - "*.ac.in"
+  - hyperphysics.phy-astr.gsu.edu
+  - physicsclassroom.com
+  - britannica.com
+
+blocklist:
+  - coursehero.com
+  - chegg.com
+  - studocu.com
+  - brainly.com
+  - answers.com
+  - slideshare.net

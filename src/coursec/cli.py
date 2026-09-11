@@ -17,6 +17,8 @@ import typer
 from coursec.core.anthropic_backend import anthropic_backend
 from coursec.core.diagnostics import DiagnosticSink
 from coursec.core.graph import Graph
+from coursec.passes import evidence as evidence_pass
+from coursec.passes import gap as gap_pass
 from coursec.passes import structure as structure_pass
 from coursec.passes import syllabus as syllabus_pass
 from coursec.passes import understand as understand_pass
@@ -83,6 +85,22 @@ def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")
 
         render_graph_html(concepts, prerequisite_edges, GRAPH_HTML_PATH)
         typer.echo(f"wrote {GRAPH_HTML_PATH}")
+
+        gap_vectors = gap_pass.compute_gap_vectors(graph, concepts)
+        histogram = gap_pass.gap_histogram(gap_vectors)
+        typer.echo("gap histogram:")
+        for dimension, count in histogram.items():
+            typer.echo(f"  {dimension}: {count}")
+
+        budgets = gap_pass.allocate_budgets(gap_vectors, global_cap=40)
+        try:
+            evidence_pass.retrieve_evidence(
+                graph, concepts, gap_vectors, budgets, sink,
+                search=evidence_pass.no_search_backend,
+            )
+        except RuntimeError as exc:
+            typer.echo(f"evidence: {exc}", err=True)
+            raise typer.Exit(code=1) from exc
 
     for diagnostic in sink.all():
         typer.echo(f"  [{diagnostic.severity}] {diagnostic.code}: {diagnostic.message}", err=True)

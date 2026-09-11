@@ -46,15 +46,20 @@ def call(
     prompt: str,
     *,
     backend: Callable[[str, str, dict[str, object]], str],
-    cache_dir: Path = DEFAULT_CACHE_DIR,
+    cache_dir: Path | None = None,
     **params: object,
 ) -> str:
     """Return `backend(model, prompt, params)`, cached by content hash.
 
     A cache hit returns the stored response without calling `backend` and
-    without incrementing `cache_miss_count`.
+    without incrementing `cache_miss_count`. `cache_dir` defaults to
+    `DEFAULT_CACHE_DIR`, read at call time (not bound at import time) so
+    tests can redirect every pass's cache by monkeypatching that module
+    global — see conftest.py's `isolated_llm_cache` autouse fixture.
     """
     global cache_miss_count
+    if cache_dir is None:
+        cache_dir = DEFAULT_CACHE_DIR
     key = _cache_key(model, prompt, params)
     cache_dir.mkdir(parents=True, exist_ok=True)
     cache_path = cache_dir / f"{key}.json"

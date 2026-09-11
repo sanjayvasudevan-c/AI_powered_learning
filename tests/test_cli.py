@@ -44,7 +44,35 @@ def test_build_on_real_fixture_runs_ingest_through_structure(
     assert "understand:" in result.output
     assert "link rate:" in result.output
     assert "structure:" in result.output
+    assert "gap histogram:" in result.output
     assert (tmp_path / "graph.html").exists()
+
+
+def _fake_backend_with_one_concept(model: str, prompt: str, params: dict) -> str:
+    if "source_index" in prompt:
+        if "[0]" in prompt:
+            return json.dumps(
+                [{"name": "a concept", "type": "definition", "salience": 0.9, "source_index": 0}]
+            )
+        return "[]"
+    return json.dumps({"prerequisite": "neither", "confidence": 0.5})
+
+
+def test_build_reaches_evidence_and_fails_loudly_with_no_search_backend(
+    tmp_path: Path, monkeypatch
+) -> None:
+    # A concept with a real (but short, hence gapped) definition gives it a
+    # nonzero retrieval budget, so build should reach the evidence stage —
+    # and stop there cleanly, since no search backend is configured.
+    monkeypatch.setattr("coursec.cli.anthropic_backend", _fake_backend_with_one_concept)
+    monkeypatch.setattr("coursec.cli.BUILD_DB_PATH", tmp_path / "coursec.db")
+    monkeypatch.setattr("coursec.cli.GRAPH_HTML_PATH", tmp_path / "graph.html")
+
+    result = runner.invoke(app, ["build", str(FIXTURE.resolve())])
+
+    assert result.exit_code != 0
+    assert "gap histogram:" in result.output
+    assert "no search backend is configured" in result.output
 
 
 def test_build_without_api_key_fails_loudly_not_silently(

@@ -6,6 +6,7 @@ import hashlib
 
 import pytest
 
+import coursec.core.llm as llm_module
 from coursec.core.graph import Graph
 from coursec.core.models import Block, BlockType, SourceSpan
 
@@ -13,6 +14,21 @@ from coursec.core.models import Block, BlockType, SourceSpan
 @pytest.fixture
 def graph() -> Graph:
     return Graph()
+
+
+@pytest.fixture(autouse=True)
+def isolated_llm_cache(tmp_path, monkeypatch):
+    """Every test gets its own `.cache/llm` directory.
+
+    Without this, two tests (or two separate `make check` runs) whose
+    concepts happen to produce byte-identical prompts — easy to do with
+    short, reused fixture names like "a"/"b" — would silently share a cache
+    entry: the second test's scripted backend would never be called, and it
+    would see the first test's cached response instead. `llm.call`'s
+    `cache_dir` default is resolved at call time from this module global
+    specifically so monkeypatching it here works.
+    """
+    monkeypatch.setattr(llm_module, "DEFAULT_CACHE_DIR", tmp_path / ".cache" / "llm")
 
 
 def add_block_with_span(
