@@ -5,3 +5,5 @@ this table is the index: what landed, when, and the commit it landed at.
 
 | Stage | Date | Commit | Summary |
 |---|---|---|---|
+| D0 | 2026-09-11 | `ac1e0eb` | uv project scaffold, Diagnostic/DiagnosticSink, 3 CLI stubs, make check gate, CI. |
+| D1 | 2026-09-11 | _pending push_ | IR (12 SQLModel tables + Edge), Graph wrapper with ownership enforcement, heuristic PyMuPDF ingest pass, LLM call cache. `coursec build` now runs ingest for real. |

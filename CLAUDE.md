@@ -72,7 +72,7 @@ refactor opportunity.
 | Pass | Writes | Reads |
 |---|---|---|
 | ingest | `Block`, `SourceSpan` | files |
-| understand | `Concept`, `Alias`, `SyllabusRef` | `Block` |
+| understand | `Concept`, `Alias`, `SyllabusNode` | `Block` |
 | structure | `prerequisite_of`, `part_of` | `Concept` |
 | gap | `GapVector`, `RetrievalBudget` | `Concept`, `SyllabusRef` |
 | evidence | `WebEvidence`, `evidenced_by`, `contradicts` | `GapVector` |
@@ -188,3 +188,4 @@ Append only. Corrections are new rows citing the old.
 | 3 | — | Numbers never produced by an LLM | Verified computation is the accuracy floor |
 | 4 | — | Trained models cut from MVP | They buy cost and latency, which a demo does not judge |
 | 5 | — | SQLite over Postgres | One dependency, adequate at chapter scale |
+| 6 | D1 | §4's ownership table named this node type `SyllabusRef`; corrected to `SyllabusNode` | D1/D2 of PROMPTS.md — the text that actually defines the node's shape — names it `SyllabusNode` throughout. §6: a discrepancy is corrected at the source, not papered over |

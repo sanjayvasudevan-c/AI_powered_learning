@@ -1,0 +1,2354 @@
+[
+  {
+    "page": 0,
+    "block_type": "figure",
+    "bbox": [
+      0.0,
+      0.0,
+      612.0,
+      246.5
+    ],
+    "text_preview": "",
+    "content_hash": "dab1934ea83b123c15a9f3366f0567f08b1dfcc4a113439f9cbfd76e4f3f44be"
+  },
+  {
+    "page": 0,
+    "block_type": "heading",
+    "bbox": [
+      75.9,
+      237.2,
+      375.3,
+      275.2
+    ],
+    "text_preview": "Science and the Universe: A Brief Tour \n1",
+    "content_hash": "fc3470a3bbd983ba4914d15c2f841f3b6a24aa514790b435357e25f306c25cf9"
+  },
+  {
+    "page": 0,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      303.0,
+      532.7,
+      334.0
+    ],
+    "text_preview": "Figure 1.1 Distant Galaxies. These two interacting islands o",
+    "content_hash": "bda94a06a8afc5d793e1e9fab84fa7e0f161be2d7719dccd23443d95397c9828"
+  },
+  {
+    "page": 0,
+    "block_type": "heading",
+    "bbox": [
+      72.0,
+      351.0,
+      172.7,
+      369.2
+    ],
+    "text_preview": "Chapter Outline",
+    "content_hash": "27ef4255d619a2734634d1dbc45319c5042062f3a0df2de2a7ebaf714889805b"
+  },
+  {
+    "page": 0,
+    "block_type": "paragraph",
+    "bbox": [
+      80.8,
+      373.0,
+      245.0,
+      493.2
+    ],
+    "text_preview": "1.1 The Nature of Astronomy \n1.2 The Nature of Science \n1.3 ",
+    "content_hash": "2fd453b9ee707430aee442d6133ec7bb33707a04077abacd47185c02e590c02c"
+  },
+  {
+    "page": 0,
+    "block_type": "heading",
+    "bbox": [
+      103.5,
+      515.9,
+      206.3,
+      537.1
+    ],
+    "text_preview": "Introduction",
+    "content_hash": "8de2a6e07c3e4df67625a60f079764a4b5563a1fcbf062bfb10354bc69fec6c5"
+  },
+  {
+    "page": 0,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      540.2,
+      538.4,
+      592.9
+    ],
+    "text_preview": "We invite you to come along on a series of voyages to explor",
+    "content_hash": "81e48f247260559dc62f00ddfb7be3a932e7ea0078c25e17d46c98aeb8f4ab37"
+  },
+  {
+    "page": 0,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      600.5,
+      239.7,
+      612.7
+    ],
+    "text_preview": "Along your journey, you will encounter:",
+    "content_hash": "21ce05d2e66ba7e02183f240db90f54bc9e692fb7eef3fe225592dff566a42d6"
+  },
+  {
+    "page": 0,
+    "block_type": "list",
+    "bbox": [
+      78.6,
+      620.3,
+      537.7,
+      632.5
+    ],
+    "text_preview": "\u2022 a canyon system so large that, on Earth, it would stretch ",
+    "content_hash": "c9fdeca845df82cdf0e645ed992e22361f545e8dd9d2eeb99bc2a7d435cdeec2"
+  },
+  {
+    "page": 1,
+    "block_type": "paragraph",
+    "bbox": [
+      53.7,
+      23.7,
+      224.8,
+      33.9
+    ],
+    "text_preview": "12     1 \u2022 Science and the Universe: A Brief Tour",
+    "content_hash": "0461b3376cf9b0fd7104868fa9ee4f4cf6db0f7e74a0447036c9ea5242a35bdc"
+  },
+  {
+    "page": 1,
+    "block_type": "figure",
+    "bbox": [
+      72.0,
+      57.6,
+      540.0,
+      273.6
+    ],
+    "text_preview": "",
+    "content_hash": "e5ac6877bce207dc09f9feaf323d87f1d879871cdfae07d40f697c5a5b75bfd3"
+  },
+  {
+    "page": 1,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      275.2,
+      524.3,
+      296.6
+    ],
+    "text_preview": "Figure 1.2 Mars Mosaic. This image of Mars is centered on th",
+    "content_hash": "6197aa3bd9b2a2cc0d2b475192c5454fec3c4ebd2769f62cee91a1da05983a23"
+  },
+  {
+    "page": 1,
+    "block_type": "paragraph",
+    "bbox": [
+      78.6,
+      302.9,
+      539.0,
+      436.7
+    ],
+    "text_preview": "\u2022 a crater and other evidence on Earth that tell us that the",
+    "content_hash": "7290a92bbdaed0db0fa8a7fd5d5bb9af2e106e72806acb5b0173fd18fce492b1"
+  },
+  {
+    "page": 1,
+    "block_type": "figure",
+    "bbox": [
+      189.1,
+      443.6,
+      422.9,
+      676.4
+    ],
+    "text_preview": "",
+    "content_hash": "b55a16a8f77ac6ea7a8ca89b4e2abeb5a1041e3a694ea8420641707a769305a5"
+  },
+  {
+    "page": 1,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      678.1,
+      529.2,
+      709.0
+    ],
+    "text_preview": "Figure 1.3 Stellar Corpse. We observe the remains of a star ",
+    "content_hash": "1e033fb7259de3d781b16754af048604f7d4788c3b2a1ca1c4b2bfa98aa9a7be"
+  },
+  {
+    "page": 1,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      715.3,
+      535.4,
+      727.6
+    ],
+    "text_preview": "Such discoveries are what make astronomy such an exciting fi",
+    "content_hash": "9e2c90d6d52a0dd06eb51a2cd397f98eef9b58a84cf28badd3ee465fe4660400"
+  },
+  {
+    "page": 1,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      758.1,
+      187.8,
+      768.3
+    ],
+    "text_preview": "Access for free at openstax.org",
+    "content_hash": "025e9cd5967036fd226c47754fe0e5f99243c3880f929145c38b7ed61bdfb5d9"
+  },
+  {
+    "page": 2,
+    "block_type": "paragraph",
+    "bbox": [
+      427.7,
+      23.7,
+      558.3,
+      33.9
+    ],
+    "text_preview": "1.1 \u2022 The Nature of Astronomy     13",
+    "content_hash": "5c7725e3d8228eb483a2ff959a141413ac79a1dd21f338d452ec2c9dffa13955"
+  },
+  {
+    "page": 2,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      58.2,
+      529.7,
+      97.5
+    ],
+    "text_preview": "explore much more than just the objects in our universe and ",
+    "content_hash": "194544c77bee11b7909fa8d4dfcbfa499773cd02075b65026bf6d689c967925f"
+  },
+  {
+    "page": 2,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      105.0,
+      534.8,
+      157.8
+    ],
+    "text_preview": "We gather information about the cosmos from the messages the",
+    "content_hash": "5f5b0eaf2e1e0d3de7f06c14a1ae84edc67ca5c0c2a2d3afa2bd50dc63347817"
+  },
+  {
+    "page": 2,
+    "block_type": "heading",
+    "bbox": [
+      78.8,
+      168.9,
+      265.7,
+      188.6
+    ],
+    "text_preview": "1.1 The Nature of Astronomy",
+    "content_hash": "b2f2c6d01f961d5db9a4609861a8b358d326ae0bf23e4e63672566271128c9d7"
+  },
+  {
+    "page": 2,
+    "block_type": "paragraph",
+    "bbox": [
+      71.5,
+      199.8,
+      539.4,
+      266.0
+    ],
+    "text_preview": "Astronomy is defined as the study of the objects that lie be",
+    "content_hash": "8b412ec713f828ecc91b33a4295b60699fd4e9ddf0b33b7cfe26ad25517d7a07"
+  },
+  {
+    "page": 2,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      273.6,
+      538.5,
+      339.8
+    ],
+    "text_preview": "In considering the history of the universe, we will see agai",
+    "content_hash": "0ad0ffddad71ee926cd509cf573336448389f8d7197cc89d806f4b78bd2eca00"
+  },
+  {
+    "page": 2,
+    "block_type": "heading",
+    "bbox": [
+      78.3,
+      351.0,
+      246.9,
+      370.7
+    ],
+    "text_preview": "1.2 The Nature of Science",
+    "content_hash": "ff4be5f4e69b18ec35106096a3a9196bbe8c58ff005caf18bc045f33ae0578f6"
+  },
+  {
+    "page": 2,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      381.8,
+      541.5,
+      448.1
+    ],
+    "text_preview": "The ultimate judge in science is always what nature itself r",
+    "content_hash": "87fe149509c84d12182b6fab4d77508f7364b40d6326af6707e0f0f84585b604"
+  },
+  {
+    "page": 2,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      455.6,
+      540.1,
+      575.9
+    ],
+    "text_preview": "As a concrete astronomical example, ancient astronomers cons",
+    "content_hash": "bc5635e5ee058254f5bd6d6ee00f0d8c3f2b828c1b89f272a3aadb5f0f862a24"
+  },
+  {
+    "page": 2,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      583.4,
+      541.5,
+      703.7
+    ],
+    "text_preview": "When they are first proposed, new models or ideas are someti",
+    "content_hash": "b40d58575579c11c534fd3fff1b925792b8260a2ea0fd56acfa9ac0c9e4dc303"
+  },
+  {
+    "page": 2,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      711.2,
+      492.0,
+      723.5
+    ],
+    "text_preview": "This last point is crucial: a hypothesis must be a proposed ",
+    "content_hash": "c74679d88fde318062b8acc138a4c04e661fa69c4c4c7fa16b590b24eb992614"
+  },
+  {
+    "page": 3,
+    "block_type": "paragraph",
+    "bbox": [
+      53.7,
+      23.7,
+      224.8,
+      33.9
+    ],
+    "text_preview": "14     1 \u2022 Science and the Universe: A Brief Tour",
+    "content_hash": "37b5fd8efce4fc233ca5722589ffdcd485d7148aa562a2c752c6c34c57b7948c"
+  },
+  {
+    "page": 3,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      58.2,
+      540.9,
+      151.5
+    ],
+    "text_preview": "straightforward approach to such testing in science is to pe",
+    "content_hash": "4e84cc29d499e68b509fb6d7fabaf36e9741d7f54247bc5ac8b848f7572263a3"
+  },
+  {
+    "page": 3,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      159.0,
+      537.4,
+      211.8
+    ],
+    "text_preview": "One way to think about this is to consider a scientist who w",
+    "content_hash": "7ad8ab02ef51b5c0077f026d2d812c2a5bfbf336a30f89f8d61da92fdd7a0db8"
+  },
+  {
+    "page": 3,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      219.3,
+      524.5,
+      272.1
+    ],
+    "text_preview": "When you read about experiments, you probably have a mental ",
+    "content_hash": "905e2bb5d0d19c282878be36d0d58e63aae81f029d5cb2806f070d356eedd790"
+  },
+  {
+    "page": 3,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      279.6,
+      529.9,
+      345.9
+    ],
+    "text_preview": "As a result, astronomy is sometimes called an observational ",
+    "content_hash": "45601421fb81f14d8baa40346086bedb78857939fad0fbc0276d5acf2cf72a94"
+  },
+  {
+    "page": 3,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      353.4,
+      537.0,
+      406.2
+    ],
+    "text_preview": "Much of astronomy is also a historical science\u2014meaning that ",
+    "content_hash": "fef690120d9f0cbd2fa713523f2c857a33a12b5b6754533f900cd106668d9c46"
+  },
+  {
+    "page": 3,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      413.7,
+      537.5,
+      507.0
+    ],
+    "text_preview": "You might compare an astronomer to a detective trying to sol",
+    "content_hash": "daeaa3ebecd9dd4a22fa5cb9945ee6b6ec59b8c7cdcbb4dbf7d0a8cdb8806386"
+  },
+  {
+    "page": 3,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      508.2,
+      519.2,
+      520.5
+    ],
+    "text_preview": "And sometimes new evidence will force both the detective and",
+    "content_hash": "19d6ef46325ea45a7a81f25bfe281304ec290d2ed893e103c70c4d8c314d1c93"
+  },
+  {
+    "page": 3,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      528.0,
+      539.8,
+      621.3
+    ],
+    "text_preview": "This self-correcting aspect of science sets it off from most",
+    "content_hash": "de5cd4afe3efff10a4c231a633f303da1c43d8eb898c1bd4e9cf8b31875ae107"
+  },
+  {
+    "page": 3,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      628.8,
+      540.1,
+      681.6
+    ],
+    "text_preview": "This is one of the reasons science has made such dramatic pr",
+    "content_hash": "7bf53f93e5d47031ae307333a70edcd8e04618152fc96ebb5c4f7d2fc76c67da"
+  },
+  {
+    "page": 3,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      758.1,
+      187.8,
+      768.3
+    ],
+    "text_preview": "Access for free at openstax.org",
+    "content_hash": "025e9cd5967036fd226c47754fe0e5f99243c3880f929145c38b7ed61bdfb5d9"
+  },
+  {
+    "page": 4,
+    "block_type": "paragraph",
+    "bbox": [
+      450.1,
+      23.7,
+      558.3,
+      33.9
+    ],
+    "text_preview": "1.3 \u2022 The Laws of Nature     15",
+    "content_hash": "98b62281c07d0feafaf8bcd5e8a89299aa645ba4cd8691a25c95c83bcd0933b1"
+  },
+  {
+    "page": 4,
+    "block_type": "heading",
+    "bbox": [
+      78.3,
+      61.8,
+      230.9,
+      81.5
+    ],
+    "text_preview": "1.3 The Laws of Nature",
+    "content_hash": "3ab6a66445f6a9d500e64a923e264f5bcb57740d66b7669fa5c710617f623e00"
+  },
+  {
+    "page": 4,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      92.7,
+      540.9,
+      158.9
+    ],
+    "text_preview": "Over centuries scientists have extracted various scientific ",
+    "content_hash": "eeb51c34edadd42bcb9a5c53759f3da15ebddeff5e352a1cb34f219cc17aefbd"
+  },
+  {
+    "page": 4,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      166.5,
+      535.6,
+      259.7
+    ],
+    "text_preview": "Note that without the existence of such universal laws, we c",
+    "content_hash": "49032386d0a2af23bd85c2cbc41a9be06f0622a38649e34df292d22fb2a8bb77"
+  },
+  {
+    "page": 4,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      267.3,
+      488.9,
+      279.5
+    ],
+    "text_preview": "This is not to say that our current scientific models and la",
+    "content_hash": "6d3971e0bb2fa2f9cb80298c9ceca9e235c367598f04a388be22592666dadf3d"
+  },
+  {
+    "page": 4,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      280.8,
+      540.3,
+      347.0
+    ],
+    "text_preview": "observations can lead to new, more sophisticated models\u2014mode",
+    "content_hash": "999ea51334d40d55aee662beeaa13e2534a6151cf4031f452bbe153538f5c8a9"
+  },
+  {
+    "page": 4,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      354.6,
+      540.5,
+      420.8
+    ],
+    "text_preview": "One important problem in describing scientific models has to",
+    "content_hash": "38e991cf770039ad3e1cc100161be8a5fb1d23930998b1018f96eebcca410290"
+  },
+  {
+    "page": 4,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      428.4,
+      536.8,
+      481.1
+    ],
+    "text_preview": "This problem is the reason scientists often prefer to descri",
+    "content_hash": "2f56fc2e472373ccf149e5ff56abe82453c929c51737a092c37e13778b98572f"
+  },
+  {
+    "page": 4,
+    "block_type": "heading",
+    "bbox": [
+      78.3,
+      492.3,
+      254.4,
+      512.0
+    ],
+    "text_preview": "1.4 Numbers in Astronomy",
+    "content_hash": "816ae9e90d0adbef1ff7eb8265a76405692347f1b4ac6f2965fcde5014c9532f"
+  },
+  {
+    "page": 4,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      523.1,
+      538.4,
+      589.4
+    ],
+    "text_preview": "In astronomy we deal with distances on a scale you may never",
+    "content_hash": "fec5a91a81a10337c1b6efc7d6880f5744cae8a3089d151e510b1d1ec4b5261d"
+  },
+  {
+    "page": 4,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      590.6,
+      538.9,
+      670.4
+    ],
+    "text_preview": "500,000,000, you express it as \n. The small raised number af",
+    "content_hash": "ed34a2f0d0d8da61cb04b7a2710756e5579853c8e762ca5007cbeaf4b4ac006e"
+  },
+  {
+    "page": 5,
+    "block_type": "paragraph",
+    "bbox": [
+      53.7,
+      23.7,
+      224.8,
+      33.9
+    ],
+    "text_preview": "16     1 \u2022 Science and the Universe: A Brief Tour",
+    "content_hash": "fd0ecd5bc8b925bf4ec52bde224b16d3403b2c7fa4e55c83386121c6258a4647"
+  },
+  {
+    "page": 5,
+    "block_type": "heading",
+    "bbox": [
+      78.3,
+      70.6,
+      163.0,
+      83.3
+    ],
+    "text_preview": "LINK TO LEARNING",
+    "content_hash": "d99683ad0ea34ef6b2c148a957b72f16767155bfecc3b9de1d6253810d93defe"
+  },
+  {
+    "page": 5,
+    "block_type": "paragraph",
+    "bbox": [
+      78.3,
+      103.2,
+      525.9,
+      129.0
+    ],
+    "text_preview": "Watch this brief PBS animation (https://openstax.org/l/30sci",
+    "content_hash": "285e34034ff528ef6effbefba564d513168c03f119bb559282dd6f7c3560244e"
+  },
+  {
+    "page": 5,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      155.4,
+      540.6,
+      235.2
+    ],
+    "text_preview": "A common unit astronomers use to describe distances in the u",
+    "content_hash": "d8e2208eb77c8f1e7c3159811e6f9f615e9528c90e495d92fcb04e27a86cd99b"
+  },
+  {
+    "page": 5,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      242.7,
+      536.5,
+      255.0
+    ],
+    "text_preview": "So, how many kilometers are there in a light-year? Light tra",
+    "content_hash": "a6d7e84bbdcf4f110716409dd9b618270ecb11505b0c17939ed1c42ff02a5b94"
+  },
+  {
+    "page": 5,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      256.2,
+      540.9,
+      309.0
+    ],
+    "text_preview": "second (km/s), which makes a light-year \n kilometers. You mi",
+    "content_hash": "bae1a51d7805eb14de5e857942e8c075b9a8908de466c092bc055e3003f546b9"
+  },
+  {
+    "page": 5,
+    "block_type": "figure",
+    "bbox": [
+      189.1,
+      315.9,
+      422.9,
+      549.7
+    ],
+    "text_preview": "",
+    "content_hash": "2a4d0564f7f8e68a570fd5f06f2450e2f87dd8cb16bbb1716fbf69bd13a41367"
+  },
+  {
+    "page": 5,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      551.3,
+      537.3,
+      592.4
+    ],
+    "text_preview": "Figure 1.4 Orion Nebula. This beautiful cloud of cosmic raw ",
+    "content_hash": "2d4a9844700aba802c64ad10cc35a0d1d0b2cc55ec666d06ab7555e81d42c09c"
+  },
+  {
+    "page": 5,
+    "block_type": "heading",
+    "bbox": [
+      84.6,
+      610.6,
+      164.2,
+      624.3
+    ],
+    "text_preview": "E X A M P L E 1 . 1",
+    "content_hash": "62747094f926bfa179b6610613af85e33dd8c07174cfdac7918b20b2f3ea0362"
+  },
+  {
+    "page": 5,
+    "block_type": "heading",
+    "bbox": [
+      78.3,
+      642.5,
+      181.6,
+      657.2
+    ],
+    "text_preview": "Scientific Notation",
+    "content_hash": "7b563e74e2e60d957e7c89e14c42e354f1e3f484bbf9d8c015f0fa822e0f682a"
+  },
+  {
+    "page": 5,
+    "block_type": "paragraph",
+    "bbox": [
+      78.3,
+      663.5,
+      526.1,
+      689.3
+    ],
+    "text_preview": "In 2015, the richest human being on our planet had a net wor",
+    "content_hash": "c4f7050be314b0273e88e5d32047c74c2f57936937b348d5589bc2eede934ae1"
+  },
+  {
+    "page": 5,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      758.1,
+      187.8,
+      768.3
+    ],
+    "text_preview": "Access for free at openstax.org",
+    "content_hash": "025e9cd5967036fd226c47754fe0e5f99243c3880f929145c38b7ed61bdfb5d9"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      393.0,
+      23.7,
+      558.3,
+      33.9
+    ],
+    "text_preview": "1.5 \u2022 Consequences of Light Travel Time     17",
+    "content_hash": "bd19d8026c544b097339982cab622c2016a072d120920c5f01e5f51da158f653"
+  },
+  {
+    "page": 6,
+    "block_type": "heading",
+    "bbox": [
+      78.3,
+      63.3,
+      125.9,
+      78.0
+    ],
+    "text_preview": "Solution",
+    "content_hash": "c959a5721529492c46bf560b8af29e331cb3056404a0cd737e124bd1020a33f5"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      78.3,
+      84.3,
+      450.0,
+      96.6
+    ],
+    "text_preview": "$79.2 billion can be written $79,200,000,000. Expressed in s",
+    "content_hash": "cfd908a8a23f77d1a0337028a3e03ff19f4e335083f6ee50d29eae7a722a751c"
+  },
+  {
+    "page": 6,
+    "block_type": "heading",
+    "bbox": [
+      84.6,
+      134.9,
+      166.8,
+      148.6
+    ],
+    "text_preview": "E X A M P L E 1 . 2",
+    "content_hash": "9f291f5ed5f24b75f8594762b5775ce1a89ee0967aa796adab7033bc546e3b40"
+  },
+  {
+    "page": 6,
+    "block_type": "heading",
+    "bbox": [
+      78.3,
+      166.8,
+      263.9,
+      181.5
+    ],
+    "text_preview": "Getting Familiar with a Light-Year",
+    "content_hash": "c3f888167c7535fcb73bd1b1ec27c7a8a2e54a8c2781d520c6fb689d95476660"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      78.3,
+      187.8,
+      277.7,
+      200.1
+    ],
+    "text_preview": "How many kilometers are there in a light-year?",
+    "content_hash": "dba78fc417a4adc556775f7e8735ca27a97ba8ece55dbb30910504a6886973b8"
+  },
+  {
+    "page": 6,
+    "block_type": "heading",
+    "bbox": [
+      78.3,
+      206.4,
+      125.9,
+      221.1
+    ],
+    "text_preview": "Solution",
+    "content_hash": "c959a5721529492c46bf560b8af29e331cb3056404a0cd737e124bd1020a33f5"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      78.3,
+      227.4,
+      388.8,
+      239.7
+    ],
+    "text_preview": "Light travels \n km in 1 s. So, let\u2019s calculate how far it go",
+    "content_hash": "570a158774083b8bbe8ad0bff4cfb58434fcdc6ad817aad831d0a22145f9090c"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      84.9,
+      247.2,
+      341.0,
+      259.5
+    ],
+    "text_preview": "\u2022 There are 60 \n s in 1 min, and \n min in 1 h.",
+    "content_hash": "376315f9858088c8a88732a02d53f45c3bbd3c58fbd57a480bac8ff8a6ffddaa"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      84.9,
+      262.0,
+      373.5,
+      274.3
+    ],
+    "text_preview": "\u2022 Multiply these together and you find that there are \n s/h.",
+    "content_hash": "5435910a54a075d46e95f485ce7e7c234644a6b179cd1d6467ea2bf68370e9f7"
+  },
+  {
+    "page": 6,
+    "block_type": "list",
+    "bbox": [
+      84.9,
+      275.5,
+      172.4,
+      287.8
+    ],
+    "text_preview": "\u2022 Thus, light covers",
+    "content_hash": "35bb3b9d72b56292610a90817e7b6f8258e9aca41f8003b2ad82e14409d40b9a"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      84.9,
+      289.0,
+      405.5,
+      301.3
+    ],
+    "text_preview": "\u2022 There are 24 or \n h in a day, and 365.25 \n days in 1 y.",
+    "content_hash": "3a1f3f69e7f88098da19ecef9f6a3e9ca62da5bf780bb736283077c07e5d9cea"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      84.9,
+      303.8,
+      319.4,
+      316.1
+    ],
+    "text_preview": "\u2022 The product of these two numbers is \n h/y.",
+    "content_hash": "84a3abcd1dc5359b6c7b0fdc78cd1bd5f4f9c39ad7bf817321ee7a9d54ef16fd"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      84.9,
+      317.3,
+      384.5,
+      329.6
+    ],
+    "text_preview": "\u2022 Multiplying this by \n km/h gives \n km/light-year.",
+    "content_hash": "ed961960a339b739c87f245f272181b701dcce3392a8945117b7d1df7c9b8720"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      78.3,
+      337.1,
+      534.6,
+      362.9
+    ],
+    "text_preview": "That\u2019s almost 10,000,000,000,000 km that light covers in a y",
+    "content_hash": "96303d85a4bf88dd1bd5f3b860d8a93bbe203be7440ce051855a9854c4c11c1f"
+  },
+  {
+    "page": 6,
+    "block_type": "heading",
+    "bbox": [
+      78.3,
+      392.9,
+      327.5,
+      412.6
+    ],
+    "text_preview": "1.5 Consequences of Light Travel Time",
+    "content_hash": "0575855e1c58dded56d744f6236693f9712a5e71429bbae69099a48ccb7c2979"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      423.8,
+      539.4,
+      503.5
+    ],
+    "text_preview": "There is another reason the speed of light is such a natural",
+    "content_hash": "4635d45ce9eb5dd6fac061c2961c028b39d005ef2e6b7fee9c0c98faedcfa034"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      504.8,
+      153.9,
+      517.0
+    ],
+    "text_preview": "500-year-old news.",
+    "content_hash": "942a6f4fc9dec34f70d6c99aab12b041e7628b67e3e0a29285e0c2d0a5eaadca"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      524.6,
+      513.1,
+      536.8
+    ],
+    "text_preview": "Because many of us are accustomed to instant news from the I",
+    "content_hash": "55a832c03540ef60c8dffd33877fcd0332dc06df31cf0421b8a53a0ff3279b5b"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      544.4,
+      535.1,
+      570.1
+    ],
+    "text_preview": "\u201cYou mean, when I see that star up there,\u201d you ask, \u201cI won\u2019t",
+    "content_hash": "cf100d713ecda9906355ae41556890a8324e2943748694efefa90df951be0af5"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      577.7,
+      539.7,
+      616.9
+    ],
+    "text_preview": "But this isn\u2019t the most helpful way to think about the situa",
+    "content_hash": "b2c11b6b45de13095d3460acd4b64c12915a9ef20162fdc9782dbd671f52a828"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      624.5,
+      533.6,
+      677.2
+    ],
+    "text_preview": "But what at first may seem a great frustration is actually a",
+    "content_hash": "a1fcff886e0446827b3445d7cd915b5787b7b7c7c2f2c9295df9a38795c545df"
+  },
+  {
+    "page": 6,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      684.8,
+      530.4,
+      724.0
+    ],
+    "text_preview": "The delay in the arrival of light provides an answer to this",
+    "content_hash": "a1c50beeb261683379f014c2e6b4d47f235b2e03dfef884da0954a97305f131f"
+  },
+  {
+    "page": 7,
+    "block_type": "paragraph",
+    "bbox": [
+      53.7,
+      23.7,
+      224.8,
+      33.9
+    ],
+    "text_preview": "18     1 \u2022 Science and the Universe: A Brief Tour",
+    "content_hash": "e55faf345815d57752b79186829f8c53ae0a0407a38e251872079f8868b419aa"
+  },
+  {
+    "page": 7,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      58.2,
+      436.7,
+      70.5
+    ],
+    "text_preview": "reconstruct the history of the cosmos and get a sense of how",
+    "content_hash": "c94e70b43e9e6ad2da5adb6b23190476b61c1cec5b2b00f37f87c43d77763e8a"
+  },
+  {
+    "page": 7,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      78.0,
+      540.1,
+      157.8
+    ],
+    "text_preview": "This is one reason why astronomers strive to build telescope",
+    "content_hash": "652df03c255fa879ede339422b6304f8aabdca166a5a88358e17c2ef91e9f2d3"
+  },
+  {
+    "page": 7,
+    "block_type": "figure",
+    "bbox": [
+      189.1,
+      164.7,
+      422.9,
+      372.1
+    ],
+    "text_preview": "",
+    "content_hash": "ace7c31d26081f47b1005bdcd5e5cc3c7793cb1d93d9b09ccc1b01b7ea857382"
+  },
+  {
+    "page": 7,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      373.7,
+      508.3,
+      395.1
+    ],
+    "text_preview": "Figure 1.5 Telescope in Orbit. The Hubble Space Telescope, s",
+    "content_hash": "d8fb4b84dd3729b600738b0616074cc3904ac1ffafcd8281d878ea06b147f1cd"
+  },
+  {
+    "page": 7,
+    "block_type": "heading",
+    "bbox": [
+      78.3,
+      405.0,
+      249.1,
+      424.7
+    ],
+    "text_preview": "1.6 A Tour of the Universe",
+    "content_hash": "7fc13d70074e187cca12dc9df5b29bc912135b5c57b800d7b126fbda4cad5766"
+  },
+  {
+    "page": 7,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      435.9,
+      541.4,
+      529.1
+    ],
+    "text_preview": "We can now take a brief introductory tour of the universe as",
+    "content_hash": "03b557725c8b1ea6672e5f9a8139e75d73a7486611f383571db3c6fcc53c87ba"
+  },
+  {
+    "page": 7,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      758.1,
+      187.8,
+      768.3
+    ],
+    "text_preview": "Access for free at openstax.org",
+    "content_hash": "025e9cd5967036fd226c47754fe0e5f99243c3880f929145c38b7ed61bdfb5d9"
+  },
+  {
+    "page": 8,
+    "block_type": "paragraph",
+    "bbox": [
+      439.5,
+      23.7,
+      558.3,
+      33.9
+    ],
+    "text_preview": "1.6 \u2022 A Tour of the Universe     19",
+    "content_hash": "5bf554f031c34f12150e45a33716b9a94b966c4961fd50b023c99196dda78209"
+  },
+  {
+    "page": 8,
+    "block_type": "figure",
+    "bbox": [
+      72.0,
+      57.6,
+      540.0,
+      291.4
+    ],
+    "text_preview": "",
+    "content_hash": "a73b7033e5f508a3edde96cd07b5c6175a79a21974cbc5a44da873399907f641"
+  },
+  {
+    "page": 8,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      293.0,
+      521.9,
+      324.0
+    ],
+    "text_preview": "Figure 1.6 Humanity\u2019s Home Base. This image shows the Wester",
+    "content_hash": "c085f8b7d9b551e27d7401efbe75d7a93bd94ecd3c7dd899951bea4860f1ea2d"
+  },
+  {
+    "page": 8,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      330.3,
+      538.3,
+      396.5
+    ],
+    "text_preview": "Our nearest astronomical neighbor is Earth\u2019s satellite, comm",
+    "content_hash": "cbcc131f96f9a24a8c8f81b6822c9270f2b87457455b54d3984f8bc60cedd259"
+  },
+  {
+    "page": 8,
+    "block_type": "figure",
+    "bbox": [
+      72.0,
+      403.5,
+      540.0,
+      448.6
+    ],
+    "text_preview": "",
+    "content_hash": "293257bbee5dee4d201d05f6271648384ef48653f4416207d62675fdf34b3643"
+  },
+  {
+    "page": 8,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      450.2,
+      519.7,
+      471.6
+    ],
+    "text_preview": "Figure 1.7 Earth and Moon, Drawn to Scale. This image shows ",
+    "content_hash": "f44fb3b9335c5b09704aab02281365b0634ae63704d77f1f5852aebd4445ea65"
+  },
+  {
+    "page": 8,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      477.9,
+      539.0,
+      530.7
+    ],
+    "text_preview": "Light (or radio waves) takes 1.3 seconds to travel between E",
+    "content_hash": "4c9231def105c48fadb291c96ecdf89435e354840e06ade9d93e58d867c0ac2a"
+  },
+  {
+    "page": 8,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      538.2,
+      541.3,
+      631.5
+    ],
+    "text_preview": "Earth revolves around our star, the Sun, which is about 150 ",
+    "content_hash": "6d46aab4488acd2fe4f0213df6970a0ec8539ba2dec857894588f9796f33eed1"
+  },
+  {
+    "page": 8,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      639.0,
+      541.3,
+      718.8
+    ],
+    "text_preview": "It takes Earth 1 year ( \n seconds) to go around the Sun at o",
+    "content_hash": "ced47a645bff02b9f863d43da95f8f8f21bf44b52a5b57510b11988286678e7e"
+  },
+  {
+    "page": 9,
+    "block_type": "paragraph",
+    "bbox": [
+      53.7,
+      23.7,
+      224.8,
+      33.9
+    ],
+    "text_preview": "20     1 \u2022 Science and the Universe: A Brief Tour",
+    "content_hash": "7b03c92484b074ecc6879400e7ab96be856a29e301363d3ef2892322a559a1ff"
+  },
+  {
+    "page": 9,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      58.2,
+      541.2,
+      124.5
+    ],
+    "text_preview": "Earth is only one of eight planets that revolve around the S",
+    "content_hash": "d913f2b900e389b01368fc22114b5199c9d8963ec8602b4a265b8c616f902ecd"
+  },
+  {
+    "page": 9,
+    "block_type": "figure",
+    "bbox": [
+      72.0,
+      131.4,
+      540.0,
+      385.8
+    ],
+    "text_preview": "",
+    "content_hash": "63643e7a1ca3587534478579544c6f0eba5f00edae95df4971ba8ce559d259ce"
+  },
+  {
+    "page": 9,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      387.4,
+      534.1,
+      418.4
+    ],
+    "text_preview": "Figure 1.8 Our Solar Family. The Sun, the planets, and some ",
+    "content_hash": "e8555797dc9d01d967ec84c78d43ce41580ca7958096c5aef085c938b8a2b5c0"
+  },
+  {
+    "page": 9,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      424.7,
+      534.7,
+      491.0
+    ],
+    "text_preview": "We are able to see the nearby planets in our skies only beca",
+    "content_hash": "0ef50f1ea37b4db9e40116321180b85fc2398355761c3e23cee77ae93a10c544"
+  },
+  {
+    "page": 9,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      498.5,
+      537.5,
+      564.8
+    ],
+    "text_preview": "The Sun is our local star, and all the other stars are also ",
+    "content_hash": "7e19b259d5cffc290dd0c54be90a4e4a6005981dbc96c7195f8a4ae240607fb3"
+  },
+  {
+    "page": 9,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      572.3,
+      540.3,
+      638.6
+    ],
+    "text_preview": "When you look up at a star-filled sky on a clear night, all ",
+    "content_hash": "ad2974c37a65d425d91737720060640ce1458b0c78a31e6c51ade1dedb783646"
+  },
+  {
+    "page": 9,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      639.8,
+      540.3,
+      679.1
+    ],
+    "text_preview": "sphere 100 light-years in radius, there are roughly 10,000 \n",
+    "content_hash": "95637e1737108a87cb9dc3a0a16632329e391430a60d7156224f510b186b1f87"
+  },
+  {
+    "page": 9,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      686.6,
+      538.9,
+      725.9
+    ],
+    "text_preview": "Our Galaxy looks like a giant disk with a small ball in the ",
+    "content_hash": "de7602eaab3554112eb2a9cd7c1ad99d11356d83d62dfc5bbb0c1351e20980aa"
+  },
+  {
+    "page": 9,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      758.1,
+      187.8,
+      768.3
+    ],
+    "text_preview": "Access for free at openstax.org",
+    "content_hash": "025e9cd5967036fd226c47754fe0e5f99243c3880f929145c38b7ed61bdfb5d9"
+  },
+  {
+    "page": 10,
+    "block_type": "paragraph",
+    "bbox": [
+      439.5,
+      23.7,
+      558.3,
+      33.9
+    ],
+    "text_preview": "1.6 \u2022 A Tour of the Universe     21",
+    "content_hash": "58162019101b8115e795dc30a3fcefa700f17616b4f9e976b8e44b938a857388"
+  },
+  {
+    "page": 10,
+    "block_type": "figure",
+    "bbox": [
+      72.0,
+      57.6,
+      540.0,
+      345.6
+    ],
+    "text_preview": "",
+    "content_hash": "d0fb35610be296549a3b48d9e9c7a4ab20bb5b6b07a7844360f4e828715a45b7"
+  },
+  {
+    "page": 10,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      347.2,
+      534.5,
+      368.6
+    ],
+    "text_preview": "Figure 1.9 Spiral Galaxy. This galaxy of billions of stars, ",
+    "content_hash": "0e0eb95d1094c9caafd743e05a8d736f651a704f3eda2cbcba7bd7d94cc89c41"
+  },
+  {
+    "page": 10,
+    "block_type": "paragraph",
+    "bbox": [
+      71.5,
+      374.9,
+      542.0,
+      468.2
+    ],
+    "text_preview": "The Sun is somewhat less than 30,000 light-years from the ce",
+    "content_hash": "582a5a4853e0ca9d3e6610c137fbca7b1c5b683680f2f7a680ae01c06ad69bca"
+  },
+  {
+    "page": 11,
+    "block_type": "paragraph",
+    "bbox": [
+      53.7,
+      23.7,
+      224.8,
+      33.9
+    ],
+    "text_preview": "22     1 \u2022 Science and the Universe: A Brief Tour",
+    "content_hash": "19eb4f052c1d8645d297882503cb37b2d1144597e9ae2828c8c35ce42444634c"
+  },
+  {
+    "page": 11,
+    "block_type": "figure",
+    "bbox": [
+      130.6,
+      57.6,
+      481.4,
+      408.5
+    ],
+    "text_preview": "",
+    "content_hash": "e4026b5381cbfe0edd3b5e81041ae5775b18efe0c69a174e352198851046ca14"
+  },
+  {
+    "page": 11,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      410.1,
+      537.4,
+      441.1
+    ],
+    "text_preview": "Figure 1.10 Milky Way Galaxy. Because we are inside the Milk",
+    "content_hash": "ca9e8bd9f4e1d02ff6279fc1a779340be3b7ad8390aefafab3051c58f28147b6"
+  },
+  {
+    "page": 11,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      447.4,
+      540.9,
+      540.7
+    ],
+    "text_preview": "Typically, the interstellar material is so extremely sparse ",
+    "content_hash": "854fccf02bf268091c0eaefc162068d43ee19e09460757295dab9a01783875cc"
+  },
+  {
+    "page": 11,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      548.2,
+      539.2,
+      641.5
+    ],
+    "text_preview": "Recent observations, however, have also revealed a rather su",
+    "content_hash": "a6a5e626f4c8cf4520fd09edca531d41ecdd0ca5d8736db62acd428b5ec69afa"
+  },
+  {
+    "page": 11,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      649.0,
+      540.2,
+      728.8
+    ],
+    "text_preview": "By the way, not all stars live by themselves, as the Sun doe",
+    "content_hash": "d8dd594a1719ba3c110c491218fbf6e81e6aba58dd990649aed76452050d3f0c"
+  },
+  {
+    "page": 11,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      758.1,
+      187.8,
+      768.3
+    ],
+    "text_preview": "Access for free at openstax.org",
+    "content_hash": "025e9cd5967036fd226c47754fe0e5f99243c3880f929145c38b7ed61bdfb5d9"
+  },
+  {
+    "page": 12,
+    "block_type": "paragraph",
+    "bbox": [
+      403.3,
+      23.7,
+      558.3,
+      33.9
+    ],
+    "text_preview": "1.7 \u2022 The Universe on the Large Scale     23",
+    "content_hash": "d27fa53332efa40845333cb160a1529b61046f10f99d52aa03278532b22a95d3"
+  },
+  {
+    "page": 12,
+    "block_type": "figure",
+    "bbox": [
+      189.1,
+      57.6,
+      422.9,
+      291.4
+    ],
+    "text_preview": "",
+    "content_hash": "e1239ac0c68fc13e882ea6f4ed2536b7cfdd44025f543577a44609b1ce7a5412"
+  },
+  {
+    "page": 12,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      293.0,
+      538.5,
+      314.4
+    ],
+    "text_preview": "Figure 1.11 Star Cluster. This large star cluster is known b",
+    "content_hash": "9fb707a0e7ab2b5aa917fdeea671080a67cd72d5c2ebdb030532880571fbd579"
+  },
+  {
+    "page": 12,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      320.7,
+      540.1,
+      414.0
+    ],
+    "text_preview": "You may hear stars referred to as \u201ceternal,\u201d but in fact no ",
+    "content_hash": "98dd8c881adc084da5f7222e8a28d7fd8fecdede831e9c8ee80a80326b995c84"
+  },
+  {
+    "page": 12,
+    "block_type": "heading",
+    "bbox": [
+      78.3,
+      425.1,
+      309.5,
+      444.8
+    ],
+    "text_preview": "1.7 The Universe on the Large Scale",
+    "content_hash": "8858bbea64afe13dce4ee7e6ed608aee18f7967cb10d4ca15694646e17d91612"
+  },
+  {
+    "page": 12,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      456.0,
+      536.7,
+      549.2
+    ],
+    "text_preview": "In a very rough sense, you could think of the solar system a",
+    "content_hash": "a5ab1f7940573487e9e3e3545ce7185f430daf65680a6d25546de2a12ea62f07"
+  },
+  {
+    "page": 12,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      556.8,
+      535.8,
+      663.5
+    ],
+    "text_preview": "The nearest galaxy, discovered in 1993, is a small one that ",
+    "content_hash": "9ff8c2766c346b970ff44b78c21584f6de1da841bd1c8315b969994a1bb68eeb"
+  },
+  {
+    "page": 13,
+    "block_type": "paragraph",
+    "bbox": [
+      53.7,
+      23.7,
+      224.8,
+      33.9
+    ],
+    "text_preview": "24     1 \u2022 Science and the Universe: A Brief Tour",
+    "content_hash": "ae3b69f79528d36a2b8abdfd32ec944b6c43b3387385cea2dd3c94fc0fa2d259"
+  },
+  {
+    "page": 13,
+    "block_type": "figure",
+    "bbox": [
+      72.0,
+      57.6,
+      540.0,
+      369.1
+    ],
+    "text_preview": "",
+    "content_hash": "5da46e754d084e283335dc7caaeec1666ae13be4405c5d26d09b2542673ba170"
+  },
+  {
+    "page": 13,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      370.7,
+      522.8,
+      401.7
+    ],
+    "text_preview": "Figure 1.12 Neighbor Galaxies. This image shows both the Lar",
+    "content_hash": "7ded56f447bb1c01579d07accacda54694c6034b8345466bf659101e446c80cd"
+  },
+  {
+    "page": 13,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      408.0,
+      540.0,
+      460.8
+    ],
+    "text_preview": "The nearest large galaxy is a spiral quite similar to our ow",
+    "content_hash": "c8aa992643fe0a6bc9048c5a1134d850bc338d823ee3548ae0ec729c7037886e"
+  },
+  {
+    "page": 13,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      758.1,
+      187.8,
+      768.3
+    ],
+    "text_preview": "Access for free at openstax.org",
+    "content_hash": "025e9cd5967036fd226c47754fe0e5f99243c3880f929145c38b7ed61bdfb5d9"
+  },
+  {
+    "page": 14,
+    "block_type": "paragraph",
+    "bbox": [
+      403.3,
+      23.7,
+      558.3,
+      33.9
+    ],
+    "text_preview": "1.7 \u2022 The Universe on the Large Scale     25",
+    "content_hash": "682ee468b006611923cd7cf1426f89bd7a31e83f7a29a78d6fe8581b40526d57"
+  },
+  {
+    "page": 14,
+    "block_type": "figure",
+    "bbox": [
+      72.0,
+      57.6,
+      540.0,
+      365.3
+    ],
+    "text_preview": "",
+    "content_hash": "0be67d03a6f7ffcdc3f64a7d89f1d5f05dbc1cab11ef045be8771f8fa81b56ee"
+  },
+  {
+    "page": 14,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      366.9,
+      533.5,
+      388.3
+    ],
+    "text_preview": "Figure 1.13 Closest Spiral Galaxy. The Andromeda galaxy (M31",
+    "content_hash": "88cc198b5ea8bdd58e41715226d8fc74d613f72f717244b4826a907f2eb81b89"
+  },
+  {
+    "page": 14,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      394.6,
+      530.7,
+      433.9
+    ],
+    "text_preview": "At distances of 10 to 15 million light-years, we find other ",
+    "content_hash": "17a7e6b8c12025888322a75a7b97f6ea21f05fabf88de2e780586fa305d02815"
+  },
+  {
+    "page": 15,
+    "block_type": "paragraph",
+    "bbox": [
+      53.7,
+      23.7,
+      224.8,
+      33.9
+    ],
+    "text_preview": "26     1 \u2022 Science and the Universe: A Brief Tour",
+    "content_hash": "3e5445a4f93b705e5a811e794de57fa2642293bd083b01e1554b9c2d0e4496b6"
+  },
+  {
+    "page": 15,
+    "block_type": "figure",
+    "bbox": [
+      130.6,
+      57.6,
+      481.4,
+      449.3
+    ],
+    "text_preview": "",
+    "content_hash": "b670a1aaebe2e7d7f0a79a3569898e0fae64b3605027cbd4ba6171aef8b2d399"
+  },
+  {
+    "page": 15,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      450.9,
+      520.0,
+      481.9
+    ],
+    "text_preview": "Figure 1.14 Cluster of Galaxies. This image shows part of a ",
+    "content_hash": "cce4fa92064dea2debf88ced904c55d72e65abfdaf7b5b6d529b9ef33fde98fd"
+  },
+  {
+    "page": 15,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      488.2,
+      539.8,
+      541.0
+    ],
+    "text_preview": "Some of the clusters themselves form into larger groups call",
+    "content_hash": "2cba1a2e496ec4f5d370cdc31c3c2311711a017524bc4f725729cba0cf632bf3"
+  },
+  {
+    "page": 15,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      548.5,
+      542.3,
+      628.3
+    ],
+    "text_preview": "At even greater distances, where many ordinary galaxies are ",
+    "content_hash": "52109e7138e3f87ad43c2a2444ef1734c2a2cd8b3c84929a62a74f15a13f8c0a"
+  },
+  {
+    "page": 15,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      635.8,
+      532.4,
+      702.1
+    ],
+    "text_preview": "With quasars we can see way back close to the Big Bang explo",
+    "content_hash": "235a92e3bd3fdc1f3217f4089ecd8ac9b99af69c19b56b0c0ca20e6c7add20e2"
+  },
+  {
+    "page": 15,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      709.6,
+      503.1,
+      721.9
+    ],
+    "text_preview": "Measurements of the properties of galaxies and quasars in re",
+    "content_hash": "c0e72d00c462a2f85d32d8a95029419c3c38058006c60ee3b674eb589c4e61d0"
+  },
+  {
+    "page": 15,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      758.1,
+      187.8,
+      768.3
+    ],
+    "text_preview": "Access for free at openstax.org",
+    "content_hash": "025e9cd5967036fd226c47754fe0e5f99243c3880f929145c38b7ed61bdfb5d9"
+  },
+  {
+    "page": 16,
+    "block_type": "paragraph",
+    "bbox": [
+      408.4,
+      23.7,
+      558.3,
+      33.9
+    ],
+    "text_preview": "1.8 \u2022 The Universe of the Very Small     27",
+    "content_hash": "8c9b247f79b3dea765fdeaee017697980b296d72589fa114b9b87191fb389a3f"
+  },
+  {
+    "page": 16,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      58.2,
+      530.9,
+      97.5
+    ],
+    "text_preview": "sophisticated light-amplifying devices, and painstaking labo",
+    "content_hash": "51c6572534af0b0267958f668bfe2f919fc7ea770871db570ff9a26c364596ce"
+  },
+  {
+    "page": 16,
+    "block_type": "heading",
+    "bbox": [
+      78.3,
+      108.6,
+      303.0,
+      128.3
+    ],
+    "text_preview": "1.8 The Universe of the Very Small",
+    "content_hash": "5f4ffa96e7da53d25528a98e2ee99f187791719a2756c9e3e96a5cbf1d37a502"
+  },
+  {
+    "page": 16,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      139.5,
+      538.4,
+      232.7
+    ],
+    "text_preview": "The foregoing discussion has likely impressed on you that th",
+    "content_hash": "e6317f3748ad1819445b2ade5b787d3016e7bd7a7a2829f52ebda2b46a913666"
+  },
+  {
+    "page": 16,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      240.3,
+      542.3,
+      281.0
+    ],
+    "text_preview": "Even our most familiar solids are mostly space. If we could ",
+    "content_hash": "f8319d04e0f48a7ef5c63502253fd195c87b19bcde6eff743622946537c13989"
+  },
+  {
+    "page": 16,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      280.8,
+      378.9,
+      293.0
+    ],
+    "text_preview": "consists of two hydrogen atoms and one oxygen atom bonded to",
+    "content_hash": "c975fe7ff549d45ecd7f417069152b25def61e4b480bad7b7b3820f0a5c1149d"
+  },
+  {
+    "page": 16,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      300.6,
+      539.6,
+      380.3
+    ],
+    "text_preview": "Molecules, in turn, are built of atoms, which are the smalle",
+    "content_hash": "60df9f6e049d760d80ecb739312c4f4171102831b569570d557215a1c5a857cf"
+  },
+  {
+    "page": 16,
+    "block_type": "paragraph",
+    "bbox": [
+      227.1,
+      394.2,
+      387.2,
+      406.4
+    ],
+    "text_preview": "The Cosmically Abundant Elements",
+    "content_hash": "1abe7dbebeb8720f079b59e85447e16d7151454ec09245747b5079965080cf4d"
+  },
+  {
+    "page": 16,
+    "block_type": "table",
+    "bbox": [
+      190.1,
+      413.4,
+      421.9,
+      668.0
+    ],
+    "text_preview": "|1<br>Element|Symbol|Number of Atoms per<br>Million Hydrogen",
+    "content_hash": "65a93f5f63491c212ff6b634e4e3d7d15274000851e3c3ea5ad85d4526fa8d1a"
+  },
+  {
+    "page": 16,
+    "block_type": "caption",
+    "bbox": [
+      189.8,
+      674.5,
+      224.2,
+      684.7
+    ],
+    "text_preview": "Table 1.1",
+    "content_hash": "0a7030d0a264723743e8b9e49e39834b3785bcaebebb902a2da3f4e5b44207ae"
+  },
+  {
+    "page": 16,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      724.8,
+      476.5,
+      735.0
+    ],
+    "text_preview": "1 This list of elements is arranged in order of the atomic n",
+    "content_hash": "bb3f9f2fa0a16becde901c7aa920895ffd910705867bbb6f7708148087014099"
+  },
+  {
+    "page": 17,
+    "block_type": "paragraph",
+    "bbox": [
+      53.7,
+      23.7,
+      224.8,
+      33.9
+    ],
+    "text_preview": "28     1 \u2022 Science and the Universe: A Brief Tour",
+    "content_hash": "8288633928db9e0f3a7fe5fea3378a75b2bba4f53825b34922bc0b36059bde40"
+  },
+  {
+    "page": 17,
+    "block_type": "table",
+    "bbox": [
+      190.1,
+      57.6,
+      421.9,
+      151.3
+    ],
+    "text_preview": "|1<br>Element|Symbol|Number of Atoms per<br>Million Hydrogen",
+    "content_hash": "e3a5389b78894af50f6f09b944c448fbb87dfabadda8e056217e845314b1c4ba"
+  },
+  {
+    "page": 17,
+    "block_type": "caption",
+    "bbox": [
+      189.8,
+      157.8,
+      224.2,
+      168.0
+    ],
+    "text_preview": "Table 1.1",
+    "content_hash": "0a7030d0a264723743e8b9e49e39834b3785bcaebebb902a2da3f4e5b44207ae"
+  },
+  {
+    "page": 17,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      187.0,
+      541.1,
+      253.2
+    ],
+    "text_preview": "All atoms consist of a central, positively charged nucleus s",
+    "content_hash": "eb98f3800b5652d18d9e52474303f8312a4db12fd38b304b0312d5976705fdff"
+  },
+  {
+    "page": 17,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      260.8,
+      542.3,
+      273.0
+    ],
+    "text_preview": "The distance from an atomic nucleus to its electrons is typi",
+    "content_hash": "3f382e9f49c043772d4e4511907f72ee89fd6ae2ecf355f18cdda64eac8e0c49"
+  },
+  {
+    "page": 17,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      274.3,
+      539.2,
+      313.5
+    ],
+    "text_preview": "is why we say that even solid matter is mostly space. The ty",
+    "content_hash": "909a26d9a3c733bf914871c35776703eef5068d189e78484069e57ffeeeb31fc"
+  },
+  {
+    "page": 17,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      321.1,
+      540.5,
+      387.3
+    ],
+    "text_preview": "Remarkably, physicists have discovered that everything that ",
+    "content_hash": "14169de80152a044d406dd190672ca109028fad58e4ab23e71de7eadcff8ebda"
+  },
+  {
+    "page": 17,
+    "block_type": "heading",
+    "bbox": [
+      78.3,
+      407.3,
+      163.0,
+      419.9
+    ],
+    "text_preview": "LINK TO LEARNING",
+    "content_hash": "d99683ad0ea34ef6b2c148a957b72f16767155bfecc3b9de1d6253810d93defe"
+  },
+  {
+    "page": 17,
+    "block_type": "paragraph",
+    "bbox": [
+      78.3,
+      439.9,
+      491.7,
+      465.6
+    ],
+    "text_preview": "To construct an atom, particle by particle, check out this g",
+    "content_hash": "7582ffd98e88565ab04d9198a7551ef08b28f8f28d234f39983cdc9b07cc6c5a"
+  },
+  {
+    "page": 17,
+    "block_type": "heading",
+    "bbox": [
+      78.3,
+      495.7,
+      293.4,
+      515.3
+    ],
+    "text_preview": "1.9 A Conclusion and a Beginning",
+    "content_hash": "ec5a61e904ab9b5c301efcb8044c9c18a2e8e84984551347441160e8cf4fffc1"
+  },
+  {
+    "page": 17,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      526.5,
+      540.5,
+      606.3
+    ],
+    "text_preview": "If you are new to astronomy, you have probably reached the e",
+    "content_hash": "20de1e6785f1058475eb6f434f84d710cb26ebf8b5ce662a707740ee6fcc93ac"
+  },
+  {
+    "page": 17,
+    "block_type": "paragraph",
+    "bbox": [
+      71.5,
+      613.8,
+      537.7,
+      680.1
+    ],
+    "text_preview": "At this point you may also feel a bit small and insignifican",
+    "content_hash": "ff72ea5628a0e8493d3107c432722cabd8686988ba08b5c1c72475ea1fbadc7f"
+  },
+  {
+    "page": 17,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      687.6,
+      529.4,
+      726.9
+    ],
+    "text_preview": "On this scale, the Big Bang happened at the first moment of ",
+    "content_hash": "15416bb6bc39ed717e1142acbee320a975d39c7f631adff31720911576ef89a0"
+  },
+  {
+    "page": 17,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      758.1,
+      187.8,
+      768.3
+    ],
+    "text_preview": "Access for free at openstax.org",
+    "content_hash": "025e9cd5967036fd226c47754fe0e5f99243c3880f929145c38b7ed61bdfb5d9"
+  },
+  {
+    "page": 18,
+    "block_type": "paragraph",
+    "bbox": [
+      411.5,
+      23.7,
+      558.3,
+      33.9
+    ],
+    "text_preview": "1.9 \u2022 A Conclusion and a Beginning     29",
+    "content_hash": "592aa5f814c0a83743a295381e96e772b8fb0f18a1d5795bd20b097324dfb0af"
+  },
+  {
+    "page": 18,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      58.2,
+      476.8,
+      70.5
+    ],
+    "text_preview": "and the oldest rocks we can date on Earth go back to the thi",
+    "content_hash": "dba86610c0c1207cf21780e17f5b51bd5cf5af63d8a69eac8d5a1281f2c2e2ae"
+  },
+  {
+    "page": 18,
+    "block_type": "figure",
+    "bbox": [
+      72.0,
+      77.4,
+      540.0,
+      354.4
+    ],
+    "text_preview": "",
+    "content_hash": "ddbd089e9e2d07122528caedd8e0749c711d0621cf8c974f259cc97139edb5a8"
+  },
+  {
+    "page": 18,
+    "block_type": "caption",
+    "bbox": [
+      72.0,
+      356.0,
+      541.5,
+      425.3
+    ],
+    "text_preview": "Figure 1.15 Charting Cosmic Time. On a cosmic calendar, wher",
+    "content_hash": "347f10e9dbb2ca1f927a50ee69d2bd2df53df084ae634106c39d33f93eab07ff"
+  },
+  {
+    "page": 18,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      431.6,
+      541.9,
+      497.9
+    ],
+    "text_preview": "Where does the origin of human beings fall during the course",
+    "content_hash": "2c1c3daf8ea81a2d8e55ba874ae8025dcfbb9d5a6ec048428bdefbf1b89e1a1c"
+  },
+  {
+    "page": 18,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      505.4,
+      540.6,
+      558.2
+    ],
+    "text_preview": "Certainly our attempts to understand the universe are not co",
+    "content_hash": "c549d206fedde35785f8257f27f6e8c97ba085f35080328813c7c8137ebbafa2"
+  },
+  {
+    "page": 19,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      23.7,
+      189.0,
+      33.9
+    ],
+    "text_preview": "30     1 \u2022 For Further Exploration",
+    "content_hash": "1c87fb323584d018f583bc31bfeca689f074c9b5407b6b84e2282c424e8341f9"
+  },
+  {
+    "page": 19,
+    "block_type": "heading",
+    "bbox": [
+      96.9,
+      57.2,
+      246.8,
+      76.9
+    ],
+    "text_preview": "For Further Exploration",
+    "content_hash": "70503c1806b1639311bd5c3c51f7a21a7c87217cdd00cf772d472d9cf58ee17f"
+  },
+  {
+    "page": 19,
+    "block_type": "heading",
+    "bbox": [
+      72.0,
+      82.2,
+      115.7,
+      96.9
+    ],
+    "text_preview": "Articles",
+    "content_hash": "2b9267b5790120e5991764e82a0c60458f09467d31b3f1ed659887c0febfd5e7"
+  },
+  {
+    "page": 19,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      103.2,
+      419.9,
+      115.5
+    ],
+    "text_preview": "Bakich, M., et al. \u201c101 Cosmic Objects You Must See.\u201d Astron",
+    "content_hash": "789ffcd64f255b10a8be566d7daa432e4ada042bae977ae01a615f180ce9132b"
+  },
+  {
+    "page": 19,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      123.0,
+      391.9,
+      135.3
+    ],
+    "text_preview": "Talcott, R. \u201c30 Years of Hubble\u2019s Greatest Hits.\u201d Astronomy ",
+    "content_hash": "5db5d7690e646e265762dda8071886e492c816868ccb72c9560cf04d4f0e3320"
+  },
+  {
+    "page": 19,
+    "block_type": "heading",
+    "bbox": [
+      72.0,
+      141.6,
+      107.5,
+      156.3
+    ],
+    "text_preview": "Books",
+    "content_hash": "a16bca7601eb7d51724e95133555ba5142e4442ba58ba8b359fdf6e6fc6711f0"
+  },
+  {
+    "page": 19,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      162.6,
+      532.9,
+      188.4
+    ],
+    "text_preview": "Miller, Ron, and William Hartmann. The Grand Tour: A Travele",
+    "content_hash": "6f18b72129dc2d76879fd65d6836d873ffe14fb9cf775fc5c090f00cfb695968"
+  },
+  {
+    "page": 19,
+    "block_type": "paragraph",
+    "bbox": [
+      71.5,
+      195.9,
+      532.4,
+      235.2
+    ],
+    "text_preview": "Sagan, Carl. Cosmos. Ballantine, 2013 [1980]. This tome pres",
+    "content_hash": "98545da3325732ea34dc9c3132ae23aa2bc3d02208f53e438bfe1bb64cd99ae9"
+  },
+  {
+    "page": 19,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      242.7,
+      530.7,
+      268.5
+    ],
+    "text_preview": "Tyson, Neil DeGrasse, and Don Goldsmith. Origins: Fourteen B",
+    "content_hash": "b0730bb5d0430dfd0bc4fb38cd18676fa0617fe5aa516909a89f743b3c373a00"
+  },
+  {
+    "page": 19,
+    "block_type": "heading",
+    "bbox": [
+      72.0,
+      274.8,
+      123.4,
+      289.5
+    ],
+    "text_preview": "Websites",
+    "content_hash": "5bee22bb969d51ab9566afa0dd75aba34aaf748f9a5fe1914557750e142d9b9d"
+  },
+  {
+    "page": 19,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      295.8,
+      538.1,
+      348.6
+    ],
+    "text_preview": "If you enjoyed the beautiful images in this chapter (and the",
+    "content_hash": "e98571807cf80a7394d304788760cbe9de243e1a6534e442d27b1e9efae4afee"
+  },
+  {
+    "page": 19,
+    "block_type": "paragraph",
+    "bbox": [
+      78.6,
+      356.1,
+      541.5,
+      543.9
+    ],
+    "text_preview": "\u2022 Astronomy Picture of the Day: apod.nasa.gov/apod/astropix.",
+    "content_hash": "0588c5d3a13fdb2b0252cbee3dcbb73e48b67238ec65d1855b19a44d38a48aee"
+  },
+  {
+    "page": 19,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      551.4,
+      318.1,
+      563.7
+    ],
+    "text_preview": "See Appendix B for more sources of astronomical images.",
+    "content_hash": "aab35c8a1af842428ff690055804cf31db6c066f8f66e2096228cd4ab73eaa2c"
+  },
+  {
+    "page": 19,
+    "block_type": "heading",
+    "bbox": [
+      72.0,
+      570.0,
+      110.4,
+      584.7
+    ],
+    "text_preview": "Videos",
+    "content_hash": "929090dc4e4fd59b2bd6ef451969414f701363a3644b192cccc1fa9172361fad"
+  },
+  {
+    "page": 19,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      591.0,
+      530.9,
+      616.8
+    ],
+    "text_preview": "Powers of Ten: www.youtube.com/watch?v=0fKBhvDjuy0. This cla",
+    "content_hash": "19473ea0a86ecd031bc5b46ff2132fc03961b4adec531973edff6a141586c124"
+  },
+  {
+    "page": 19,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      624.3,
+      538.4,
+      650.1
+    ],
+    "text_preview": "The Known Universe: www.youtube.com/watch?v=17jymDn0W6U. Thi",
+    "content_hash": "7a8dee963d0f9b33948a82b1ce998bad93fe159e0ca74fae05d93ef6a4824cbf"
+  },
+  {
+    "page": 19,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      657.6,
+      538.0,
+      683.4
+    ],
+    "text_preview": "Wanderers: apod.nasa.gov/apod/ap141208.html. This video prov",
+    "content_hash": "9e0a9e85f0720d9eb81f6b7f92e988d9e99834e92a1dde9185e3ff45bc8be1b9"
+  },
+  {
+    "page": 19,
+    "block_type": "paragraph",
+    "bbox": [
+      72.0,
+      758.1,
+      187.8,
+      768.3
+    ],
+    "text_preview": "Access for free at openstax.org",
+    "content_hash": "025e9cd5967036fd226c47754fe0e5f99243c3880f929145c38b7ed61bdfb5d9"
+  }
+]
