@@ -113,6 +113,10 @@ class Concept(IRNode, table=True):
     concept_type: ConceptType
     definition_span_id: str | None = Field(default=None, foreign_key="sourcespan.id")
     salience: float = 0.0
+    # Zero or one SyllabusNode (D2 syllabus anchoring). A plain FK, not an
+    # Edge: EdgeKind (below) is a closed enum with no "syllabus link" member,
+    # and linking is capped at one node, unlike a real `part_of` edge set.
+    syllabus_node_id: str | None = Field(default=None, foreign_key="syllabusnode.id")
 
 
 class Alias(IRNode, table=True):

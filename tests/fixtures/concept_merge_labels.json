@@ -1,0 +1,36 @@
+{
+  "_comment": "Labelled fixture PROMPTS.md D2 asks Pass B's merge threshold to be tuned on. Each entry is (name, definition) as Pass A would emit it; `should_merge` pairs are meant to canonicalize to one Concept, `should_not_merge` pairs must stay separate. understand.MERGE_SIMILARITY_THRESHOLD is chosen so both hold — see test_understand.py::test_merge_threshold_separates_labelled_pairs.",
+  "concepts": {
+    "ohms_law": {
+      "name": "Ohm's law",
+      "definition": "Ohm's law states that voltage equals current times resistance, V = IR, in a circuit."
+    },
+    "v_ir_relationship": {
+      "name": "V = IR relationship",
+      "definition": "The relationship V = IR relates voltage, current, and resistance in an electrical circuit."
+    },
+    "variance": {
+      "name": "variance",
+      "definition": "Variance measures the spread of a set of numbers from their mean value."
+    },
+    "covariance": {
+      "name": "covariance",
+      "definition": "Covariance measures how two random variables change together, positively or negatively."
+    },
+    "hypothesis": {
+      "name": "hypothesis",
+      "definition": "A hypothesis is a proposed explanation for a phenomenon that can be tested."
+    },
+    "theory": {
+      "name": "theory",
+      "definition": "A scientific theory is a well-substantiated explanation supported by a large body of evidence."
+    }
+  },
+  "should_merge": [["ohms_law", "v_ir_relationship"]],
+  "should_not_merge": [
+    ["variance", "covariance"],
+    ["hypothesis", "theory"],
+    ["ohms_law", "variance"],
+    ["v_ir_relationship", "covariance"]
+  ]
+}

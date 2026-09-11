@@ -33,13 +33,12 @@ from coursec.core.models import (
     WebEvidence,
 )
 
-# CLAUDE.md §4, node types introduced through D1. `part_of` is listed there
-# under `structure`; D2's understand-pass text also creates `part_of` edges
-# while linking a Concept to multiple sections. That is a live discrepancy
-# between the two documents this project has not needed to resolve yet — no
-# pass creates a `part_of` edge before D2 — so it is left as a TODO for
-# whichever of D2's passes turns out to be the one that does, rather than
-# guessed at here.
+# CLAUDE.md §4, node types introduced through D1. `part_of` is owned by
+# `structure` (decision log #8): D2's Extraction section mentions part_of
+# while discussing Concept-to-section linking, but §4 assigns it to
+# `structure`, and this map is what's enforced below — `understand` records
+# section membership as plain data; `structure.py` is what turns it into
+# `part_of` edges.
 NODE_TYPE_OWNER: dict[type[SQLModel], str] = {
     Block: "ingest",
     SourceSpan: "ingest",

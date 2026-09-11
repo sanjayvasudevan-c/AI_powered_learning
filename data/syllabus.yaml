@@ -1,0 +1,91 @@
+# Hand-authored syllabus for the fixture chapter (tests/fixtures/chapter.pdf
+# = OpenStax Astronomy 2e, Chapter 1: "Science and the Universe: A Brief
+# Tour"). PROMPTS.md D2: 20-40 unit/topic entries, loaded into SyllabusNode.
+#
+# `code` follows the source's own section numbering where one exists
+# (e.g. "1.4") with a trailing letter for sub-topics ("1.4.a"); `order` is
+# the flat reading-order rank used for tie-breaking and display.
+- code: "1.1"
+  title: "The Nature of Astronomy"
+  order: 1
+- code: "1.1.a"
+  title: "Astronomy as the study of objects beyond Earth's atmosphere"
+  order: 2
+- code: "1.2"
+  title: "The Nature of Science"
+  order: 3
+- code: "1.2.a"
+  title: "Scientific models and hypotheses"
+  order: 4
+- code: "1.2.b"
+  title: "Testability and falsifiability"
+  order: 5
+- code: "1.2.c"
+  title: "Science as a self-correcting process"
+  order: 6
+- code: "1.3"
+  title: "The Laws of Nature"
+  order: 7
+- code: "1.3.a"
+  title: "Universal physical laws"
+  order: 8
+- code: "1.3.b"
+  title: "Mathematics as the language of physical law"
+  order: 9
+- code: "1.4"
+  title: "Numbers in Astronomy"
+  order: 10
+- code: "1.4.a"
+  title: "Scientific notation"
+  order: 11
+- code: "1.4.b"
+  title: "The light-year as a unit of distance"
+  order: 12
+- code: "1.5"
+  title: "Consequences of Light Travel Time"
+  order: 13
+- code: "1.5.a"
+  title: "Look-back time"
+  order: 14
+- code: "1.5.b"
+  title: "Why 'now' is ambiguous across astronomical distances"
+  order: 15
+- code: "1.6"
+  title: "A Tour of the Universe"
+  order: 16
+- code: "1.6.a"
+  title: "The solar system"
+  order: 17
+- code: "1.6.b"
+  title: "The Milky Way galaxy"
+  order: 18
+- code: "1.6.c"
+  title: "Galaxy clusters and superclusters"
+  order: 19
+- code: "1.6.d"
+  title: "The observable universe"
+  order: 20
+- code: "1.7"
+  title: "The Universe on the Large Scale"
+  order: 21
+- code: "1.7.a"
+  title: "The cosmic distance scale"
+  order: 22
+- code: "1.7.b"
+  title: "Large-scale structure and homogeneity"
+  order: 23
+- code: "1.8"
+  title: "The Universe of the Very Small"
+  order: 24
+- code: "1.8.a"
+  title: "Atoms and subatomic particles"
+  order: 25
+- code: "1.8.b"
+  title: "Quantum-scale phenomena relevant to astronomy"
+  order: 26
+- code: "1.9"
+  title: "A Conclusion and a Beginning"
+  order: 27
+- code: "1.9.a"
+  title: "Astronomy as an interdisciplinary science"
+  order: 28

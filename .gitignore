@@ -1,9 +1,17 @@
 # CourseC build artifacts and runtime state — never committed (CLAUDE.md §5)
 build/
-data/
 .cache/
 .env
 *.db
+# data/*, not data/: a negated pattern can't re-include a file inside a
+# directory that's itself ignored, so data/ stays traversable and only its
+# contents are ignored by default...
+data/*
+# ...except hand-authored source content that happens to live under data/,
+# e.g. D2's data/syllabus.yaml (curriculum authored by hand, not scraped or
+# generated — see decision log #7). Runtime data (retrieved web evidence,
+# downloaded weights) is unaffected: it never matches *.yaml.
+!data/*.yaml
 
 # Python / uv
 __pycache__/
