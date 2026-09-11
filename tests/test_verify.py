@@ -97,10 +97,15 @@ def test_unsupported_sentence_is_repaired_up_to_max_attempts_then_dropped(graph:
     block = _lesson_block_with_one_sentence(graph, concept, "voltage")
     sink = DiagnosticSink()
     critique_calls = []
+    repair_count = 0
 
     def backend(model: str, prompt: str, params: dict) -> str:
+        nonlocal repair_count
         if "Rewrite the sentence" in prompt:
-            return json.dumps({"text": "a repaired but still unsupported sentence"})
+            repair_count += 1
+            # Distinct text each time so a repeated attempt isn't a cache
+            # hit on an earlier critique call's identical prompt.
+            return json.dumps({"text": f"still unsupported, repair attempt {repair_count}"})
         critique_calls.append(prompt)
         return json.dumps({"classification": "unsupported"})
 

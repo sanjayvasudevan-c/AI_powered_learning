@@ -108,6 +108,6 @@ def test_dossier_truncates_by_ascending_score_under_tight_budget(graph: Graph) -
             )
         )
     # Budget large enough for the header + source + one 50-word chunk, not both.
-    dossier = build_dossier(graph, concept, all_slots=CONTRACT_SLOTS, token_budget=60)
+    dossier = build_dossier(graph, concept, all_slots=CONTRACT_SLOTS, token_budget=80)
     assert strong.id in dossier.evidence_ids
     assert weak.id not in dossier.evidence_ids
