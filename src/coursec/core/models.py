@@ -117,6 +117,9 @@ class Concept(IRNode, table=True):
     # Edge: EdgeKind (below) is a closed enum with no "syllabus link" member,
     # and linking is capped at one node, unlike a real `part_of` edge set.
     syllabus_node_id: str | None = Field(default=None, foreign_key="syllabusnode.id")
+    # Set by verify (D4) when dropping an unsupported/contradicted sentence
+    # empties one of this concept's contract slots (CLAUDE.md I5).
+    status: str = "ok"  # "ok" | "partial"
 
 
 class Alias(IRNode, table=True):

@@ -17,11 +17,14 @@ import typer
 from coursec.core.anthropic_backend import anthropic_backend
 from coursec.core.diagnostics import DiagnosticSink
 from coursec.core.graph import Graph
+from coursec.passes import compose as compose_pass
 from coursec.passes import evidence as evidence_pass
 from coursec.passes import gap as gap_pass
+from coursec.passes import origin_linter
 from coursec.passes import structure as structure_pass
 from coursec.passes import syllabus as syllabus_pass
 from coursec.passes import understand as understand_pass
+from coursec.passes import verify as verify_pass
 from coursec.passes.ingest import block_type_histogram, ingest_pdf
 from coursec.viz.graph_html import render_graph_html
 
@@ -35,8 +38,8 @@ GRAPH_HTML_PATH = Path("build/graph.html")
 def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")) -> None:
     """Compile a source PDF into the Concept Graph and emit targets.
 
-    Runs ingest -> understand -> structure so far. Later stages layer
-    gap/evidence/compose/verify/assess/emit on top of this same call.
+    Runs ingest -> understand -> structure -> gap -> evidence -> compose ->
+    verify so far. Later stages layer assess/emit on top of this same call.
     """
     if not pdf.exists():
         typer.echo(f"coursec build: no such file: {pdf}", err=True)
@@ -101,6 +104,41 @@ def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")
         except RuntimeError as exc:
             typer.echo(f"evidence: {exc}", err=True)
             raise typer.Exit(code=1) from exc
+
+        try:
+            lesson_blocks = []
+            for concept in concepts:
+                lesson_blocks.extend(
+                    compose_pass.compose_concept(graph, concept, sink, backend=anthropic_backend)
+                )
+        except RuntimeError as exc:
+            typer.echo(f"compose: {exc}", err=True)
+            raise typer.Exit(code=1) from exc
+
+        try:
+            numeric_origin_violations = 0
+            for block in lesson_blocks:
+                verify_pass.verify_lesson_block(graph, block, sink, backend=anthropic_backend)
+                verify_pass.run_compute_check(graph, block, sink)
+                numeric_origin_violations += origin_linter.lint_lesson_block(graph, block, sink)
+        except RuntimeError as exc:
+            typer.echo(f"verify: {exc}", err=True)
+            raise typer.Exit(code=1) from exc
+
+        unsupported_count = sum(
+            1 for d in sink.all() if d.code == "sentence_dropped_unsupported"
+        )
+        contradicted_count = sum(
+            1 for d in sink.all() if d.code == "sentence_dropped_contradicted"
+        )
+        quarantine_count = sum(1 for block in lesson_blocks if block.status == "quarantined")
+
+        typer.echo(f"compose: {len(lesson_blocks)} lesson blocks")
+        typer.echo("verify:")
+        typer.echo(f"  unsupported sentences dropped: {unsupported_count}")
+        typer.echo(f"  contradicted sentences dropped: {contradicted_count}")
+        typer.echo(f"  numeric-origin violations: {numeric_origin_violations}")
+        typer.echo(f"  quarantined slots: {quarantine_count}")
 
     for diagnostic in sink.all():
         typer.echo(f"  [{diagnostic.severity}] {diagnostic.code}: {diagnostic.message}", err=True)

@@ -54,15 +54,26 @@ NODE_TYPE_OWNER: dict[type[SQLModel], str] = {
     Mastery: "learn",
 }
 
-EDGE_KIND_OWNER: dict[EdgeKind, str] = {
+# A value can be one pass name, or a frozenset of several: `evidenced_by` is
+# "X is evidenced by Y" at two different levels — evidence writes
+# Concept-evidenced_by->WebEvidence (this concept has retrieved evidence);
+# compose writes LessonBlock-evidenced_by->SourceSpan|WebEvidence (this
+# generated sentence cites this specific span). §4's table predates D4 and
+# only names "evidence"; decision log #9 extends it rather than inventing a
+# second edge kind for the same relationship at a different granularity.
+EDGE_KIND_OWNER: dict[EdgeKind, str | frozenset[str]] = {
     EdgeKind.prerequisite_of: "structure",
     EdgeKind.part_of: "structure",
-    EdgeKind.evidenced_by: "evidence",
+    EdgeKind.evidenced_by: frozenset({"evidence", "compose"}),
     EdgeKind.contradicts: "evidence",
     EdgeKind.assesses: "assess",
     EdgeKind.remediates: "learn",
     EdgeKind.mastery_of: "learn",
 }
+
+
+def _allowed_passes(owner: str | frozenset[str]) -> frozenset[str]:
+    return owner if isinstance(owner, frozenset) else frozenset({owner})
 
 
 class OwnershipViolation(ValueError):
@@ -105,9 +116,10 @@ class Graph:
             owner = EDGE_KIND_OWNER.get(obj.kind)
             if owner is None:
                 raise OwnershipViolation(f"no declared owner for edge kind {obj.kind!r}")
-            if obj.created_by_pass != owner:
+            allowed = _allowed_passes(owner)
+            if obj.created_by_pass not in allowed:
                 raise OwnershipViolation(
-                    f"edge kind {obj.kind!r} is owned by pass {owner!r}, "
+                    f"edge kind {obj.kind!r} is owned by {sorted(allowed)!r}, "
                     f"not {obj.created_by_pass!r}"
                 )
             for ref, role in ((obj.source_id, "source_id"), (obj.target_id, "target_id")):
