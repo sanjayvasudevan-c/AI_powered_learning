@@ -1,0 +1,54 @@
+[project]
+name = "coursec"
+version = "0.1.0"
+description = "CourseC — a course compiler: source PDF in, Concept Graph IR, PDF/cheat-sheet/question-paper/remediation targets out."
+authors = [
+    { name = "Sanjay", email = "sanjaykirthu@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.28.1",
+    "jinja2>=3.1.6",
+    "pydantic>=2",
+    "pymupdf>=1.28.2",
+    "pyyaml>=6.0.3",
+    "sentence-transformers>=6.0.1",
+    "sqlmodel>=0.0.42",
+    "streamlit>=1.63.0",
+    "sympy>=1.14.0",
+    "typer>=0.27.2",
+]
+
+[project.scripts]
+coursec = "coursec.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.12.13,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "hypothesis>=6.168.0",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.16.7",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# typer's documented idiom is `param: T = typer.Argument(...)` / `typer.Option(...)`
+# in the function signature itself — B008 (no calls in defaults) doesn't apply here.
+"src/coursec/cli.py" = ["B008"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=src/coursec/core --cov-report=term-missing"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true

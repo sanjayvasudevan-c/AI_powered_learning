@@ -1,0 +1,17 @@
+# CourseC build artifacts and runtime state — never committed (CLAUDE.md §5)
+build/
+data/
+.cache/
+.env
+*.db
+
+# Python / uv
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+*.egg-info/
