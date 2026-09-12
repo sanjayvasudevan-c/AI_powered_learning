@@ -17,6 +17,9 @@ import typer
 from coursec.core.anthropic_backend import anthropic_backend
 from coursec.core.diagnostics import DiagnosticSink
 from coursec.core.graph import Graph
+from coursec.emit import certificate as certificate_module
+from coursec.emit.blueprint import Blueprint
+from coursec.emit.targets import BlueprintInfeasible, render_all_targets
 from coursec.passes import compose as compose_pass
 from coursec.passes import evidence as evidence_pass
 from coursec.passes import gap as gap_pass
@@ -33,15 +36,32 @@ app = typer.Typer(no_args_is_help=True, add_completion=False)
 
 BUILD_DB_PATH = Path("build/coursec.db")
 GRAPH_HTML_PATH = Path("build/graph.html")
+CERTIFICATE_PATH = Path("build/certificate.html")
+EMIT_WORK_DIR = Path("build/emit")
+
+
+def _default_blueprint(accepted_items: list) -> Blueprint:
+    """A blueprint sized to what was actually generated, so a typical run
+    is feasible by construction — an explicit, narrower blueprint is a
+    caller concern (see emit.blueprint.Blueprint), not the CLI's default."""
+    bloom_levels = sorted({item.bloom_level for item in accepted_items})
+    if not bloom_levels:
+        return Blueprint(total_marks=0)
+    share = 1.0 / len(bloom_levels)
+    return Blueprint(
+        total_marks=min(len(accepted_items), 10),
+        marks_per_item=1,
+        bloom_mix={level: share for level in bloom_levels},
+    )
 
 
 @app.command()
 def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")) -> None:
     """Compile a source PDF into the Concept Graph and emit targets.
 
-    Runs ingest -> understand -> structure -> gap -> evidence -> compose ->
-    verify -> assess (items, gates, synthetic pilot) so far. D6's emit is
-    the only stage left to layer on top of this same call.
+    Runs the full pipeline: ingest -> understand -> structure -> gap ->
+    evidence -> compose -> verify -> assess -> emit. D7's quiz UI and
+    mastery model, and D8's demo harness, aren't built yet.
     """
     if not pdf.exists():
         typer.echo(f"coursec build: no such file: {pdf}", err=True)
@@ -172,6 +192,32 @@ def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")
                 f"  discrimination: min={min(discriminations):.2f} max={max(discriminations):.2f}"
             )
             typer.echo(f"  difficulty: min={min(difficulties):.2f} max={max(difficulties):.2f}")
+
+        certificate_data = certificate_module.build_certificate_data(
+            graph, concepts, sink.all(), syllabus_nodes=syllabus_nodes, links=links
+        )
+        certificate_module.write_certificate(CERTIFICATE_PATH, certificate_data)
+        typer.echo(f"wrote {CERTIFICATE_PATH}")
+
+        if sink.has_errors():
+            typer.echo(
+                "emit: an error-severity diagnostic is present — producing no PDF at all",
+                err=True,
+            )
+        else:
+            blueprint = _default_blueprint(accepted_items)
+            try:
+                rendered = render_all_targets(
+                    graph, concepts, blueprint, work_dir=EMIT_WORK_DIR, pdf_path=pdf
+                )
+            except BlueprintInfeasible as exc:
+                typer.echo(f"emit: question paper/answer key skipped — {exc}", err=True)
+            else:
+                (EMIT_WORK_DIR / "booklet.pdf").write_bytes(rendered.booklet)
+                (EMIT_WORK_DIR / "cheat_sheet.pdf").write_bytes(rendered.cheat_sheet)
+                (EMIT_WORK_DIR / "question_paper.pdf").write_bytes(rendered.question_paper)
+                (EMIT_WORK_DIR / "answer_key.pdf").write_bytes(rendered.answer_key)
+                typer.echo(f"emit: wrote 4 PDFs to {EMIT_WORK_DIR}")
 
     for diagnostic in sink.all():
         typer.echo(f"  [{diagnostic.severity}] {diagnostic.code}: {diagnostic.message}", err=True)

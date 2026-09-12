@@ -202,6 +202,13 @@ class ExecResult(IRNode, table=True):
     expression: str
     result: str
     success: bool
+    # Which numeric claim this is the computed record for — a LessonBlock's
+    # worked example (D4) or an Item's numeric key (D5's gate 4). Exactly
+    # one is set, or neither for a standalone check. D6's answer key reads
+    # item_id results rather than recomputing (PROMPTS.md D6: "not
+    # regenerated").
+    lesson_block_id: str | None = Field(default=None, foreign_key="lessonblock.id")
+    item_id: str | None = Field(default=None, foreign_key="item.id")
 
 
 # ---------------------------------------------------------------------------

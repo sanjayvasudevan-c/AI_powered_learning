@@ -203,3 +203,35 @@ def test_compute_check_is_a_noop_without_a_computation_block(graph: Graph) -> No
     concept = _concept(graph, "voltage", "Voltage is electric potential difference.")
     block = _lesson_block_with_one_sentence(graph, concept, "voltage")
     assert verify.run_compute_check(graph, block, DiagnosticSink()) is None
+
+
+def test_run_item_compute_check_ties_the_exec_result_to_the_item(graph: Graph) -> None:
+    from coursec.core.models import Item
+
+    concept = _concept(graph, "force", "Force equals mass times acceleration.")
+    item = graph.add(
+        Item(
+            created_by_pass="assess",
+            content_hash="h",
+            concept_id=concept.id,
+            bloom_level="apply",
+            item_type="numeric",
+            stem="x",
+            key="6.0",
+            content=json.dumps(
+                {
+                    "computation": {
+                        "formula": "m*a",
+                        "substitutions": {"m": 2.0, "a": 3.0},
+                        "claimed_result": 6.0,
+                    }
+                }
+            ),
+        )
+    )
+    sink = DiagnosticSink()
+    exec_result = verify.run_item_compute_check(graph, item, sink)
+    assert exec_result.success is True
+    assert exec_result.item_id == item.id
+    assert exec_result.lesson_block_id is None
+    assert not sink.all()

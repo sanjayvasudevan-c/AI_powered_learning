@@ -19,7 +19,7 @@ from coursec.core import llm
 from coursec.core.diagnostics import DiagnosticSink
 from coursec.core.graph import Graph
 from coursec.core.models import Concept, ConceptType, Item
-from coursec.passes import compute, items
+from coursec.passes import compute, items, verify
 from coursec.passes.items import GeneratedItem
 
 # gates are screening/classification: cheap model (CLAUDE.md §8)
@@ -267,6 +267,11 @@ def assess_concept(
                 pass_name=items.PASS_NAME,
             )
             continue
+        if item.item_type == "numeric":
+            # Gate 4 already checked this in memory; persist the same
+            # computation as a real ExecResult now that the Item has an id,
+            # so D6's answer key can read it instead of recomputing.
+            verify.run_item_compute_check(graph, item, sink)
         accepted.append(item)
 
     return accepted, rejected_count

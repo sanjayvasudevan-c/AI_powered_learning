@@ -24,6 +24,7 @@ from coursec.core.models import (
     Block,
     Concept,
     ExecResult,
+    Item,
     LessonBlock,
     SourceSpan,
     Verdict,
@@ -199,6 +200,58 @@ def verify_lesson_block(
     return lesson_block
 
 
+def _record_exec_result(
+    graph: Graph,
+    computation: Computation,
+    sink: DiagnosticSink,
+    *,
+    lesson_block_id: str | None = None,
+    item_id: str | None = None,
+) -> ExecResult:
+    """Shared by the LessonBlock and Item paths: run the computation, store
+    an `ExecResult` tied to whichever one asked (exactly one of
+    `lesson_block_id`/`item_id`), diagnose a divergence. D6's answer key
+    reads this row rather than recomputing (PROMPTS.md D6: "not
+    regenerated")."""
+    result = check_worked_example(computation)
+    expression = (
+        f"{computation.formula} at {computation.substitutions} "
+        f"claims {computation.claimed_result}"
+    )
+    owner_id = lesson_block_id or item_id
+    exec_result = graph.add(
+        ExecResult(
+            created_by_pass=PASS_NAME,
+            content_hash=hashlib.sha256(f"{owner_id}:{expression}".encode()).hexdigest(),
+            expression=expression,
+            result=json.dumps(
+                {
+                    "symbolic_equivalent": result.symbolic_equivalent,
+                    "numeric_agreement": result.numeric_agreement,
+                    "error": result.error,
+                }
+            ),
+            success=result.agrees,
+            lesson_block_id=lesson_block_id,
+            item_id=item_id,
+        )
+    )
+    if not result.agrees:
+        owner_kind = "lesson block" if lesson_block_id else "item"
+        sink.emit(
+            severity="error",
+            code="compute_divergence",
+            message=(
+                f"worked example in {owner_kind} {owner_id} claims "
+                f"{computation.claimed_result} but {computation.formula} evaluates to "
+                f"something else ({result.error or 'numeric mismatch'})"
+            ),
+            pass_name=PASS_NAME,
+            node_id=owner_id,
+        )
+    return exec_result
+
+
 def run_compute_check(
     graph: Graph, lesson_block: LessonBlock, sink: DiagnosticSink
 ) -> ExecResult | None:
@@ -209,44 +262,25 @@ def run_compute_check(
     raw_computation = content.get("computation")
     if not raw_computation:
         return None
-
     computation = Computation(
         formula=raw_computation["formula"],
         substitutions=raw_computation["substitutions"],
         claimed_result=raw_computation["claimed_result"],
     )
-    result = check_worked_example(computation)
-    expression = (
-        f"{computation.formula} at {computation.substitutions} "
-        f"claims {computation.claimed_result}"
+    return _record_exec_result(graph, computation, sink, lesson_block_id=lesson_block.id)
+
+
+def run_item_compute_check(graph: Graph, item: Item, sink: DiagnosticSink) -> ExecResult | None:
+    """The Item-side twin of `run_compute_check` — called from assess's gate
+    4 (numeric execution), but still writes through `verify` since
+    `ExecResult` is verify's column, not assess's."""
+    content = json.loads(item.content)
+    raw_computation = content.get("computation")
+    if not raw_computation:
+        return None
+    computation = Computation(
+        formula=raw_computation["formula"],
+        substitutions=raw_computation["substitutions"],
+        claimed_result=raw_computation["claimed_result"],
     )
-    exec_result = graph.add(
-        ExecResult(
-            created_by_pass=PASS_NAME,
-            content_hash=hashlib.sha256(
-                f"{lesson_block.id}:{expression}".encode()
-            ).hexdigest(),
-            expression=expression,
-            result=json.dumps(
-                {
-                    "symbolic_equivalent": result.symbolic_equivalent,
-                    "numeric_agreement": result.numeric_agreement,
-                    "error": result.error,
-                }
-            ),
-            success=result.agrees,
-        )
-    )
-    if not result.agrees:
-        sink.emit(
-            severity="error",
-            code="compute_divergence",
-            message=(
-                f"worked example in lesson block {lesson_block.id} claims "
-                f"{computation.claimed_result} but {computation.formula} evaluates to "
-                f"something else ({result.error or 'numeric mismatch'})"
-            ),
-            pass_name=PASS_NAME,
-            node_id=lesson_block.id,
-        )
-    return exec_result
+    return _record_exec_result(graph, computation, sink, item_id=item.id)
