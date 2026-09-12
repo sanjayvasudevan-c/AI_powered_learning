@@ -145,6 +145,7 @@ def verify_lesson_block(
                     lesson_block_id=lesson_block.id,
                     sentence_index=index,
                     classification=classification,
+                    sentence_text=current.text,
                 )
             )
             if classification == "entailed":

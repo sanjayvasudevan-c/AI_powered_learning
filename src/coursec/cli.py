@@ -20,7 +20,8 @@ from coursec.core.graph import Graph
 from coursec.passes import compose as compose_pass
 from coursec.passes import evidence as evidence_pass
 from coursec.passes import gap as gap_pass
-from coursec.passes import origin_linter
+from coursec.passes import item_gates, origin_linter
+from coursec.passes import pilot as pilot_pass
 from coursec.passes import structure as structure_pass
 from coursec.passes import syllabus as syllabus_pass
 from coursec.passes import understand as understand_pass
@@ -39,7 +40,8 @@ def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")
     """Compile a source PDF into the Concept Graph and emit targets.
 
     Runs ingest -> understand -> structure -> gap -> evidence -> compose ->
-    verify so far. Later stages layer assess/emit on top of this same call.
+    verify -> assess (items, gates, synthetic pilot) so far. D6's emit is
+    the only stage left to layer on top of this same call.
     """
     if not pdf.exists():
         typer.echo(f"coursec build: no such file: {pdf}", err=True)
@@ -139,6 +141,37 @@ def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")
         typer.echo(f"  contradicted sentences dropped: {contradicted_count}")
         typer.echo(f"  numeric-origin violations: {numeric_origin_violations}")
         typer.echo(f"  quarantined slots: {quarantine_count}")
+
+        try:
+            accepted_items = []
+            total_rejected = 0
+            for concept in concepts:
+                accepted, rejected = item_gates.assess_concept(
+                    graph, concept, sink, backend=anthropic_backend
+                )
+                accepted_items.extend(accepted)
+                total_rejected += rejected
+        except RuntimeError as exc:
+            typer.echo(f"assess: {exc}", err=True)
+            raise typer.Exit(code=1) from exc
+
+        total_generated = len(accepted_items) + total_rejected
+        typer.echo(f"assess: {total_generated} items generated, {len(accepted_items)} accepted")
+        typer.echo(f"  rejections: {total_rejected}")
+
+        item_stats = pilot_pass.run_pilot(graph, accepted_items, sink, seed=0)
+        quarantined_items = sum(1 for s in item_stats if s.quarantined)
+        typer.echo(
+            f"pilot (SCREENING, n={pilot_pass.COHORT_SIZE}, not a calibration claim): "
+            f"{len(item_stats)} items fit, {quarantined_items} quarantined"
+        )
+        if item_stats:
+            discriminations = [s.discrimination for s in item_stats]
+            difficulties = [s.difficulty for s in item_stats]
+            typer.echo(
+                f"  discrimination: min={min(discriminations):.2f} max={max(discriminations):.2f}"
+            )
+            typer.echo(f"  difficulty: min={min(difficulties):.2f} max={max(difficulties):.2f}")
 
     for diagnostic in sink.all():
         typer.echo(f"  [{diagnostic.severity}] {diagnostic.code}: {diagnostic.message}", err=True)

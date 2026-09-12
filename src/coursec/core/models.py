@@ -171,6 +171,10 @@ class Item(IRNode, table=True):
     item_type: str  # "mcq" | "numeric" | "short" | "derivation" | "application"
     stem: str
     key: str
+    # JSON: {"distractors": [{"text": str, "misconception_id": str}, ...],
+    # "computation": {"formula", "substitutions", "claimed_result"} | null}
+    content: str = "{}"
+    status: str = "draft"  # "draft" | "accepted" | "rejected" | "quarantined"
 
 
 class Misconception(IRNode, table=True):
@@ -187,6 +191,11 @@ class Verdict(IRNode, table=True):
     lesson_block_id: str = Field(foreign_key="lessonblock.id")
     sentence_index: int
     classification: str  # "entailed" | "unsupported" | "contradicted"
+    # The sentence text judged, at the moment of judgement — verify.py drops
+    # unsupported/contradicted sentences from LessonBlock.content once a slot
+    # is finalized, so this is the only place that text survives. D5 needs it
+    # to harvest real "the material contradicted this claim" misconceptions.
+    sentence_text: str = ""
 
 
 class ExecResult(IRNode, table=True):
@@ -204,6 +213,16 @@ class Mastery(IRNode, table=True):
     concept_id: str = Field(foreign_key="concept.id")
     student_id: str
     probability: float
+
+
+class ItemStats(IRNode, table=True):
+    """The synthetic pilot's 2PL fit per Item (D5) — screening, not
+    calibration; see pilot.py's module docstring."""
+
+    item_id: str = Field(foreign_key="item.id")
+    discrimination: float  # "a"
+    difficulty: float  # "b"
+    quarantined: bool = False
 
 
 # ---------------------------------------------------------------------------
@@ -241,6 +260,7 @@ NODE_TABLES: ClassVar[tuple[type[SQLModel], ...]] = (
     LessonBlock,
     Item,
     Misconception,
+    ItemStats,
     Verdict,
     ExecResult,
     Mastery,
