@@ -1,1 +1,286 @@
-# AI_powered_learning
+# CourseC
+
+**A course compiler.** You give it one source chapter (a PDF); it gives you back a graph of the concepts in that chapter — linked to your syllabus, linked to each other as prerequisites, backed by cited evidence — and, from that graph, a lesson, a set of assessment items, and (soon) a rendered course booklet.
+
+The framing is deliberate: source material is the *input language*, the **Concept Graph** is the *IR*, each stage below is a *typed compiler pass*, and the rendered targets are *codegen*. Nothing here is a single long prompt. If a change would turn a pass back into "ask the model and hope," it doesn't belong in this codebase.
+
+```
+      PDF                                    Concept Graph (SQLite)                 Targets
+  ┌─────────┐   ingest    ┌───────────────────────────────────────────────┐   emit   ┌─────────┐
+  │ chapter │ ──────────▶ │ Block, SourceSpan, Concept, Edge, LessonBlock, │ ───────▶ │ booklet │
+  │  .pdf   │             │ Item, Misconception, WebEvidence, Verdict, …   │          │ + quiz  │
+  └─────────┘             └───────────────────────────────────────────────┘          └─────────┘
+```
+
+---
+
+## Why a compiler, not a prompt chain
+
+Ask an LLM to "make a lesson from this PDF" in one shot and you get something that *reads* fine and is *unauditable*: you can't point at a sentence and say why it's true, you can't tell a hallucinated formula from a real one, and re-running it changes the output for reasons no one can name.
+
+Compiling instead of prompting buys three things a single prompt cannot:
+
+- **A typed intermediate representation.** Every fact the system knows is a row in a real schema — a `Concept`, a `SourceSpan`, a `WebEvidence` chunk — not a paragraph of prose one model wrote for another model to re-read.
+- **Passes that own their columns.** `ingest` only ever writes `Block`/`SourceSpan`. `compose` only ever writes `LessonBlock`. A pass writing outside its lane is a caught defect (`Graph.add` enforces this at runtime — see [Pass ownership](#pass-ownership)), not a refactor someone gets to next quarter.
+- **Diagnostics instead of vibes.** Every pass reports through a structured `Diagnostic` (severity, code, message) rather than printing or swallowing problems. An error-severity diagnostic is a build failure, full stop.
+
+## Table of contents
+
+- [The invariants](#the-invariants)
+- [The Concept Graph IR](#the-concept-graph-ir)
+- [Pass ownership](#pass-ownership)
+- [The pipeline, pass by pass](#the-pipeline-pass-by-pass)
+- [Grounding, concretely](#grounding-concretely)
+- [Getting started](#getting-started)
+- [Testing philosophy](#testing-philosophy)
+- [Project layout](#project-layout)
+- [Status](#status)
+
+---
+
+## The invariants
+
+Seven rules hold across every pass. A violation is a build failure — never a warning, never a `TODO`.
+
+| | Invariant |
+|---|---|
+| **I1** | **No unsupported sentence.** Every emitted factual sentence carries ≥1 `evidenced_by` edge and passes entailment against the union of its cited spans. Unentailed → repair (max 2 attempts) → drop → quarantine. |
+| **I2** | **Numbers are computed, never generated.** Every numeric literal in emitted material traces to a `SourceSpan`, a cited `WebEvidence` span, or a sandbox execution result. The model phrases explanations; it never originates a value. |
+| **I3** | **Provenance is total.** Every node reachable from an emitted document traces to `(file\|url, locator, retrieved_at, content_hash)`. |
+| **I4** | **The prerequisite graph is acyclic.** Cycles are broken by a deterministic, logged policy — never silently. |
+| **I5** | **Contract before emission.** A concept enters a target only with a contract status attached. MVP contract = 5 slots: definition, intuition, worked example, visual-or-analogy, ≥2 assessment items. |
+| **I6** | **Contradiction is surfaced, never resolved.** When evidence contradicts the source, the source stays primary and the divergence is a marked note with both citations — never an overwrite. |
+| **I7** | **Licence-clean media only.** Images are a bbox crop of the source, generated diagram code, or nothing. |
+
+These aren't aspirations in a design doc — they're the thing the adversarial test suite exists to break. If the suite passes on first write, it's too weak and gets strengthened before the stage is considered done.
+
+## The Concept Graph IR
+
+Everything the compiler knows lives in one SQLite database, as SQLModel tables. Every node — regardless of type — carries `id`, `created_by_pass`, `content_hash`, `created_at`; `created_by_pass` is immutable after first write.
+
+<details>
+<summary><strong>Node types</strong></summary>
+
+| Node | What it holds |
+|---|---|
+| `Block` | One classified unit of a source page — heading, paragraph, figure, caption, table, equation, or list |
+| `SourceSpan` | The exact `(file, page, bbox, char_range, sha256)` a `Block` came from |
+| `Concept` | A definition, formula, procedure, theorem, phenomenon, or example, with a salience score and a contract `status` |
+| `Alias` | A name that canonicalized into an existing `Concept` rather than becoming its own |
+| `SyllabusNode` | One hand-authored curriculum entry a `Concept` may (or may not — abstaining is correct) link to |
+| `WebEvidence` | One retrieved, scored, tiered, admitted/weak/rejected chunk of external material |
+| `LessonBlock` | One generated contract slot for a `Concept`, as structured sentences with per-sentence citations |
+| `Verdict` | The critic's entailed/unsupported/contradicted judgement on one sentence, including repair attempts |
+| `ExecResult` | The outcome of executing a formula/worked-example claim as SymPy in a subprocess |
+| `Item` | One assessment item (mcq/numeric/short/derivation/application) with its gate history |
+| `Misconception` | A named, specific piece of faulty reasoning an MCQ distractor encodes |
+| `ItemStats` | An item's `(discrimination, difficulty)` from the synthetic pilot, and whether it was quarantined |
+| `Mastery` | A student's per-concept mastery posterior *(D7, not yet built)* |
+
+</details>
+
+<details>
+<summary><strong>Edge kinds</strong></summary>
+
+`Edge` is the one relationship table; `kind` is a closed enum, and *who's allowed to create which kind* is enforced, not just documented:
+
+| Kind | Meaning | Owning pass |
+|---|---|---|
+| `prerequisite_of` | `A → B`: A must be learned before B | `structure` |
+| `part_of` | `Concept → Block`: this concept's definition sits under this heading | `structure` |
+| `evidenced_by` | `Concept → WebEvidence` **or** `LessonBlock → SourceSpan\|WebEvidence` — the same relationship at two pipeline stages | `evidence`, `compose` |
+| `contradicts` | `WebEvidence → Concept`: this evidence disagrees with the source | `evidence` |
+| `assesses` | `Item → Concept` or `Item → Misconception` | `assess` |
+| `remediates` | remediation content → the misconception it targets *(D7)* | `learn` |
+| `mastery_of` | `Mastery → Concept` *(D7)* | `learn` |
+
+</details>
+
+## Pass ownership
+
+`Graph.add()` looks up the object's type (or, for an `Edge`, its `kind`) and rejects the write if `created_by_pass` isn't on the approved list — a pass genuinely *cannot* write outside its column, by construction:
+
+```python
+>>> graph.add(Block(created_by_pass="understand", ...))
+OwnershipViolation: Block is owned by pass 'ingest', not 'understand'
+```
+
+| Pass | Writes | Reads |
+|---|---|---|
+| `ingest` | `Block`, `SourceSpan` | source files |
+| `understand` | `Concept`, `Alias`, `SyllabusNode` | `Block` |
+| `structure` | `prerequisite_of`, `part_of` edges | `Concept` |
+| `gap` | `GapVector`, `RetrievalBudget` (transient) | `Concept`, `SyllabusNode` |
+| `evidence` | `WebEvidence`, `evidenced_by`, `contradicts` | `GapVector` |
+| `compose` | `LessonBlock`, `evidenced_by` | dossiers |
+| `verify` | `Verdict`, `ExecResult` | `LessonBlock` |
+| `assess` | `Item`, `Misconception`, `ItemStats` | `Concept`, `LessonBlock` |
+| `emit` *(D6)* | rendered targets | everything, read-only |
+| `learn` *(D7)* | `Mastery` | `Item`, responses |
+
+## The pipeline, pass by pass
+
+Run end to end by `coursec build chapter.pdf`. Each pass is independently unit-tested with a scripted LLM backend — none of the tests below need a live model or a network connection.
+
+### `ingest` — PDF → typed blocks
+
+PyMuPDF gives raw text/image blocks; a typography-based heuristic classifies each one (font size against the body-text baseline, bullet-prefix detection, a regex for `Figure N.M` / `Table N.M` captions) into `heading | paragraph | figure | caption | table | equation | list`. Figure captions are bound to their figure by sequence order first, geometric proximity second — an unbound figure is never silent, it gets a `caption_missing` diagnostic. Every `Block` gets a `SourceSpan` with a running character offset across the whole document, so later provenance chains are exact byte ranges, not "somewhere in the PDF."
+
+### `understand` — blocks → canonical concepts, anchored to a syllabus
+
+Two sub-passes:
+
+- **Extraction** is one LLM call *per section*, never per paragraph and never per pair — a chapter has dozens of paragraphs but a handful of subsections, and calling a model in a loop over more than that is exactly the anti-pattern the cost rules forbid.
+- **Canonicalization** is LLM-free: candidate concepts are embedded (`name: definition`, local `bge-small`) and agglomeratively clustered. The merge threshold (cosine similarity 0.80) isn't a guess — it's tuned against a committed labelled fixture where the pair that must merge ("Ohm's law" / "V = IR relationship") embeds at 0.855, and the closest false-positive risks ("variance"/"covariance" at 0.764, "hypothesis"/"theory" at 0.773) both sit below 0.78.
+
+Each surviving `Concept` links to **zero or one** `SyllabusNode` via hybrid embedding+lexical retrieval with an abstain threshold — forcing a link when there isn't a good one is worse than reporting a gap.
+
+### `structure` — the prerequisite DAG
+
+An edge only exists when **two independent signals agree**: (a) concept A's definition text actually mentions concept B by name, and (b) an LLM pairwise judgement — run only over the candidate pairs (a) plus same-section co-occurrence produce, never all *O(n²)* pairs — agrees on the same direction. Any cycle that slips through is broken by repeatedly removing its lowest-confidence edge, tie-broken on a deterministic content hash (not a random ID — a random tie-break would make cycle-breaking non-reproducible run to run, defeating the point of a *deterministic* policy).
+
+### `gap` — deciding what's missing, before spending anything on it
+
+A four-field `GapVector` per concept: **coverage** (no syllabus link), **depth** (definition under a word floor), **modality** (no worked example *and* no nearby figure), **prerequisite** (an ancestor is itself uncovered). A `RetrievalBudget` is allocated proportional to that vector under a hard global cap — a fully-covered chapter allocates a *total* budget of zero, because deciding not to search is a valid outcome, not a missing feature. The allocation is provably scale-invariant: doubling the concept count can only shrink any one concept's share, never grow it.
+
+### `evidence` — retrieval that respects the web it's reading
+
+Query synthesis is per gap *dimension* ("Ohm's law worked example", "Ohm's law diagram", "voltage explained" for an uncovered prerequisite), not per concept. `data/sources.yaml` — tier1/tier2/blocklist domains — is data the pass loads, never text baked into a prompt. Fetching is real: `httpx`, `robots.txt` honored via `urllib.robotparser` (not just parsed and ignored), per-domain rate limiting, `BeautifulSoup` strips nav/header/footer and chunks by heading. Admission is a strict policy, not a vibe: present-in-source or corroborated by ≥2 independent tier-1 domains → admitted; a single tier-1 source → `weak`, usable for enrichment but **never as the sole citation for a formula, constant, or definition**; anything else → rejected, with a reason. A numeric mismatch against the source produces a `contradicts` edge — the source is never overwritten.
+
+### `compose` — generation that can't answer from memory
+
+Each of the four generative contract slots (definition, intuition, worked example, visual-or-analogy) is one LLM call constrained to a `Dossier`: the concept's source span, its admitted evidence (best-score-first, truncated by dropping the *worst* first under a token budget), one-line prerequisite summaries. **If the dossier has no grounding material, generation refuses before the backend is ever called** — this is a code-level guard, not a prompt instruction hoping the model behaves, which is what makes "strip the dossier and confirm generation fails" an actual deterministic test rather than a hope about model behavior. Every sentence in the output carries the bracketed ids (`[SPAN:...]`, `[EVID:...]`) it was drawn from. A visual is Mermaid source, never prose describing an image.
+
+### `verify` — a critic that can't see what it's grading, plus real computation
+
+The critic sees one `LessonBlock`'s sentences and, for each, **only that sentence's own cited spans** — looked up fresh by id — never the dossier that produced it. It classifies each sentence `entailed | unsupported | contradicted`; a failing sentence is rewritten against the same citations up to twice, then dropped. Drop every sentence in a slot and the slot is quarantined, the concept marked `partial`. Every judgement — including intermediate repair attempts — is a `Verdict` row, not just the final one.
+
+Separately, `compute.py` takes any worked-example's `formula`/`substitutions`/`claimed_result` and actually executes it — SymPy, in a subprocess, with a timeout — checking the claimed result against what the formula really evaluates to. This is the concrete form invariant I2 takes: a worked example that claims `m·a = 5` when `m=2, a=3` is caught by *running the arithmetic*, not by asking a model to double-check itself.
+
+The origin linter then scans surviving prose for numeric literals and confirms each one traces to a cited span, cited evidence, or an `ExecResult` — anything else is an **error**-severity diagnostic.
+
+### `assess` — items a model can't just answer from the stem
+
+Per concept × Bloom level, one item, typed by the concept's own kind (a `formula` concept gets a `numeric` item; a `definition` gets an `mcq`; etc.). **Every MCQ distractor must link to a real `Misconception` node** — sourced from sentences the critic actually marked `contradicted` upstream (real material, never invented) and an explicit elicitation call; a distractor that can't cite one is dropped, and an item left with none is rejected outright. Four gates, all blocking, run in full even after an early failure so the rejection log shows every reason, not just the first:
+
+1. **Key verification** — solve the item independently 5 times with no access to the key; majority must agree.
+2. **Leakage** — answer with *no course context at all*; correct-and-confident means the item is testing trivia, not the chapter.
+3. **Single-answer** — every distractor must be independently judged defensibly wrong; any ambiguity rejects the item.
+4. **Numeric execution** — a quantitative key must equal the sandboxed computation.
+
+*A gate that never rejects anything is broken, not perfect* — the pipeline asserts the aggregate rejection rate is nonzero.
+
+Surviving items go through a **synthetic pilot**: 12 simulated students on a fixed, known ability grid, each seeded with a misconception profile drawn from real `Misconception` nodes, answer every item; a from-scratch 2PL IRT fit (SciPy `minimize`, ~30 lines — no `py-irt` dependency) recovers `(discrimination, difficulty)` per item and flags degenerate ones for quarantine. This is labelled **screening** everywhere in the code and output — twelve students is nowhere near enough for a calibration claim, and the wording is not allowed to drift.
+
+### `emit` and `learn` — not yet built
+
+D6 (Typst rendering: booklet, cheat sheet, question paper, answer key, certificate) and D7 (adaptive quiz + Bayesian Knowledge Tracing mastery) are the two remaining stages. See [Status](#status).
+
+## Grounding, concretely
+
+The two guarantees above ("empty dossier ⇒ refuses" and "critic never sees the dossier") are each backed by a unit test that doesn't depend on model behavior:
+
+```python
+def test_empty_dossier_refuses_without_calling_the_backend() -> None:
+    dossier = Dossier(concept_id="c1", prefix="CONCEPT: x\nCOHORT: intro")  # no spans, no evidence
+
+    def backend(model, prompt, params):
+        raise AssertionError("backend must never be called for an ungrounded dossier")
+
+    result = compose.generate_slot(dossier, "definition", sink, backend=backend)
+    assert result.refused is True
+```
+
+```python
+def test_critic_never_receives_dossier_content_it_did_not_cite() -> None:
+    # concept has admitted evidence containing "UNCITEDMARKER"; the sentence
+    # under test cites only its SourceSpan, never that evidence chunk.
+    ...
+    verify.verify_lesson_block(graph, block, sink, backend=backend)
+    assert "UNCITEDMARKER" not in captured_prompts[0]
+```
+
+Every pass takes its LLM `backend` as an explicit, required argument — the same shape `llm.call`'s cache wrapper uses. There is no code path where a pass can quietly reach for a live model; tests script deterministic responses, and the one production backend (`anthropic_backend`) fails loudly — never fabricates — when no API key is configured.
+
+## Getting started
+
+```bash
+# Python 3.12, managed by uv
+uv sync
+
+export ANTHROPIC_API_KEY=sk-...   # needed for understand/structure/compose/verify/assess
+
+uv run coursec build path/to/chapter.pdf
+```
+
+`build` runs `ingest → understand → structure → gap → evidence → compose → verify → assess` and prints, per stage: the block-type histogram, concept count and syllabus link/abstain rate, prerequisite edge count, the gap histogram, unsupported/contradicted sentence counts, numeric-origin violations, item generation/rejection counts, and the pilot's discrimination/difficulty spread. It also writes `build/graph.html` — a self-contained, offline-viewable render of the concept graph.
+
+Without a network-connected search provider, retrieval stops at "no search backend configured" rather than fabricating results — the rest of the pipeline (composition, verification, assessment) still runs on whatever the source PDF and any evidence already in the graph provide.
+
+## Testing philosophy
+
+Four kinds of test, and every pass writes whichever apply:
+
+- **Unit** — pure functions and schema validation (e.g. domain-tier classification, gap-vector arithmetic).
+- **Property** — invariants checked with [Hypothesis](https://hypothesis.readthedocs.io/) over generated input, e.g. *the prerequisite graph is acyclic after cycle-breaking, for any graph*.
+- **Golden** — a committed snapshot of `ingest`'s output against a real, openly-licensed fixture chapter (`tests/fixtures/chapter.pdf` — an excerpt of OpenStax *Astronomy 2e*, CC BY 4.0); diffs are reviewed, never blanket-regenerated.
+- **Adversarial** — poisoned input the system must catch on purpose: a low-authority page asserting a wrong constant, an MCQ with two defensible answers, a worked example whose arithmetic doesn't hold up.
+
+```bash
+make check   # ruff check . && pytest -q
+```
+
+150+ tests, 100% branch coverage on `src/coursec/core/` (the coverage target is deliberately scoped there — [see below](#status) for why the rest isn't graded the same way).
+
+## Project layout
+
+```
+src/coursec/
+├── cli.py                  # `coursec build` — wires every pass together
+├── core/
+│   ├── models.py            # the IR: every SQLModel table, IRNode base, EdgeKind
+│   ├── graph.py              # Graph: add/get/neighbors/ancestors/descendants, ownership enforcement
+│   ├── diagnostics.py         # Diagnostic, DiagnosticSink
+│   ├── llm.py                  # content-addressed LLM call cache
+│   ├── embeddings.py            # bge-small wrapper
+│   └── anthropic_backend.py      # the one production llm.call backend
+├── passes/
+│   ├── ingest.py             # PDF → Block/SourceSpan
+│   ├── understand.py          # extraction + canonicalization
+│   ├── syllabus.py             # syllabus anchoring + coverage report
+│   ├── structure.py             # prerequisite DAG
+│   ├── gap.py                    # GapVector, RetrievalBudget
+│   ├── evidence.py                 # fetch, score, admit, contradict
+│   ├── dossier.py                   # grounding assembly for compose
+│   ├── compose.py                    # per-slot generation
+│   ├── verify.py                      # critic, repair, quarantine
+│   ├── compute.py                      # SymPy-in-subprocess execution
+│   ├── origin_linter.py                 # I2 enforcement
+│   ├── items.py                          # item + misconception generation
+│   ├── item_gates.py                      # the 4 blocking gates
+│   └── pilot.py                            # synthetic 2PL screening
+└── viz/graph_html.py        # pyvis concept-graph render
+
+data/
+├── syllabus.yaml            # hand-authored curriculum for the fixture chapter
+└── sources.yaml              # tier1/tier2/blocklist domains (data, not prompt text)
+
+tests/                      # one file per pass, plus fixtures/
+```
+
+## Status
+
+| Stage | What it does | Status |
+|---|---|---|
+| Scaffold | uv project, diagnostics, CLI, CI | ✅ |
+| Ingest | PDF → classified blocks | ✅ |
+| Understand + syllabus | concept extraction, canonicalization, anchoring | ✅ |
+| Structure | prerequisite DAG | ✅ |
+| Gap + evidence | budget allocation, real web retrieval | ✅ |
+| Compose + verify | grounded generation, critique, computation | ✅ |
+| Assess | items, gates, synthetic pilot | ✅ |
+| Emit | Typst rendering — booklet, cheat sheet, question paper, answer key, certificate | 🚧 |
+| Learn | Streamlit quiz, Bayesian Knowledge Tracing mastery, root-cause readout | ⬜ |
+| Demo harness | adversarial fixtures, end-to-end measured results | ⬜ |
+
+The evidence pass has no configured search-API provider in this environment, so a live `coursec build` runs real retrieval mechanics (fetch, robots.txt, scoring, admission) against whatever URLs a `search` callable hands it, but ships no default search backend — wiring one in is the one piece needed to take this from "correct machinery" to "actually crawling the web" end to end.

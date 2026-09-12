@@ -1,4 +1,4 @@
-# CourseC build artifacts and runtime state — never committed (CLAUDE.md §5)
+# Build artifacts and runtime state — never committed
 build/
 .cache/
 .env
@@ -8,9 +8,9 @@ build/
 # contents are ignored by default...
 data/*
 # ...except hand-authored source content that happens to live under data/,
-# e.g. D2's data/syllabus.yaml (curriculum authored by hand, not scraped or
-# generated — see decision log #7). Runtime data (retrieved web evidence,
-# downloaded weights) is unaffected: it never matches *.yaml.
+# e.g. data/syllabus.yaml (curriculum authored by hand, not scraped or
+# generated). Runtime data (retrieved web evidence, downloaded weights) is
+# unaffected: it never matches *.yaml.
 !data/*.yaml
 
 # Python / uv
@@ -18,6 +18,7 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
+.hypothesis/
 .coverage
 .coverage.*
 htmlcov/
