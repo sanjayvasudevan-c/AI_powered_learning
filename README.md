@@ -197,6 +197,20 @@ A wrong answer on concept C doesn't stop at "C is weak" — `diagnose_root_cause
 
 What D7 does *not* build: the `remediates` edge (linking generated remediation content to a `Misconception`) has no remediation-content generator behind it yet, and `Mastery` links to its `Concept` via a plain FK rather than the declared-but-unused `mastery_of` edge kind — see the edge-kind table's notes. The BKT parameters (`p_init`, `p_transit`, `p_slip`, `p_guess`) are illustrative defaults, not fit to any real cohort — the same "screening, not calibration" honesty the pilot insists on for its own numbers applies here too.
 
+### `demo` — the harness: adversarial fixtures, end to end
+
+Every invariant above already has its own per-pass proof — I1 in `tests/test_verify.py`, I2 in `tests/test_compute.py`, I4 in `tests/test_structure.py`, I6 in `tests/test_evidence.py`, the single-answer gate in `tests/test_item_gates.py`. `demo/harness.py` (`coursec demo`) is not a second copy of those tests; it answers a different question — does the *same* planted defect still get caught once the real passes are wired together the way `coursec build` actually wires them, not only inside one pass's own smaller fixture?
+
+Five scenarios, each scored against the specific diagnostic code its invariant promises to raise, never against "the build didn't crash":
+
+- **Real chapter, I1 + I2 together.** Ingests the actual fixture chapter (`tests/fixtures/chapter.pdf`) and hands a real `Block`/`SourceSpan` to a hand-built `Concept`, then runs `compose` → `verify` over it with a scripted backend that plants both an unsupported claim and a wrong worked-example computation. `understand`'s LLM extraction is skipped on purpose here — its canonicalization step always calls the local embedding model, which needs a one-time download this project's own sandboxed CI blocks (the same reason 10 pre-existing tests are environment-gated; see [Status](#status)) — so this scenario stays runnable with no live model and no network.
+- **A 3-cycle of conflicting prerequisite signals is broken** (I4) — a direct `structure.break_cycles` call, the same construction `test_structure.py` uses.
+- **An ungrounded concept refuses generation outright, without ever calling the backend** (I5's grounding guard) — a poison backend that raises `AssertionError` if invoked at all.
+- **An MCQ with a defensible-both-ways distractor is rejected by the single-answer gate** — a full `item_gates.assess_concept` run scored on the resulting `item_rejected` diagnostic actually naming `single_answer`.
+- **A low-authority page asserting a wrong constant is rejected as evidence and flagged as a contradiction, never overwriting the source** (I6) — this one *does* need the embedding model (`evidence.py` always scores admitted chunks against a concept embedding), so it shares the same network caveat as the first scenario's skipped extraction step; it stays in the harness anyway; excluding a real invariant to keep the report all-green would be exactly the "loosen the gate so more pass" move CLAUDE.md forbids elsewhere.
+
+A scenario that raises an unexpected exception is reported as its own `error` status, distinct from `fail` (ran clean, didn't catch its defect — the harness's own bug): one flaky or environment-gated scenario should never look identical to a real regression, and `run_demo()` never lets one scenario's exception end the run for the rest. `coursec demo [pdf]` prints a PASS/FAIL/ERROR line with measured counts per scenario and writes `build/demo_report.html`; it exits non-zero unless every scenario passed.
+
 ## Grounding, concretely
 
 The two guarantees above ("empty dossier ⇒ refuses" and "critic never sees the dossier") are each backed by a unit test that doesn't depend on model behavior:
@@ -239,6 +253,8 @@ uv run coursec build path/to/chapter.pdf
 Without a network-connected search provider, retrieval stops at "no search backend configured" rather than fabricating results — the rest of the pipeline (composition, verification, assessment, rendering) still runs on whatever the source PDF and any evidence already in the graph provide.
 
 Once a build has produced `build/coursec.db`, `uv run coursec quiz build/coursec.db` runs an adaptive quiz from the terminal (BKT-driven item selection, mastery updates, root-cause readout on a miss); `uv run coursec serve build/coursec.db` does the same thing as a Streamlit app.
+
+`uv run coursec demo` runs the adversarial demo harness against the fixture chapter (or any PDF you pass it) and reports, per scenario, whether every invariant above is actually caught in a real pipeline run — see [`demo`](#demo--the-harness-adversarial-fixtures-end-to-end) above.
 
 ## Testing philosophy
 
@@ -285,6 +301,7 @@ src/coursec/
 │   └── learn.py                             # BKT mastery, root-cause propagation
 ├── viz/graph_html.py        # pyvis concept-graph render
 ├── ui/quiz_app.py            # Streamlit adaptive-quiz UI, over passes/learn.py
+├── demo/harness.py           # D8: adversarial fixtures through the real pipeline
 └── emit/
     ├── contract.py            # the 5 MVP slots, per-concept status
     ├── mermaid.py               # Mermaid -> SVG (mermaid.ink, pluggable)
@@ -315,6 +332,6 @@ tests/                      # one file per pass, plus fixtures/
 | Assess | items, gates, synthetic pilot | ✅ |
 | Emit | Typst rendering — booklet, cheat sheet, question paper, answer key, certificate | ✅ |
 | Learn | terminal + Streamlit adaptive quiz, Bayesian Knowledge Tracing mastery, root-cause readout | ✅ |
-| Demo harness | adversarial fixtures, end-to-end measured results | ⬜ |
+| Demo harness | adversarial fixtures, end-to-end measured results | ✅ |
 
 The evidence pass has no configured search-API provider in this environment, so a live `coursec build` runs real retrieval mechanics (fetch, robots.txt, scoring, admission) against whatever URLs a `search` callable hands it, but ships no default search backend — wiring one in is the one piece needed to take this from "correct machinery" to "actually crawling the web" end to end.
