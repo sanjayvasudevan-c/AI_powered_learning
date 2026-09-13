@@ -1,0 +1,386 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,200..700;1,6..72,200..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <style>
+    body { margin: 0; background: #FAF8F4; }
+    a { color: #7A2E2E; text-decoration: none; }
+    a:hover { color: #5E2222; }
+
+    /* ---- ink settles: the house reveal ---------------------------- */
+    @keyframes inkRise {
+      from { opacity: 0; transform: translateY(14px); filter: blur(6px); }
+      to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+    }
+    @keyframes inkWipe {
+      from { clip-path: inset(0 100% 0 0); }
+      to   { clip-path: inset(0 0 0 0); }
+    }
+    @keyframes marginSlide {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes drawLine { to { stroke-dashoffset: 0; } }
+    @keyframes travel {
+      /* The whole translate, not just X: a CSS transform REPLACES an SVG
+         transform attribute rather than composing with it, so animating X
+         alone drops the token's y and parks it off the line. 90 -> 990 is
+         where the line actually runs. */
+      0%   { transform: translate(90px, 110px); opacity: 0; }
+      4%   { opacity: 1; }
+      96%  { opacity: 1; }
+      100% { transform: translate(990px, 110px); opacity: 0; }
+    }
+    @keyframes stageInk {
+      0%, 100% { opacity: .32; }
+      8%, 22%  { opacity: 1; }
+    }
+
+    .wipe  { animation: inkWipe .9s cubic-bezier(.2,.7,.3,1) both; }
+    .rise  { animation: inkRise .8s cubic-bezier(.2,.7,.3,1) both; }
+    .mnote { animation: marginSlide .7s cubic-bezier(.2,.7,.3,1) both; }
+
+    /* ---- link + claim underline that grows from the left ---------- */
+    .grow {
+      background-image: linear-gradient(#7A2E2E, #7A2E2E);
+      background-repeat: no-repeat;
+      background-position: 0 100%;
+      background-size: 0% 1px;
+      transition: background-size .42s cubic-bezier(.2,.7,.3,1);
+    }
+    .grow:hover { background-size: 100% 1px; }
+
+    /* ---- the grounding demo: hover a claim, its margin note inks -- */
+    .note { opacity: .55; transition: opacity .35s ease, transform .35s ease; transform: translateX(-4px); }
+    .claim { box-shadow: inset 0 -0.55em 0 rgba(122,46,46,0); transition: box-shadow .4s cubic-bezier(.2,.7,.3,1); }
+    .claimrow:hover .claim { box-shadow: inset 0 -0.55em 0 rgba(122,46,46,.10); }
+    .claimrow:hover .sup { color: #7A2E2E; }
+    /* The notes sit in a sibling grid column, so no descendant selector from
+       the claim can reach them — :has() on the shared grid can. */
+    .ground:has(.c1:hover) #n1,
+    .ground:has(.c2:hover) #n2,
+    .ground:has(.c3:hover) #n3 { opacity: 1; transform: translateX(0); }
+
+    /* ---- pipeline ------------------------------------------------- */
+    .pline { stroke-dasharray: 900; stroke-dashoffset: 900; animation: drawLine 1.8s .3s cubic-bezier(.3,.8,.3,1) forwards; }
+    .token { animation: travel 11s 1.4s linear infinite; }
+    .stage { animation: stageInk 11s 1.4s linear infinite; }
+
+    /* ---- paper grain ---------------------------------------------- */
+    .grain {
+      position: absolute; inset: 0; pointer-events: none; opacity: .55;
+      background-image: radial-gradient(#12110F 0.5px, transparent 0.6px);
+      background-size: 4px 4px;
+      mix-blend-mode: multiply;
+      -webkit-mask-image: radial-gradient(120% 80% at 50% 0%, #000 0%, transparent 70%);
+              mask-image: radial-gradient(120% 80% at 50% 0%, #000 0%, transparent 70%);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .wipe, .rise, .mnote, .pline, .token, .stage { animation: none !important; opacity: 1 !important; transform: none !important; clip-path: none !important; stroke-dashoffset: 0 !important; }
+    }
+  </style>
+</helmet>
+
+<div style="position: relative; background: #FAF8F4; color: #12110F; font-family: Newsreader, Georgia, serif; width: 1440px; overflow: hidden;">
+  <div class="grain"></div>
+
+  <!-- ══ masthead ══════════════════════════════════════════════════ -->
+  <header style="display: flex; align-items: center; justify-content: space-between; gap: 40px; padding: 26px 100px 22px; border-bottom: 1px solid #E0D9CB; position: relative;">
+    <div style="display: flex; align-items: center; gap: 13px;">
+      <svg width="30" height="27" viewBox="0 0 112 100" aria-label="CourseC">
+        <path d="M 84.7 24.9 A 44 44 0 1 0 84.7 79.1 L 73 73.9 A 30 34 0 1 1 73 30.1 Z" fill="#12110F"></path>
+        <path d="M 88 18 L 96 8 L 101 8 L 101 32 L 108 32 L 108 37 L 88 37 L 88 32 L 96 32 L 96 15 Z" fill="#7A2E2E"></path>
+      </svg>
+      <span style="font-family: 'Instrument Serif', Georgia, serif; font-size: 25px; letter-spacing: .2px;">CourseC</span>
+    </div>
+    <nav style="display: flex; align-items: center; gap: 34px; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: #6B655C;">
+      <a href="#" class="grow" style="color: #6B655C;">Pipeline</a>
+      <a href="#" class="grow" style="color: #6B655C;">Invariants</a>
+      <a href="#" class="grow" style="color: #6B655C;">Graph</a>
+      <a href="#" class="grow" style="color: #6B655C;">Certificate</a>
+      <a href="#" style="color: #FAF8F4; background: #12110F; padding: 11px 18px; letter-spacing: .12em;">Compile a chapter</a>
+    </nav>
+  </header>
+
+  <!-- ══ hero ══════════════════════════════════════════════════════ -->
+  <section style="display: grid; grid-template-columns: 168px 772px 1fr; gap: 0; padding: 96px 100px 0; position: relative;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .16em; color: #9A9287; padding-top: 16px;">
+      <div>§&nbsp;01</div>
+      <div style="margin-top: 6px; color: #C9C0B2;">SOURCE&nbsp;IN.</div>
+      <div style="color: #C9C0B2;">PROOF&nbsp;OUT.</div>
+    </div>
+
+    <div>
+      <h1 class="wipe" style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 108px; line-height: .92; letter-spacing: -1.6px; margin: 0 0 6px;">A course</h1>
+      <h1 class="wipe" style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 108px; line-height: .92; letter-spacing: -1.6px; margin: 0; animation-delay: .16s;">
+        compiler<span style="color: #7A2E2E;">.</span>
+      </h1>
+
+      <p class="rise" style="animation-delay: .42s; font-size: 23px; line-height: 1.52; color: #2A2722; margin: 38px 0 0; max-width: 640px; text-wrap: pretty;">
+        One chapter PDF in. A cited concept graph, a lesson, an assessment and four
+        typeset documents out — with every factual sentence traceable to the exact
+        span of the page it came from.
+      </p>
+
+      <div class="rise" style="animation-delay: .56s; display: flex; align-items: center; gap: 22px; margin-top: 42px;">
+        <a href="#" style="display: inline-flex; align-items: center; gap: 12px; background: #12110F; color: #FAF8F4; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; padding: 17px 26px;">
+          Compile a chapter
+          <svg width="15" height="10" viewBox="0 0 15 10" fill="none"><path d="M0 5h13M9 1l4 4-4 4" stroke="#FAF8F4" stroke-width="1.3"></path></svg>
+        </a>
+        <a href="#" class="grow" style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: #6B655C;">Read the invariants</a>
+      </div>
+    </div>
+
+    <!-- margin apparatus -->
+    <div style="display: flex; flex-direction: column; gap: 26px; padding-left: 56px; padding-top: 20px; border-left: 1px solid #E0D9CB; font-size: 15px; line-height: 1.45; color: #6B655C;">
+      <div class="mnote" style="animation-delay: .8s;">
+        <sup style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #7A2E2E;">1</sup>
+        Not a prompt chain. Ten typed passes over one SQLite IR, each owning its own columns.
+      </div>
+      <div class="mnote" style="animation-delay: .95s;">
+        <sup style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #7A2E2E;">2</sup>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #12110F;">209</span> tests,
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #12110F;">100%</span> branch coverage on the core IR.
+      </div>
+      <div class="mnote" style="animation-delay: 1.1s;">
+        <sup style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #7A2E2E;">3</sup>
+        Identical IR, fixed timestamp — byte-identical PDF. Checked, not hoped for.
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ the press line: animated pipeline ═════════════════════════ -->
+  <section style="padding: 84px 100px 0;">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid #E0D9CB; padding-top: 18px;">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .16em; color: #9A9287;">§&nbsp;02&nbsp;&nbsp;THE&nbsp;PRESS&nbsp;LINE</span>
+      <span style="font-family: Newsreader, serif; font-style: italic; font-size: 17px; color: #6B655C;">ten passes, each writing only its own column</span>
+    </div>
+
+    <svg width="1240" height="238" viewBox="0 0 1240 238" style="margin-top: 10px;">
+      <!-- source page glyph -->
+      <g transform="translate(18,84)">
+        <rect x="0" y="0" width="40" height="52" fill="#FAF8F4" stroke="#12110F" stroke-width="1.2"></rect>
+        <path d="M28 0 L40 12 L28 12 Z" fill="#12110F"></path>
+        <path d="M8 22h24M8 30h24M8 38h16" stroke="#C9C0B2" stroke-width="1.2"></path>
+        <text x="20" y="70" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" letter-spacing="1.4" fill="#9A9287">PDF</text>
+      </g>
+
+      <!-- the line -->
+      <line class="pline" x1="90" y1="110" x2="990" y2="110" stroke="#12110F" stroke-width="1.2"></line>
+
+      <!-- stages -->
+      <g font-family="IBM Plex Mono, monospace" font-size="10.5" letter-spacing="1.3" fill="#12110F">
+        <g class="stage" style="animation-delay: 1.4s;">
+          <line x1="90" y1="101" x2="90" y2="119" stroke="#12110F" stroke-width="1.2"></line>
+          <text x="90" y="86" text-anchor="middle">INGEST</text>
+          <text x="90" y="72" text-anchor="middle" font-family="Instrument Serif, serif" font-size="11" fill="#9A9287" letter-spacing="0">01</text>
+        </g>
+        <g class="stage" style="animation-delay: 2.5s;">
+          <line x1="190" y1="101" x2="190" y2="119" stroke="#12110F" stroke-width="1.2"></line>
+          <text x="190" y="140" text-anchor="middle">UNDERSTAND</text>
+          <text x="190" y="155" text-anchor="middle" font-family="Instrument Serif, serif" font-size="11" fill="#9A9287" letter-spacing="0">02</text>
+        </g>
+        <g class="stage" style="animation-delay: 3.6s;">
+          <line x1="290" y1="101" x2="290" y2="119" stroke="#12110F" stroke-width="1.2"></line>
+          <text x="290" y="86" text-anchor="middle">STRUCTURE</text>
+          <text x="290" y="72" text-anchor="middle" font-family="Instrument Serif, serif" font-size="11" fill="#9A9287" letter-spacing="0">03</text>
+        </g>
+        <g class="stage" style="animation-delay: 4.7s;">
+          <line x1="390" y1="101" x2="390" y2="119" stroke="#12110F" stroke-width="1.2"></line>
+          <text x="390" y="140" text-anchor="middle">GAP</text>
+          <text x="390" y="155" text-anchor="middle" font-family="Instrument Serif, serif" font-size="11" fill="#9A9287" letter-spacing="0">04</text>
+        </g>
+        <g class="stage" style="animation-delay: 5.8s;">
+          <line x1="490" y1="101" x2="490" y2="119" stroke="#12110F" stroke-width="1.2"></line>
+          <text x="490" y="86" text-anchor="middle">EVIDENCE</text>
+          <text x="490" y="72" text-anchor="middle" font-family="Instrument Serif, serif" font-size="11" fill="#9A9287" letter-spacing="0">05</text>
+        </g>
+        <g class="stage" style="animation-delay: 6.9s;">
+          <line x1="590" y1="101" x2="590" y2="119" stroke="#12110F" stroke-width="1.2"></line>
+          <text x="590" y="140" text-anchor="middle">COMPOSE</text>
+          <text x="590" y="155" text-anchor="middle" font-family="Instrument Serif, serif" font-size="11" fill="#9A9287" letter-spacing="0">06</text>
+        </g>
+        <g class="stage" style="animation-delay: 8s;">
+          <line x1="690" y1="101" x2="690" y2="119" stroke="#12110F" stroke-width="1.2"></line>
+          <text x="690" y="86" text-anchor="middle">VERIFY</text>
+          <text x="690" y="72" text-anchor="middle" font-family="Instrument Serif, serif" font-size="11" fill="#9A9287" letter-spacing="0">07</text>
+        </g>
+        <g class="stage" style="animation-delay: 9.1s;">
+          <line x1="790" y1="101" x2="790" y2="119" stroke="#12110F" stroke-width="1.2"></line>
+          <text x="790" y="140" text-anchor="middle">ASSESS</text>
+          <text x="790" y="155" text-anchor="middle" font-family="Instrument Serif, serif" font-size="11" fill="#9A9287" letter-spacing="0">08</text>
+        </g>
+        <g class="stage" style="animation-delay: 10.2s;">
+          <line x1="890" y1="101" x2="890" y2="119" stroke="#12110F" stroke-width="1.2"></line>
+          <text x="890" y="86" text-anchor="middle">EMIT</text>
+          <text x="890" y="72" text-anchor="middle" font-family="Instrument Serif, serif" font-size="11" fill="#9A9287" letter-spacing="0">09</text>
+        </g>
+        <g class="stage" style="animation-delay: 11.3s;">
+          <line x1="990" y1="101" x2="990" y2="119" stroke="#12110F" stroke-width="1.2"></line>
+          <text x="990" y="140" text-anchor="middle">LEARN</text>
+          <text x="990" y="155" text-anchor="middle" font-family="Instrument Serif, serif" font-size="11" fill="#9A9287" letter-spacing="0">10</text>
+        </g>
+      </g>
+
+      <!-- the travelling token -->
+      <g class="token" transform="translate(90,110)">
+        <circle r="17" fill="#7A2E2E" opacity=".07"></circle>
+        <circle r="4.5" fill="#7A2E2E"></circle>
+      </g>
+
+      <!-- four targets -->
+      <g transform="translate(1030,70)">
+        <rect x="0"  y="0" width="34" height="44" fill="#FAF8F4" stroke="#12110F" stroke-width="1.2"></rect>
+        <rect x="42" y="0" width="34" height="44" fill="#FAF8F4" stroke="#12110F" stroke-width="1.2"></rect>
+        <rect x="0"  y="52" width="34" height="44" fill="#FAF8F4" stroke="#12110F" stroke-width="1.2"></rect>
+        <rect x="42" y="52" width="34" height="44" fill="#7A2E2E" stroke="#7A2E2E" stroke-width="1.2"></rect>
+        <text x="38" y="118" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" letter-spacing="1.4" fill="#9A9287">4 TARGETS</text>
+      </g>
+    </svg>
+  </section>
+
+  <!-- ══ invariants ════════════════════════════════════════════════ -->
+  <section style="padding: 74px 100px 0;">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid #E0D9CB; padding-top: 18px; margin-bottom: 46px;">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .16em; color: #9A9287;">§&nbsp;03&nbsp;&nbsp;THE&nbsp;INVARIANTS</span>
+      <span style="font-family: Newsreader, serif; font-style: italic; font-size: 17px; color: #6B655C;">a violation is a build failure — never a warning, never a TODO</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 76px;">
+      <div style="display: flex; gap: 24px; padding: 24px 0; border-top: 1px solid #E0D9CB;">
+        <span style="font-family: 'Instrument Serif', serif; font-size: 30px; color: #7A2E2E; line-height: 1; min-width: 40px;">I1</span>
+        <div><div style="font-size: 19px; margin-bottom: 5px;">No unsupported sentence.</div><div style="font-size: 16px; line-height: 1.5; color: #6B655C;">Every emitted sentence carries a citation and passes entailment against the spans it cites. Unentailed → repair twice → drop → quarantine.</div></div>
+      </div>
+      <div style="display: flex; gap: 24px; padding: 24px 0; border-top: 1px solid #E0D9CB;">
+        <span style="font-family: 'Instrument Serif', serif; font-size: 30px; color: #7A2E2E; line-height: 1; min-width: 40px;">I2</span>
+        <div><div style="font-size: 19px; margin-bottom: 5px;">Numbers are computed, never generated.</div><div style="font-size: 16px; line-height: 1.5; color: #6B655C;">Every numeric literal traces to a span, a cited source, or a sandboxed SymPy result. The model phrases; it never originates a value.</div></div>
+      </div>
+      <div style="display: flex; gap: 24px; padding: 24px 0; border-top: 1px solid #E0D9CB;">
+        <span style="font-family: 'Instrument Serif', serif; font-size: 30px; color: #7A2E2E; line-height: 1; min-width: 40px;">I3</span>
+        <div><div style="font-size: 19px; margin-bottom: 5px;">Provenance is total.</div><div style="font-size: 16px; line-height: 1.5; color: #6B655C;">Every node reachable from a document traces to file or url, locator, retrieval time and content hash.</div></div>
+      </div>
+      <div style="display: flex; gap: 24px; padding: 24px 0; border-top: 1px solid #E0D9CB;">
+        <span style="font-family: 'Instrument Serif', serif; font-size: 30px; color: #7A2E2E; line-height: 1; min-width: 40px;">I4</span>
+        <div><div style="font-size: 19px; margin-bottom: 5px;">The prerequisite graph is acyclic.</div><div style="font-size: 16px; line-height: 1.5; color: #6B655C;">Cycles break by a deterministic, logged policy — lowest confidence first, tie-broken on content hash. Never silently.</div></div>
+      </div>
+      <div style="display: flex; gap: 24px; padding: 24px 0; border-top: 1px solid #E0D9CB;">
+        <span style="font-family: 'Instrument Serif', serif; font-size: 30px; color: #7A2E2E; line-height: 1; min-width: 40px;">I5</span>
+        <div><div style="font-size: 19px; margin-bottom: 5px;">Contract before emission.</div><div style="font-size: 16px; line-height: 1.5; color: #6B655C;">Five slots: definition, intuition, worked example, visual-or-analogy, and two assessment items. A concept enters a document only with its status attached.</div></div>
+      </div>
+      <div style="display: flex; gap: 24px; padding: 24px 0; border-top: 1px solid #E0D9CB;">
+        <span style="font-family: 'Instrument Serif', serif; font-size: 30px; color: #7A2E2E; line-height: 1; min-width: 40px;">I6</span>
+        <div><div style="font-size: 19px; margin-bottom: 5px;">Contradiction is surfaced, never resolved.</div><div style="font-size: 16px; line-height: 1.5; color: #6B655C;">When retrieved evidence disagrees with the source, the source stays primary and the divergence becomes a marked note carrying both citations.</div></div>
+      </div>
+      <div style="display: flex; gap: 24px; padding: 24px 0; border-top: 1px solid #E0D9CB; border-bottom: 1px solid #E0D9CB;">
+        <span style="font-family: 'Instrument Serif', serif; font-size: 30px; color: #7A2E2E; line-height: 1; min-width: 40px;">I7</span>
+        <div><div style="font-size: 19px; margin-bottom: 5px;">Licence-clean media only.</div><div style="font-size: 16px; line-height: 1.5; color: #6B655C;">An image is a bbox crop of the source, generated diagram code, or nothing at all.</div></div>
+      </div>
+      <div style="display: flex; align-items: flex-end; padding: 24px 0; border-top: 1px solid #E0D9CB; border-bottom: 1px solid #E0D9CB;">
+        <div style="font-family: Newsreader, serif; font-style: italic; font-size: 17px; line-height: 1.5; color: #9A9287;">These are not aspirations in a design doc. They are the thing the adversarial suite exists to break — and a gate that never rejects anything is broken, not perfect.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ grounding, in the margin ══════════════════════════════════ -->
+  <section style="padding: 74px 100px 0;">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid #E0D9CB; padding-top: 18px; margin-bottom: 40px;">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .16em; color: #9A9287;">§&nbsp;04&nbsp;&nbsp;GROUNDING</span>
+      <span style="font-family: Newsreader, serif; font-style: italic; font-size: 17px; color: #6B655C;">hover a claim — its source lights in the margin</span>
+    </div>
+
+    <div class="ground" style="display: grid; grid-template-columns: 700px 1fr; gap: 0 72px;">
+      <div style="font-size: 20px; line-height: 1.72; color: #12110F;">
+        <span style="float: left; font-family: 'Instrument Serif', serif; font-size: 78px; line-height: .78; padding: 6px 14px 0 0; color: #7A2E2E;">T</span>
+        he critic never sees the dossier that produced the sentence it is grading.
+        It sees one sentence and, for each, only that sentence's own cited spans —
+        looked up fresh by id.
+        <span class="claimrow c1" style="display: inline;">
+          <span class="claim">A chapter's concepts merge at cosine 0.80<sup class="sup" style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #9A9287;">1</sup></span>
+        </span>,
+        <span class="claimrow c2" style="display: inline;">
+          <span class="claim">every MCQ distractor cites a real misconception node<sup class="sup" style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #9A9287;">2</sup></span>
+        </span>, and
+        <span class="claimrow c3" style="display: inline;">
+          <span class="claim">twelve simulated students screen each item<sup class="sup" style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #9A9287;">3</sup></span>
+        </span>
+        before it is allowed near a question paper.
+      </div>
+
+      <div style="border-left: 1px solid #E0D9CB; padding-left: 44px; display: flex; flex-direction: column; gap: 22px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .16em; color: #C9C0B2;">MARGINALIA</div>
+        <div class="note" id="n1" style="display: flex; gap: 12px; font-size: 15px; line-height: 1.45; color: #6B655C;">
+          <sup style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #7A2E2E;">1</sup>
+          <div>Tuned against a committed labelled fixture: “Ohm's law”/“V = IR” embed at <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #12110F;">0.855</span>; the closest false positives, “variance”/“covariance” at <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #12110F;">0.764</span>, sit below the line.</div>
+        </div>
+        <div class="note" id="n2" style="display: flex; gap: 12px; font-size: 15px; line-height: 1.45; color: #6B655C;">
+          <sup style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #7A2E2E;">2</sup>
+          <div>Sourced from sentences the critic actually marked <span style="font-style: italic;">contradicted</span> — real material, never invented. A distractor that can't cite one is dropped.</div>
+        </div>
+        <div class="note" id="n3" style="display: flex; gap: 12px; font-size: 15px; line-height: 1.45; color: #6B655C;">
+          <sup style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #7A2E2E;">3</sup>
+          <div>Labelled <span style="font-style: italic;">screening</span>, never calibration — twelve students is nowhere near enough for a calibration claim, and the wording is not allowed to drift.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ targets ═══════════════════════════════════════════════════ -->
+  <section style="padding: 76px 100px 0;">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid #E0D9CB; padding-top: 18px; margin-bottom: 40px;">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .16em; color: #9A9287;">§&nbsp;05&nbsp;&nbsp;WHAT&nbsp;COMES&nbsp;OFF&nbsp;THE&nbsp;PRESS</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px;">
+      <div style="background: #F2EEE6; padding: 30px 28px 34px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-family: 'Instrument Serif', serif; font-size: 27px;">Booklet</div>
+        <div style="font-size: 15.5px; line-height: 1.5; color: #6B655C;">Every contract slot, Mermaid visuals rendered at build time, source figures cropped by stored bbox, and a bibliography walked from the citation edges.</div>
+      </div>
+      <div style="background: #F2EEE6; padding: 30px 28px 34px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-family: 'Instrument Serif', serif; font-size: 27px;">Cheat sheet</div>
+        <div style="font-size: 15.5px; line-height: 1.5; color: #6B655C;">A pure template over each concept's own source span — so it makes zero model calls, asserted on the cache-miss counter.</div>
+      </div>
+      <div style="background: #F2EEE6; padding: 30px 28px 34px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-family: 'Instrument Serif', serif; font-size: 27px;">Question paper</div>
+        <div style="font-size: 15.5px; line-height: 1.5; color: #6B655C;">Greedy selection against a blueprint of marks, Bloom mix and unit weightage. An infeasible blueprint names its binding constraint.</div>
+      </div>
+      <div style="background: #12110F; color: #FAF8F4; padding: 30px 28px 34px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-family: 'Instrument Serif', serif; font-size: 27px;">Answer key</div>
+        <div style="font-size: 15.5px; line-height: 1.5; color: #B8B0A4;">Mirrors the paper's selection and reads each numeric item's stored execution result rather than recomputing anything.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ closing ═══════════════════════════════════════════════════ -->
+  <section style="padding: 86px 100px 0;">
+    <div style="background: #F2EEE6; padding: 62px 72px; display: flex; align-items: center; justify-content: space-between; gap: 60px;">
+      <div>
+        <div style="font-family: 'Instrument Serif', serif; font-size: 46px; line-height: 1.08; letter-spacing: -.4px; max-width: 620px;">A build with any error-severity diagnostic produces no PDF at all.</div>
+        <div style="font-size: 17px; line-height: 1.5; color: #6B655C; margin-top: 16px; max-width: 560px;">The certificate still gets written either way — it is the artifact that explains why.</div>
+      </div>
+      <a href="#" style="display: inline-flex; align-items: center; gap: 12px; background: #12110F; color: #FAF8F4; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; padding: 17px 26px; white-space: nowrap;">
+        Compile a chapter
+        <svg width="15" height="10" viewBox="0 0 15 10" fill="none"><path d="M0 5h13M9 1l4 4-4 4" stroke="#FAF8F4" stroke-width="1.3"></path></svg>
+      </a>
+    </div>
+  </section>
+
+  <footer style="display: flex; align-items: center; justify-content: space-between; padding: 40px 100px 56px; margin-top: 56px; border-top: 1px solid #E0D9CB; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .13em; color: #9A9287; text-transform: uppercase;">
+    <span>CourseC — a course compiler</span>
+    <span>Fixture chapter: OpenStax Astronomy 2e, CC BY 4.0</span>
+    <span>§ 001</span>
+  </footer>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":3160}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>

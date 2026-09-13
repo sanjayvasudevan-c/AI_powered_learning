@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,200..700;1,6..72,200..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <style>
+    body { margin: 0; background: #FAF8F4; }
+    a { color: #7A2E2E; } a:hover { color: #5E2222; }
+    @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @keyframes trace { to { stroke-dashoffset: 0; } }
+    .rise { animation: rise .6s cubic-bezier(.2,.7,.3,1) both; }
+    .bar  { transform-origin: left center; animation: fill .9s cubic-bezier(.3,.8,.3,1) both; }
+    .trace { stroke-dasharray: 340; stroke-dashoffset: 340; animation: trace 1.2s .5s cubic-bezier(.3,.8,.3,1) forwards; }
+    .opt { transition: border-color .3s ease, background .3s ease, transform .3s cubic-bezier(.2,.7,.3,1); }
+    .opt:hover { border-color: #12110F; transform: translateX(3px); }
+    @media (prefers-reduced-motion: reduce) { .rise,.bar,.trace { animation: none !important; opacity:1 !important; transform:none !important; stroke-dashoffset:0 !important; } }
+  </style>
+</helmet>
+
+<div style="background: #FAF8F4; color: #12110F; font-family: Newsreader, Georgia, serif; width: 1440px; height: 900px; display: flex; flex-direction: column; overflow: hidden;">
+
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 20px 36px; border-bottom: 1px solid #E0D9CB;">
+    <div style="display: flex; align-items: center; gap: 26px;">
+      <div style="display: flex; align-items: center; gap: 11px;">
+        <svg width="24" height="21" viewBox="0 0 112 100">
+          <path d="M 84.7 24.9 A 44 44 0 1 0 84.7 79.1 L 73 73.9 A 30 34 0 1 1 73 30.1 Z" fill="#12110F"></path>
+          <path d="M 88 18 L 96 8 L 101 8 L 101 32 L 108 32 L 108 37 L 88 37 L 88 32 L 96 32 L 96 15 Z" fill="#7A2E2E"></path>
+        </svg>
+        <span style="font-family: 'Instrument Serif', serif; font-size: 20px;">CourseC</span>
+      </div>
+      <span style="width: 1px; height: 20px; background: #E0D9CB;"></span>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .15em; color: #6B655C;">ADAPTIVE&nbsp;QUIZ</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 22px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .13em; color: #9A9287;">
+      <span>QUESTION&nbsp;<span style="color: #12110F;">04</span>&nbsp;/&nbsp;10</span>
+      <span style="display: flex; gap: 4px; align-items: center;">
+        <span style="width: 18px; height: 3px; background: #2F5A38;"></span>
+        <span style="width: 18px; height: 3px; background: #7A2E2E;"></span>
+        <span style="width: 18px; height: 3px; background: #2F5A38;"></span>
+        <span style="width: 18px; height: 3px; background: #12110F;"></span>
+        <span style="width: 18px; height: 3px; background: #E0D9CB;"></span>
+        <span style="width: 18px; height: 3px; background: #E0D9CB;"></span>
+        <span style="width: 18px; height: 3px; background: #E0D9CB;"></span>
+        <span style="width: 18px; height: 3px; background: #E0D9CB;"></span>
+        <span style="width: 18px; height: 3px; background: #E0D9CB;"></span>
+        <span style="width: 18px; height: 3px; background: #E0D9CB;"></span>
+      </span>
+    </div>
+  </header>
+
+  <div style="display: grid; grid-template-columns: 1fr 400px; flex-grow: 1; min-height: 0;">
+
+    <!-- the item -->
+    <main style="padding: 52px 72px 0 96px; display: flex; flex-direction: column; overflow: hidden;">
+      <div class="rise" style="display: flex; align-items: baseline; gap: 16px;">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: .16em; color: #9A9287;">ASSESSES</span>
+        <span style="font-family: 'Instrument Serif', serif; font-size: 24px; color: #7A2E2E;">Apparent magnitude</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .12em; color: #C9C0B2;">BLOOM&nbsp;·&nbsp;APPLY</span>
+      </div>
+
+      <h2 class="rise" style="animation-delay:.08s; font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.34; letter-spacing: -.2px; margin: 26px 0 0; max-width: 760px; text-wrap: pretty;">
+        Two stars have the same luminosity, but star&nbsp;B is four times farther away
+        than star&nbsp;A. How do their apparent brightnesses compare?
+      </h2>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 38px; max-width: 760px;">
+        <div class="opt rise" style="animation-delay:.16s; display: flex; align-items: center; gap: 18px; border: 1px solid #E0D9CB; padding: 19px 24px; background: #FAF8F4;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #9A9287;">A</span>
+          <span style="font-size: 19px;">Star B appears four times fainter.</span>
+        </div>
+        <div class="opt rise" style="animation-delay:.22s; display: flex; align-items: center; gap: 18px; border: 1.5px solid #7A2E2E; padding: 19px 24px; background: rgba(122,46,46,.045);">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7A2E2E;">B</span>
+          <span style="font-size: 19px;">Star B appears sixteen times fainter.</span>
+          <span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .13em; color: #7A2E2E;">YOUR&nbsp;ANSWER</span>
+        </div>
+        <div class="opt rise" style="animation-delay:.28s; display: flex; align-items: center; gap: 18px; border: 1.5px solid #2F5A38; padding: 19px 24px; background: rgba(47,90,56,.05);">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #2F5A38;">C</span>
+          <span style="font-size: 19px;">Star B appears sixteen times fainter, and its magnitude rises by 3.0.</span>
+          <span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .13em; color: #2F5A38;">KEY</span>
+        </div>
+        <div class="opt rise" style="animation-delay:.34s; display: flex; align-items: center; gap: 18px; border: 1px solid #E0D9CB; padding: 19px 24px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #9A9287;">D</span>
+          <span style="font-size: 19px;">Their apparent brightnesses are identical.</span>
+        </div>
+      </div>
+
+      <!-- the misconception this distractor encodes -->
+      <div class="rise" style="animation-delay:.44s; display: flex; gap: 18px; margin-top: 34px; padding-top: 22px; border-top: 1px solid #E0D9CB; max-width: 760px;">
+        <span style="font-family: 'Instrument Serif', serif; font-size: 30px; color: #7A2E2E; line-height: 1;">✻</span>
+        <div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .16em; color: #9A9287; margin-bottom: 7px;">THE&nbsp;MISCONCEPTION&nbsp;THIS&nbsp;DISTRACTOR&nbsp;ENCODES</div>
+          <div style="font-size: 17px; line-height: 1.5; color: #2A2722;">Applies the inverse-square fall-off correctly but stops at brightness — treating magnitude as if it were linear in brightness rather than logarithmic.</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- the ledger -->
+    <aside style="border-left: 1px solid #E0D9CB; padding: 30px 34px; display: flex; flex-direction: column; overflow: hidden; background: #FAF8F4;">
+
+      <!-- root cause -->
+      <div class="rise" style="animation-delay:.5s;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .16em; color: #C9C0B2;">ROOT&nbsp;CAUSE</div>
+        <div style="font-family: 'Instrument Serif', serif; font-size: 27px; line-height: 1.2; margin-top: 10px;">
+          This traces back to<br><span style="color: #7A2E2E;">Luminosity</span>
+        </div>
+        <div style="font-size: 15.5px; line-height: 1.5; color: #6B655C; margin-top: 12px;">
+          Two prerequisite levels back, still at 0.19. Its own prerequisites are solid, so the gap is there — not further upstream.
+        </div>
+
+        <svg width="332" height="132" viewBox="0 0 332 132" style="margin-top: 18px;">
+          <path class="trace" d="M56 104 C 116 104, 122 68, 176 68 C 230 68, 236 34, 282 34" fill="none" stroke="#7A2E2E" stroke-width="1.2"></path>
+          <circle cx="56" cy="104" r="6" fill="#7A2E2E"></circle>
+          <circle cx="176" cy="68" r="5" fill="#FAF8F4" stroke="#C9C0B2" stroke-width="1.5"></circle>
+          <circle cx="282" cy="34" r="5" fill="#FAF8F4" stroke="#C9C0B2" stroke-width="1.5"></circle>
+          <g font-family="IBM Plex Mono, monospace" font-size="9.5" letter-spacing="1.1" fill="#9A9287">
+            <text x="56" y="126" text-anchor="middle" fill="#7A2E2E">ROOT</text>
+            <text x="282" y="58" text-anchor="middle">ASKED</text>
+          </g>
+          <g font-family="Newsreader, serif" font-size="12.5" fill="#12110F">
+            <text x="56" y="90" text-anchor="middle">Luminosity</text>
+            <text x="176" y="56" text-anchor="start" fill="#6B655C">Stellar parallax</text>
+            <text x="282" y="20" text-anchor="end" fill="#6B655C">App. magnitude</text>
+          </g>
+        </svg>
+      </div>
+
+      <div style="height: 1px; background: #E0D9CB; margin: 24px 0 22px;"></div>
+
+      <!-- mastery ledger -->
+      <div class="rise" style="animation-delay:.6s; flex-grow: 1; min-height: 0;">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .16em; color: #C9C0B2;">MASTERY&nbsp;·&nbsp;BKT&nbsp;POSTERIOR</span>
+          <span style="font-family: Newsreader, serif; font-style: italic; font-size: 13.5px; color: #9A9287;">after 4 answers</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 6px;"><span>Inverse-square law</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #2F5A38;">0.82</span></div>
+            <div style="height: 3px; background: #EFE9DD;"><div class="bar" style="animation-delay:.7s; width: 82%; height: 3px; background: #2F5A38;"></div></div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 6px;"><span>Luminosity</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #2F5A38;">0.71</span></div>
+            <div style="height: 3px; background: #EFE9DD;"><div class="bar" style="animation-delay:.78s; width: 71%; height: 3px; background: #2F5A38;"></div></div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 6px;"><span style="color: #7A2E2E;">Apparent magnitude</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7A2E2E;">0.34</span></div>
+            <div style="height: 3px; background: #EFE9DD;"><div class="bar" style="animation-delay:.86s; width: 34%; height: 3px; background: #7A2E2E;"></div></div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 6px;"><span>Stellar parallax</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7A5A16;">0.58</span></div>
+            <div style="height: 3px; background: #EFE9DD;"><div class="bar" style="animation-delay:.94s; width: 58%; height: 3px; background: #7A5A16;"></div></div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 6px;"><span style="color: #9A9287;">Distance ladder</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #9A9287;">0.30</span></div>
+            <div style="height: 3px; background: #EFE9DD;"><div class="bar" style="animation-delay:1.02s; width: 30%; height: 3px; background: #C9C0B2;"></div></div>
+          </div>
+        </div>
+
+        <div style="font-family: Newsreader, serif; font-style: italic; font-size: 13.5px; line-height: 1.5; color: #C9C0B2; margin-top: 20px;">
+          Unasked concepts sit at the prior, not at zero — silence is not evidence of mastery.
+        </div>
+      </div>
+
+      <a href="#" style="margin-top: 18px; text-align: center; background: #12110F; color: #FAF8F4; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .13em; padding: 16px 0;">NEXT&nbsp;QUESTION&nbsp;&nbsp;→</a>
+    </aside>
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>

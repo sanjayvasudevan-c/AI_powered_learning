@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,200..700;1,6..72,200..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <style>
+    body { margin: 0; background: #FAF8F4; }
+    a { color: #7A2E2E; } a:hover { color: #5E2222; }
+    @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes stampIn { from { opacity: 0; transform: rotate(-4deg) scale(1.5); } to { opacity: 1; transform: rotate(-4deg) scale(1); } }
+    @keyframes tick { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
+    .rise  { animation: rise .6s cubic-bezier(.2,.7,.3,1) both; }
+    .stamp { animation: stampIn .5s .7s cubic-bezier(.2,.9,.3,1) both; }
+    .tick  { animation: tick .45s cubic-bezier(.2,.7,.3,1) both; }
+    @media (prefers-reduced-motion: reduce) {
+      .rise, .tick { animation: none !important; opacity: 1 !important; transform: none !important; }
+      /* only the stamp is meant to sit askew */
+      .stamp { animation: none !important; opacity: 1 !important; transform: rotate(-4deg) !important; }
+    }
+  </style>
+</helmet>
+
+<div style="background: #FAF8F4; color: #12110F; font-family: Newsreader, Georgia, serif; width: 1440px; height: 900px; display: flex; flex-direction: column; overflow: hidden;">
+
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 20px 36px; border-bottom: 1px solid #E0D9CB;">
+    <div style="display: flex; align-items: center; gap: 26px;">
+      <div style="display: flex; align-items: center; gap: 11px;">
+        <svg width="24" height="21" viewBox="0 0 112 100">
+          <path d="M 84.7 24.9 A 44 44 0 1 0 84.7 79.1 L 73 73.9 A 30 34 0 1 1 73 30.1 Z" fill="#12110F"></path>
+          <path d="M 88 18 L 96 8 L 101 8 L 101 32 L 108 32 L 108 37 L 88 37 L 88 32 L 96 32 L 96 15 Z" fill="#7A2E2E"></path>
+        </svg>
+        <span style="font-family: 'Instrument Serif', serif; font-size: 20px;">CourseC</span>
+      </div>
+      <span style="width: 1px; height: 20px; background: #E0D9CB;"></span>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .15em; color: #6B655C;">BUILD&nbsp;CERTIFICATE</span>
+    </div>
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .13em; color: #9A9287;">
+      build&nbsp;<span style="color:#12110F;">a4f19c2</span>&nbsp;·&nbsp;chapter.pdf&nbsp;·&nbsp;1m&nbsp;42s
+    </div>
+  </header>
+
+  <div style="display: grid; grid-template-columns: 1fr 424px; flex-grow: 1; min-height: 0;">
+
+    <main style="padding: 36px 56px 0 72px; overflow: hidden;">
+
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 40px;">
+        <div class="rise">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: .17em; color: #9A9287;">ATTESTATION&nbsp;·&nbsp;§&nbsp;001</div>
+          <h1 style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 60px; line-height: 1.02; letter-spacing: -.8px; margin: 12px 0 0;">
+            One error-severity<br>diagnostic. <span style="color: #7A2E2E;">No PDF.</span>
+          </h1>
+          <p style="font-size: 17px; line-height: 1.5; color: #6B655C; margin: 14px 0 0; max-width: 560px;">
+            The certificate is written either way — it is the artifact that explains why.
+          </p>
+        </div>
+
+        <div class="stamp" style="border: 2px solid #7A2E2E; color: #7A2E2E; padding: 14px 20px; text-align: center; transform: rotate(-4deg); flex-shrink: 0; margin-top: 18px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .2em;">EMISSION</div>
+          <div style="font-family: 'Instrument Serif', serif; font-size: 30px; line-height: 1.1; margin: 2px 0;">WITHHELD</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: .16em;">I2&nbsp;·&nbsp;COMPUTE&nbsp;DIVERGENCE</div>
+        </div>
+      </div>
+
+      <!-- invariant ledger -->
+      <div style="margin-top: 30px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .17em; color: #C9C0B2; padding-bottom: 12px; border-bottom: 1px solid #E0D9CB;">INVARIANT&nbsp;LEDGER</div>
+
+        <div class="tick" style="animation-delay:.20s; display: grid; grid-template-columns: 42px 1fr 190px 96px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #EFE9DD;">
+          <span style="font-family: 'Instrument Serif', serif; font-size: 22px; color: #9A9287;">I1</span>
+          <span style="font-size: 17px;">No unsupported sentence</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6B655C;">2 dropped, 1 repaired</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .12em; color: #2F5A38; text-align: right;">HELD</span>
+        </div>
+        <div class="tick" style="animation-delay:.26s; display: grid; grid-template-columns: 42px 1fr 190px 96px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #EFE9DD; background: rgba(122,46,46,.035);">
+          <span style="font-family: 'Instrument Serif', serif; font-size: 22px; color: #7A2E2E;">I2</span>
+          <span style="font-size: 17px; color: #7A2E2E;">Numbers are computed, never generated</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7A2E2E;">1 divergence</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .12em; color: #7A2E2E; text-align: right;">BROKEN</span>
+        </div>
+        <div class="tick" style="animation-delay:.32s; display: grid; grid-template-columns: 42px 1fr 190px 96px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #EFE9DD;">
+          <span style="font-family: 'Instrument Serif', serif; font-size: 22px; color: #9A9287;">I3</span>
+          <span style="font-size: 17px;">Provenance is total</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6B655C;">318/318 nodes traced</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .12em; color: #2F5A38; text-align: right;">HELD</span>
+        </div>
+        <div class="tick" style="animation-delay:.38s; display: grid; grid-template-columns: 42px 1fr 190px 96px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #EFE9DD;">
+          <span style="font-family: 'Instrument Serif', serif; font-size: 22px; color: #9A9287;">I4</span>
+          <span style="font-size: 17px;">The prerequisite graph is acyclic</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6B655C;">1 cycle broken, logged</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .12em; color: #2F5A38; text-align: right;">HELD</span>
+        </div>
+        <div class="tick" style="animation-delay:.44s; display: grid; grid-template-columns: 42px 1fr 190px 96px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #EFE9DD;">
+          <span style="font-family: 'Instrument Serif', serif; font-size: 22px; color: #9A9287;">I5</span>
+          <span style="font-size: 17px;">Contract before emission</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6B655C;">14 complete · 4 partial</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .12em; color: #2F5A38; text-align: right;">HELD</span>
+        </div>
+        <div class="tick" style="animation-delay:.50s; display: grid; grid-template-columns: 42px 1fr 190px 96px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #EFE9DD;">
+          <span style="font-family: 'Instrument Serif', serif; font-size: 22px; color: #9A9287;">I6</span>
+          <span style="font-size: 17px;">Contradiction is surfaced, never resolved</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6B655C;">1 marked, source kept</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .12em; color: #2F5A38; text-align: right;">HELD</span>
+        </div>
+        <div class="tick" style="animation-delay:.56s; display: grid; grid-template-columns: 42px 1fr 190px 96px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #E0D9CB;">
+          <span style="font-family: 'Instrument Serif', serif; font-size: 22px; color: #9A9287;">I7</span>
+          <span style="font-size: 17px;">Licence-clean media only</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6B655C;">6 bbox crops, 0 generated</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .12em; color: #2F5A38; text-align: right;">HELD</span>
+        </div>
+      </div>
+
+      <!-- the offending diagnostic -->
+      <div class="rise" style="animation-delay:.62s; margin-top: 22px; border-left: 2px solid #7A2E2E; padding: 4px 0 4px 22px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .16em; color: #7A2E2E; margin-bottom: 8px;">ERROR&nbsp;·&nbsp;compute_divergence&nbsp;·&nbsp;verify</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 1.7; color: #2A2722;">
+worked example in lesson block <span style="color:#9A9287;">0201532b</span> claims <span style="color:#7A2E2E;">672.0</span>
+          but <span style="color:#12110F;">L/(4*pi*d**2)</span> at <span style="color:#12110F;">{L: 3.8e26, d: 1.5e11}</span> evaluates to <span style="color:#2F5A38;">1344.0</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- counts -->
+    <aside style="border-left: 1px solid #E0D9CB; padding: 40px 36px; display: flex; flex-direction: column; gap: 0; background: #F2EEE6; overflow: hidden;">
+      <div class="rise" style="animation-delay:.3s;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .17em; color: #9A9287;">MEASURED</div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 26px 20px; margin-top: 20px;">
+          <div><div style="font-family: 'Instrument Serif', serif; font-size: 44px; line-height: 1;">142</div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: .13em; color: #9A9287; margin-top: 4px;">BLOCKS&nbsp;INGESTED</div></div>
+          <div><div style="font-family: 'Instrument Serif', serif; font-size: 44px; line-height: 1;">18</div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: .13em; color: #9A9287; margin-top: 4px;">CONCEPTS</div></div>
+          <div><div style="font-family: 'Instrument Serif', serif; font-size: 44px; line-height: 1;">78<span style="font-size: 22px;">%</span></div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: .13em; color: #9A9287; margin-top: 4px;">SYLLABUS&nbsp;COVERAGE</div></div>
+          <div><div style="font-family: 'Instrument Serif', serif; font-size: 44px; line-height: 1; color: #7A2E2E;">1</div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: .13em; color: #9A9287; margin-top: 4px;">ERROR&nbsp;DIAGNOSTIC</div></div>
+        </div>
+      </div>
+
+      <div style="height: 1px; background: #E0D9CB; margin: 30px 0;"></div>
+
+      <div class="rise" style="animation-delay:.42s;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .17em; color: #9A9287; margin-bottom: 16px;">ITEM&nbsp;GATES&nbsp;·&nbsp;ALL&nbsp;BLOCKING</div>
+        <div style="display: flex; flex-direction: column; gap: 11px; font-size: 15.5px;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline;"><span>Key verification</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6B655C;">2 rejected</span></div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline;"><span>Leakage</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6B655C;">3 rejected</span></div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline;"><span>Single answer</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6B655C;">1 rejected</span></div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline;"><span>Numeric execution</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6B655C;">1 rejected</span></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid #E0D9CB; margin-top: 14px; padding-top: 12px;">
+          <span style="font-family: Newsreader, serif; font-style: italic; font-size: 15px; color: #6B655C;">accepted</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px;">27 / 34</span>
+        </div>
+      </div>
+
+      <div style="height: 1px; background: #E0D9CB; margin: 30px 0;"></div>
+
+      <div class="rise" style="animation-delay:.54s;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .17em; color: #9A9287; margin-bottom: 14px;">PILOT&nbsp;·&nbsp;SCREENING,&nbsp;NOT&nbsp;CALIBRATION</div>
+        <div style="font-family: Newsreader, serif; font-style: italic; font-size: 15px; line-height: 1.5; color: #6B655C;">
+          n&nbsp;=&nbsp;12 simulated students on a fixed ability grid. Discrimination 0.31–1.84, difficulty −1.6–2.2; 2 items quarantined as degenerate.
+        </div>
+      </div>
+
+      <div style="margin-top: auto; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: .14em; color: #C9C0B2; line-height: 1.9;">
+        <div>WRITTEN&nbsp;BY&nbsp;emit&nbsp;·&nbsp;READ-ONLY&nbsp;OVER&nbsp;THE&nbsp;GRAPH</div>
+        <div>build/certificate.html</div>
+      </div>
+    </aside>
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>

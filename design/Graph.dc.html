@@ -1,0 +1,216 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,200..700;1,6..72,200..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <style>
+    body { margin: 0; background: #FAF8F4; }
+    a { color: #7A2E2E; } a:hover { color: #5E2222; }
+    @keyframes drawEdge { to { stroke-dashoffset: 0; } }
+    @keyframes nodeIn { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: scale(1); } }
+    @keyframes noteIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    /* opacity only — `r` needs a <length> as a CSS property and isn't
+       animatable this way in every engine. */
+    @keyframes pulse { 0%,100% { opacity: .10; } 50% { opacity: .04; } }
+    /* longer than the longest edge — a short dasharray leaves the tail
+       into the arrowhead permanently undrawn. */
+    .edge { stroke-dasharray: 520; stroke-dashoffset: 520; animation: drawEdge 1.1s cubic-bezier(.3,.8,.3,1) forwards; }
+    .node { animation: nodeIn .5s cubic-bezier(.2,1.4,.4,1) both; transform-box: fill-box; transform-origin: center; }
+    .halo { animation: pulse 3.6s ease-in-out infinite; }
+    .slot { animation: noteIn .55s cubic-bezier(.2,.7,.3,1) both; }
+    .idx { transition: color .25s ease, background .25s ease; }
+    .idx:hover { background: #F2EEE6; color: #12110F; }
+    @media (prefers-reduced-motion: reduce) { .edge,.node,.halo,.slot { animation: none !important; opacity:1 !important; stroke-dashoffset:0 !important; transform:none !important; } }
+  </style>
+</helmet>
+
+<div style="background: #FAF8F4; color: #12110F; font-family: Newsreader, Georgia, serif; width: 1440px; height: 900px; display: flex; flex-direction: column; overflow: hidden;">
+
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 20px 36px; border-bottom: 1px solid #E0D9CB;">
+    <div style="display: flex; align-items: center; gap: 26px;">
+      <div style="display: flex; align-items: center; gap: 11px;">
+        <svg width="24" height="21" viewBox="0 0 112 100">
+          <path d="M 84.7 24.9 A 44 44 0 1 0 84.7 79.1 L 73 73.9 A 30 34 0 1 1 73 30.1 Z" fill="#12110F"></path>
+          <path d="M 88 18 L 96 8 L 101 8 L 101 32 L 108 32 L 108 37 L 88 37 L 88 32 L 96 32 L 96 15 Z" fill="#7A2E2E"></path>
+        </svg>
+        <span style="font-family: 'Instrument Serif', serif; font-size: 20px;">CourseC</span>
+      </div>
+      <span style="width: 1px; height: 20px; background: #E0D9CB;"></span>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .15em; color: #6B655C;">CONCEPT&nbsp;GRAPH</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 22px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .13em; color: #9A9287;">
+      <span>chapter&nbsp;1&nbsp;·&nbsp;astronomy&nbsp;2e</span>
+      <span>9&nbsp;CONCEPTS</span>
+      <span>10&nbsp;EDGES</span>
+      <span style="color: #2F5A38;">ACYCLIC&nbsp;✓</span>
+    </div>
+  </header>
+
+  <div style="display: grid; grid-template-columns: 244px 1fr 372px; flex-grow: 1; min-height: 0;">
+
+    <!-- index rail -->
+    <aside style="border-right: 1px solid #E0D9CB; padding: 24px 0 0; display: flex; flex-direction: column; gap: 2px; overflow: hidden;">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .16em; color: #C9C0B2; padding: 0 26px 14px;">INDEX</div>
+      <div class="idx" style="display: flex; align-items: baseline; gap: 12px; padding: 9px 26px; background: #F2EEE6;">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #7A2E2E;">01</span>
+        <span style="font-size: 16.5px;">Inverse-square law</span>
+      </div>
+      <div class="idx" style="display: flex; align-items: baseline; gap: 12px; padding: 9px 26px; color: #6B655C;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #C9C0B2;">02</span><span style="font-size: 16.5px;">Angular size</span></div>
+      <div class="idx" style="display: flex; align-items: baseline; gap: 12px; padding: 9px 26px; color: #6B655C;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #C9C0B2;">03</span><span style="font-size: 16.5px;">Luminosity</span></div>
+      <div class="idx" style="display: flex; align-items: baseline; gap: 12px; padding: 9px 26px; color: #6B655C;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #C9C0B2;">04</span><span style="font-size: 16.5px;">Stellar parallax</span></div>
+      <div class="idx" style="display: flex; align-items: baseline; gap: 12px; padding: 9px 26px; color: #6B655C;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #C9C0B2;">05</span><span style="font-size: 16.5px;">Spectroscopy</span></div>
+      <div class="idx" style="display: flex; align-items: baseline; gap: 12px; padding: 9px 26px; color: #6B655C;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #C9C0B2;">06</span><span style="font-size: 16.5px; flex-grow: 1;">Apparent magnitude</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: #7A5A16; letter-spacing: .1em;">PARTIAL</span></div>
+      <div class="idx" style="display: flex; align-items: baseline; gap: 12px; padding: 9px 26px; color: #6B655C;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #C9C0B2;">07</span><span style="font-size: 16.5px;">Doppler shift</span></div>
+      <div class="idx" style="display: flex; align-items: baseline; gap: 12px; padding: 9px 26px; color: #6B655C;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #C9C0B2;">08</span><span style="font-size: 16.5px;">Astronomical unit</span></div>
+      <div class="idx" style="display: flex; align-items: baseline; gap: 12px; padding: 9px 26px; color: #6B655C;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #C9C0B2;">09</span><span style="font-size: 16.5px;">Distance ladder</span></div>
+
+      <div style="margin-top: auto; border-top: 1px solid #E0D9CB; padding: 18px 26px 22px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .13em; color: #9A9287; line-height: 2;">
+        <div>SYLLABUS&nbsp;LINKED&nbsp;&nbsp;<span style="color: #12110F;">7/9</span></div>
+        <div>ABSTAINED&nbsp;&nbsp;<span style="color: #12110F;">2</span></div>
+      </div>
+    </aside>
+
+    <!-- the graph -->
+    <main style="position: relative; overflow: hidden;">
+      <svg width="824" height="820" viewBox="0 0 824 820">
+        <defs>
+          <marker id="tip" markerWidth="7" markerHeight="7" refX="6.4" refY="3" orient="auto">
+            <path d="M0 0.4 L6.4 3 L0 5.6 Z" fill="#C9C0B2"></path>
+          </marker>
+          <marker id="tipLit" markerWidth="7" markerHeight="7" refX="6.4" refY="3" orient="auto">
+            <path d="M0 0.4 L6.4 3 L0 5.6 Z" fill="#7A2E2E"></path>
+          </marker>
+        </defs>
+
+        <!-- layer guides -->
+        <g stroke="#EFE9DD" stroke-width="1">
+          <line x1="136" y1="86" x2="136" y2="700"></line>
+          <line x1="344" y1="86" x2="344" y2="700"></line>
+          <line x1="552" y1="86" x2="552" y2="700"></line>
+          <line x1="724" y1="86" x2="724" y2="700"></line>
+        </g>
+        <g font-family="IBM Plex Mono, monospace" font-size="9.5" letter-spacing="1.3" fill="#C9C0B2" text-anchor="middle">
+          <text x="136" y="74">DEPTH 0</text><text x="344" y="74">1</text><text x="552" y="74">2</text><text x="724" y="74">3</text>
+        </g>
+
+        <!-- edges -->
+        <g fill="none" stroke-width="1.1">
+          <path class="edge" style="animation-delay:.15s" d="M150 208 C 240 208, 250 300, 330 300" stroke="#7A2E2E" marker-end="url(#tipLit)"></path>
+          <path class="edge" style="animation-delay:.25s" d="M150 208 C 240 208, 250 460, 330 460" stroke="#C9C0B2" marker-end="url(#tip)"></path>
+          <path class="edge" style="animation-delay:.35s" d="M150 396 C 250 396, 250 300, 330 300" stroke="#C9C0B2" marker-end="url(#tip)"></path>
+          <path class="edge" style="animation-delay:.45s" d="M150 560 C 250 560, 250 612, 330 612" stroke="#C9C0B2" marker-end="url(#tip)"></path>
+          <path class="edge" style="animation-delay:.55s" d="M358 300 C 450 300, 460 372, 538 372" stroke="#C9C0B2" marker-end="url(#tip)"></path>
+          <path class="edge" style="animation-delay:.62s" d="M358 460 C 450 460, 460 372, 538 372" stroke="#C9C0B2" marker-end="url(#tip)"></path>
+          <path class="edge" style="animation-delay:.70s" d="M358 460 C 450 460, 460 540, 538 540" stroke="#C9C0B2" marker-end="url(#tip)"></path>
+          <path class="edge" style="animation-delay:.78s" d="M358 612 C 450 612, 460 540, 538 540" stroke="#C9C0B2" marker-end="url(#tip)"></path>
+          <path class="edge" style="animation-delay:.86s" d="M566 372 C 650 372, 650 456, 710 456" stroke="#C9C0B2" marker-end="url(#tip)"></path>
+          <path class="edge" style="animation-delay:.94s" d="M566 540 C 650 540, 650 456, 710 456" stroke="#C9C0B2" marker-end="url(#tip)"></path>
+        </g>
+
+        <!-- nodes -->
+        <g font-family="Newsreader, serif" font-size="15" fill="#12110F">
+          <g class="node" style="animation-delay:.05s">
+            <circle class="halo" cx="136" cy="208" r="22" fill="#7A2E2E" opacity=".10"></circle>
+            <circle cx="136" cy="208" r="8" fill="#7A2E2E"></circle>
+            <text x="136" y="248" text-anchor="middle" fill="#7A2E2E">Inverse-square law</text>
+            <text x="136" y="264" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="1.2" fill="#9A9287">FORMULA</text>
+          </g>
+          <g class="node" style="animation-delay:.12s">
+            <circle cx="136" cy="396" r="6.5" fill="#12110F"></circle>
+            <text x="136" y="430" text-anchor="middle">Angular size</text>
+          </g>
+          <g class="node" style="animation-delay:.19s">
+            <circle cx="136" cy="560" r="6.5" fill="#12110F"></circle>
+            <text x="136" y="594" text-anchor="middle">Spectroscopy</text>
+          </g>
+          <g class="node" style="animation-delay:.26s">
+            <circle cx="344" cy="300" r="6.5" fill="#12110F"></circle>
+            <text x="344" y="334" text-anchor="middle">Luminosity</text>
+          </g>
+          <g class="node" style="animation-delay:.33s">
+            <circle cx="344" cy="460" r="6.5" fill="#12110F"></circle>
+            <text x="344" y="494" text-anchor="middle">Stellar parallax</text>
+          </g>
+          <g class="node" style="animation-delay:.40s">
+            <circle cx="344" cy="612" r="6.5" fill="#12110F"></circle>
+            <text x="344" y="646" text-anchor="middle">Doppler shift</text>
+          </g>
+          <g class="node" style="animation-delay:.47s">
+            <circle cx="552" cy="372" r="6.5" fill="#FAF8F4" stroke="#7A5A16" stroke-width="2"></circle>
+            <text x="552" y="406" text-anchor="middle">Apparent magnitude</text>
+            <text x="552" y="422" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="1.2" fill="#7A5A16">PARTIAL</text>
+          </g>
+          <g class="node" style="animation-delay:.54s">
+            <circle cx="552" cy="540" r="6.5" fill="#12110F"></circle>
+            <text x="552" y="574" text-anchor="middle">Astronomical unit</text>
+          </g>
+          <g class="node" style="animation-delay:.61s">
+            <circle cx="724" cy="456" r="6.5" fill="#12110F"></circle>
+            <text x="724" y="490" text-anchor="middle">Distance ladder</text>
+          </g>
+        </g>
+      </svg>
+
+      <div style="position: absolute; left: 28px; bottom: 22px; display: flex; gap: 26px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: .13em; color: #9A9287;">
+        <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 9px; height: 9px; border-radius: 50%; background: #12110F;"></span>COMPLETE</span>
+        <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 9px; height: 9px; border-radius: 50%; border: 2px solid #7A5A16;"></span>PARTIAL</span>
+        <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 18px; height: 1px; background: #C9C0B2;"></span>PREREQUISITE&nbsp;OF</span>
+      </div>
+    </main>
+
+    <!-- the selected concept, in the margin -->
+    <aside style="border-left: 1px solid #E0D9CB; padding: 26px 32px; display: flex; flex-direction: column; gap: 0; overflow: hidden;">
+      <div class="slot" style="animation-delay:.6s">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .16em; color: #C9C0B2;">SELECTED&nbsp;·&nbsp;§&nbsp;01</div>
+        <div style="font-family: 'Instrument Serif', serif; font-size: 38px; line-height: 1.1; margin-top: 10px;">Inverse-square law</div>
+        <div style="display: flex; gap: 16px; margin-top: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .12em; color: #9A9287;">
+          <span>FORMULA</span><span>SALIENCE&nbsp;<span style="color:#12110F;">0.91</span></span><span style="color: #2F5A38;">CONTRACT&nbsp;5/5</span>
+        </div>
+      </div>
+
+      <div style="height: 1px; background: #E0D9CB; margin: 24px 0;"></div>
+
+      <div class="slot" style="animation-delay:.72s">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .16em; color: #C9C0B2; margin-bottom: 10px;">DEFINITION</div>
+        <div style="font-size: 16.5px; line-height: 1.58; color: #2A2722;">
+          The apparent brightness of a source falls off as the square of the distance to it<sup style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: #7A2E2E;">&nbsp;p.14</sup>, so a star twice as far away appears one quarter as bright<sup style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: #7A2E2E;">&nbsp;p.14</sup>.
+        </div>
+      </div>
+
+      <div class="slot" style="animation-delay:.82s; margin-top: 22px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .16em; color: #C9C0B2; margin-bottom: 10px;">WORKED&nbsp;EXAMPLE&nbsp;<span style="color: #2F5A38;">· EXECUTED</span></div>
+        <div style="background: #F2EEE6; padding: 16px 18px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; line-height: 1.8; color: #2A2722;">
+          <div>b = L / (4·π·d²)</div>
+          <div style="color: #6B655C;">L = 3.8e26,&nbsp; d = 1.5e11</div>
+          <div style="border-top: 1px solid #E0D9CB; margin-top: 8px; padding-top: 8px;">= 1344.0&nbsp;&nbsp;<span style="color: #2F5A38;">✓ sandbox agrees</span></div>
+        </div>
+      </div>
+
+      <div class="slot" style="animation-delay:.92s; margin-top: 22px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .16em; color: #C9C0B2; margin-bottom: 10px;">PROVENANCE</div>
+        <div style="display: flex; flex-direction: column; gap: 9px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.5; color: #6B655C;">
+          <div>chapter.pdf&nbsp;·&nbsp;p.14&nbsp;·&nbsp;chars&nbsp;8210–8447</div>
+          <div>sha256&nbsp;<span style="color: #12110F;">4f2a9c…e71b</span></div>
+          <div style="color: #2F5A38;">2&nbsp;spans&nbsp;·&nbsp;1&nbsp;admitted&nbsp;source</div>
+        </div>
+      </div>
+
+      <div style="margin-top: auto; border-top: 1px solid #E0D9CB; padding-top: 18px; display: flex; gap: 10px;">
+        <a href="#" style="flex-grow: 1; text-align: center; background: #12110F; color: #FAF8F4; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .12em; padding: 13px 0;">QUIZ&nbsp;THIS</a>
+        <a href="#" style="flex-grow: 1; text-align: center; border: 1px solid #E0D9CB; color: #6B655C; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .12em; padding: 13px 0;">OPEN&nbsp;SOURCE&nbsp;PAGE</a>
+      </div>
+    </aside>
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>
