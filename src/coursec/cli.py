@@ -6,6 +6,8 @@ adds understand (concept extraction + syllabus anchoring) and structure
 non-zero only if it fails. D7 gives `quiz` and `serve` their real
 implementations, both over `passes/learn.py`: `quiz` is a terminal-driven
 adaptive session, `serve` shells out to `streamlit run` on `ui/quiz_app.py`.
+D8 adds `demo`, over `demo/harness.py`: adversarial fixtures run through
+the real pipeline, scored against the diagnostic each invariant promises.
 """
 
 from __future__ import annotations
@@ -21,6 +23,7 @@ import typer
 from coursec.core.anthropic_backend import anthropic_backend
 from coursec.core.diagnostics import DiagnosticSink
 from coursec.core.graph import Graph
+from coursec.demo import harness as demo_harness
 from coursec.emit import certificate as certificate_module
 from coursec.emit.blueprint import Blueprint
 from coursec.emit.targets import BlueprintInfeasible, render_all_targets
@@ -320,6 +323,42 @@ def quiz(
     typer.echo(f"\nSession complete: {questions_asked} question(s) answered.")
     if questions_asked == 0:
         typer.echo("coursec quiz: no accepted items in this graph", err=True)
+        raise typer.Exit(code=1)
+
+
+DEMO_REPORT_PATH = Path("build/demo_report.html")
+
+
+@app.command()
+def demo(
+    pdf: Path = typer.Argument(
+        demo_harness.DEFAULT_FIXTURE,
+        help="Fixture chapter the real-chapter scenario ingests.",
+    ),
+) -> None:
+    """Run the D8 demo harness: adversarial fixtures through the real
+    pipeline, end to end, scored against the specific diagnostic each
+    invariant promises to raise. See `demo/harness.py`'s module docstring
+    for exactly what each scenario constructs and why.
+    """
+    if not pdf.exists():
+        typer.echo(f"coursec demo: no such file: {pdf}", err=True)
+        raise typer.Exit(code=1)
+
+    report = demo_harness.run_demo(pdf)
+    for scenario in report.scenarios:
+        typer.echo(f"[{scenario.status.upper()}] {scenario.invariant}: {scenario.name}")
+        for key, value in scenario.measured.items():
+            typer.echo(f"    {key}: {value}")
+        if scenario.status != "pass":
+            typer.echo(f"    expected diagnostic: {scenario.expected_code!r}", err=True)
+            typer.echo(f"    detail: {scenario.detail}", err=True)
+
+    demo_harness.write_demo_report(DEMO_REPORT_PATH, report)
+    passed = sum(1 for s in report.scenarios if s.status == "pass")
+    typer.echo(f"\n{passed}/{len(report.scenarios)} scenarios passed. Wrote {DEMO_REPORT_PATH}")
+
+    if not report.all_passed:
         raise typer.Exit(code=1)
 
 
