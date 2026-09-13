@@ -3,13 +3,17 @@
 D0 shipped three stubs. D1 gave `build` its first real stage (ingest); D2
 adds understand (concept extraction + syllabus anchoring) and structure
 (prerequisite DAG). `build` runs the pipeline built so far and exits
-non-zero only if it fails. `serve` and `quiz` remain not-implemented stubs —
-each still prints that and exits 1, since a green stub is worse than a
-missing command.
+non-zero only if it fails. D7 gives `quiz` and `serve` their real
+implementations, both over `passes/learn.py`: `quiz` is a terminal-driven
+adaptive session, `serve` shells out to `streamlit run` on `ui/quiz_app.py`.
 """
 
 from __future__ import annotations
 
+import os
+import string
+import subprocess
+import sys
 from pathlib import Path
 
 import typer
@@ -24,6 +28,7 @@ from coursec.passes import compose as compose_pass
 from coursec.passes import evidence as evidence_pass
 from coursec.passes import gap as gap_pass
 from coursec.passes import item_gates, origin_linter
+from coursec.passes import learn as learn_pass
 from coursec.passes import pilot as pilot_pass
 from coursec.passes import structure as structure_pass
 from coursec.passes import syllabus as syllabus_pass
@@ -60,8 +65,9 @@ def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")
     """Compile a source PDF into the Concept Graph and emit targets.
 
     Runs the full pipeline: ingest -> understand -> structure -> gap ->
-    evidence -> compose -> verify -> assess -> emit. D7's quiz UI and
-    mastery model, and D8's demo harness, aren't built yet.
+    evidence -> compose -> verify -> assess -> emit. Once this has produced
+    a `coursec.db`, `quiz`/`serve` run D7's adaptive quiz over it. D8's demo
+    harness isn't built yet.
     """
     if not pdf.exists():
         typer.echo(f"coursec build: no such file: {pdf}", err=True)
@@ -227,17 +233,94 @@ def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")
 
 
 @app.command()
-def serve() -> None:
-    """Serve the Streamlit quiz UI."""
-    typer.echo("coursec serve: not implemented yet", err=True)
-    raise typer.Exit(code=1)
+def serve(
+    db: Path = typer.Argument(..., help="Path to a built coursec.db (from `coursec build`)."),
+    student_id: str = typer.Option(
+        "student", help="Identifies whose mastery this session updates."
+    ),
+    port: int = typer.Option(8501, help="Port to serve the Streamlit app on."),
+) -> None:
+    """Serve the Streamlit adaptive-quiz UI (ui/quiz_app.py) over `db`."""
+    if not db.exists():
+        typer.echo(f"coursec serve: no such database: {db}", err=True)
+        raise typer.Exit(code=1)
+
+    app_path = Path(__file__).parent / "ui" / "quiz_app.py"
+    env = {**os.environ, "COURSEC_DB_PATH": str(db.resolve()), "COURSEC_STUDENT_ID": student_id}
+    result = subprocess.run(
+        [sys.executable, "-m", "streamlit", "run", str(app_path), "--server.port", str(port)],
+        env=env,
+    )
+    raise typer.Exit(code=result.returncode)
 
 
 @app.command()
-def quiz() -> None:
-    """Run a quiz session from the command line."""
-    typer.echo("coursec quiz: not implemented yet", err=True)
-    raise typer.Exit(code=1)
+def quiz(
+    db: Path = typer.Argument(..., help="Path to a built coursec.db (from `coursec build`)."),
+    student_id: str = typer.Option(
+        "student", help="Identifies whose mastery this session updates."
+    ),
+    max_questions: int = typer.Option(10, help="Stop after this many questions."),
+) -> None:
+    """Run an adaptive quiz session from the command line.
+
+    Each question is the accepted `Item` on the concept this student's BKT
+    mastery is currently weakest on (`learn.select_next_item`); every
+    answer updates that concept's `Mastery` (`learn.record_response`), and
+    a wrong answer is followed by `learn.diagnose_root_cause`'s readout —
+    which prerequisite, if any, is the deeper thing actually worth
+    reviewing.
+    """
+    if not db.exists():
+        typer.echo(f"coursec quiz: no such database: {db}", err=True)
+        raise typer.Exit(code=1)
+
+    sink = DiagnosticSink()
+    asked: frozenset[str] = frozenset()
+    questions_asked = 0
+
+    with Graph(db) as graph:
+        while questions_asked < max_questions:
+            item = learn_pass.select_next_item(graph, student_id, asked_item_ids=asked)
+            if item is None:
+                break
+            asked = asked | {item.id}
+            questions_asked += 1
+
+            concept = graph.get(item.concept_id)
+            typer.echo(f"\nQ{questions_asked}. [{concept.name}] {item.stem}")
+
+            if item.item_type == "mcq":
+                options = learn_pass.mcq_options(item)
+                letters = string.ascii_uppercase[: len(options)]
+                for letter, (text, _) in zip(letters, options, strict=True):
+                    typer.echo(f"  {letter}) {text}")
+                response = typer.prompt("Answer").strip().upper()
+                correct = response in letters and options[letters.index(response)][1]
+            else:
+                response = typer.prompt("Answer").strip()
+                correct = response.lower() == item.key.strip().lower()
+
+            learn_pass.record_response(
+                graph, sink, student_id=student_id, concept_id=item.concept_id, correct=correct
+            )
+
+            if correct:
+                typer.echo("Correct.")
+            else:
+                typer.echo(f"Incorrect. The answer was: {item.key}")
+                root = learn_pass.diagnose_root_cause(graph, item.concept_id, student_id)
+                if root.concept_id != item.concept_id:
+                    root_concept = graph.get(root.concept_id)
+                    typer.echo(
+                        f"  This likely traces back to '{root_concept.name}' "
+                        f"({root.depth} prerequisite level(s) back) — review that first."
+                    )
+
+    typer.echo(f"\nSession complete: {questions_asked} question(s) answered.")
+    if questions_asked == 0:
+        typer.echo("coursec quiz: no accepted items in this graph", err=True)
+        raise typer.Exit(code=1)
 
 
 def main() -> None:
