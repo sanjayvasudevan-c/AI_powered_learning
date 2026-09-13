@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CourseC — a course compiler</title>
+<meta name="description" content="One chapter PDF in. A cited concept graph, a lesson, an assessment and four typeset documents out — every factual sentence traceable to the span it came from.">
+<link rel="icon" href="/mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,200..700;1,6..72,200..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="masthead">
+  <a class="logo" href="#/">
+    <svg width="28" height="25" viewBox="0 0 112 100" aria-hidden="true">
+      <path d="M 84.7 24.9 A 44 44 0 1 0 84.7 79.1 L 73 73.9 A 30 34 0 1 1 73 30.1 Z" fill="currentColor"/>
+      <path d="M 88 18 L 96 8 L 101 8 L 101 32 L 108 32 L 108 37 L 88 37 L 88 32 L 96 32 L 96 15 Z" fill="var(--accent)"/>
+    </svg>
+    <span>CourseC</span>
+  </a>
+  <nav class="nav">
+    <a href="#/" data-route-link="/">Overview</a>
+    <a href="#/graph" data-route-link="/graph">Graph</a>
+    <a href="#/quiz" data-route-link="/quiz">Quiz</a>
+    <a href="#/certificate" data-route-link="/certificate">Certificate</a>
+    <span class="build-chip" id="build-chip" hidden></span>
+  </nav>
+</header>
+
+<main id="view-home" class="view">
+
+  <!-- ═════ hero ═════ -->
+  <section class="hero">
+    <div class="folio">
+      <div>§&nbsp;01</div>
+      <div class="folio-quiet">Source in.</div>
+      <div class="folio-quiet">Proof out.</div>
+    </div>
+
+    <div class="hero-body">
+      <h1>
+        <span class="wipe">A course</span>
+        <span class="wipe" style="animation-delay:.16s">compiler<i class="dot">.</i></span>
+      </h1>
+      <p class="lede rise" style="animation-delay:.42s">
+        One chapter PDF in. A cited concept graph, a lesson, an assessment and four
+        typeset documents out — with every factual sentence traceable to the exact
+        span of the page it came from.
+      </p>
+      <div class="cta-row rise" style="animation-delay:.56s">
+        <a class="btn" href="#/graph">
+          Open the graph
+          <svg width="15" height="10" viewBox="0 0 15 10" fill="none" aria-hidden="true"><path d="M0 5h13M9 1l4 4-4 4" stroke="currentColor" stroke-width="1.3"/></svg>
+        </a>
+        <a class="link-grow" href="#invariants">Read the invariants</a>
+      </div>
+    </div>
+
+    <aside class="margin-rail">
+      <p class="mnote" style="animation-delay:.8s"><sup>1</sup> Not a prompt chain. Ten typed passes over one SQLite IR, each owning its own columns.</p>
+      <p class="mnote" style="animation-delay:.95s"><sup>2</sup> <b>209</b> tests, <b>100%</b> branch coverage on the core IR.</p>
+      <p class="mnote" style="animation-delay:1.1s"><sup>3</sup> Identical IR, fixed timestamp — byte-identical PDF. Checked, not hoped for.</p>
+    </aside>
+  </section>
+
+  <!-- ═════ the press line ═════ -->
+  <section class="band">
+    <div class="band-head">
+      <span class="eyebrow">§&nbsp;02&nbsp;&nbsp;The press line</span>
+      <span class="aside-italic">ten passes, each writing only its own column</span>
+    </div>
+
+    <div class="pressline-wrap">
+      <svg class="pressline" viewBox="0 0 1240 238" role="img" aria-label="The ten compiler passes, from ingest to learn">
+        <g transform="translate(18,84)">
+          <rect x="0" y="0" width="40" height="52" fill="var(--paper)" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M28 0 L40 12 L28 12 Z" fill="currentColor"/>
+          <path d="M8 22h24M8 30h24M8 38h16" stroke="var(--rule)" stroke-width="1.2"/>
+          <text x="20" y="70" text-anchor="middle" class="svg-micro">PDF</text>
+        </g>
+
+        <line class="pline" x1="90" y1="110" x2="990" y2="110" stroke="currentColor" stroke-width="1.2"/>
+
+        <g class="stages"></g>
+
+        <g class="token" transform="translate(90,110)">
+          <circle r="17" fill="var(--accent)" opacity=".07"/>
+          <circle r="4.5" fill="var(--accent)"/>
+        </g>
+
+        <g transform="translate(1030,70)">
+          <rect x="0"  y="0"  width="34" height="44" fill="var(--paper)" stroke="currentColor" stroke-width="1.2"/>
+          <rect x="42" y="0"  width="34" height="44" fill="var(--paper)" stroke="currentColor" stroke-width="1.2"/>
+          <rect x="0"  y="52" width="34" height="44" fill="var(--paper)" stroke="currentColor" stroke-width="1.2"/>
+          <rect x="42" y="52" width="34" height="44" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.2"/>
+          <text x="38" y="118" text-anchor="middle" class="svg-micro">4 TARGETS</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═════ invariants ═════ -->
+  <section class="band" id="invariants">
+    <div class="band-head">
+      <span class="eyebrow">§&nbsp;03&nbsp;&nbsp;The invariants</span>
+      <span class="aside-italic">a violation is a build failure — never a warning, never a TODO</span>
+    </div>
+
+    <div class="inv-grid">
+      <article class="inv reveal"><span class="inv-code">I1</span><div><h3>No unsupported sentence.</h3><p>Every emitted sentence carries a citation and passes entailment against the spans it cites. Unentailed → repair twice → drop → quarantine.</p></div></article>
+      <article class="inv reveal"><span class="inv-code">I2</span><div><h3>Numbers are computed, never generated.</h3><p>Every numeric literal traces to a span, a cited source, or a sandboxed SymPy result. The model phrases; it never originates a value.</p></div></article>
+      <article class="inv reveal"><span class="inv-code">I3</span><div><h3>Provenance is total.</h3><p>Every node reachable from a document traces to file or url, locator, retrieval time and content hash.</p></div></article>
+      <article class="inv reveal"><span class="inv-code">I4</span><div><h3>The prerequisite graph is acyclic.</h3><p>Cycles break by a deterministic, logged policy — lowest confidence first, tie-broken on content hash. Never silently.</p></div></article>
+      <article class="inv reveal"><span class="inv-code">I5</span><div><h3>Contract before emission.</h3><p>Five slots: definition, intuition, worked example, visual-or-analogy, and two assessment items. A concept enters a document only with its status attached.</p></div></article>
+      <article class="inv reveal"><span class="inv-code">I6</span><div><h3>Contradiction is surfaced, never resolved.</h3><p>When retrieved evidence disagrees with the source, the source stays primary and the divergence becomes a marked note carrying both citations.</p></div></article>
+      <article class="inv reveal"><span class="inv-code">I7</span><div><h3>Licence-clean media only.</h3><p>An image is a bbox crop of the source, generated diagram code, or nothing at all.</p></div></article>
+      <article class="inv inv-coda reveal"><p class="aside-italic">These are not aspirations in a design doc. They are the thing the adversarial suite exists to break — and a gate that never rejects anything is broken, not perfect.</p></article>
+    </div>
+  </section>
+
+  <!-- ═════ grounding ═════ -->
+  <section class="band">
+    <div class="band-head">
+      <span class="eyebrow">§&nbsp;04&nbsp;&nbsp;Grounding</span>
+      <span class="aside-italic">hover a claim — its source lights in the margin</span>
+    </div>
+
+    <div class="ground-grid">
+      <div class="measure reveal">
+        <span class="dropcap">T</span>he critic never sees the dossier that produced the sentence it is grading.
+        It sees one sentence and, for each, only that sentence's own cited spans —
+        looked up fresh by id.
+        <span class="claim" data-note="n1">A chapter's concepts merge at cosine 0.80<sup>1</sup></span>,
+        <span class="claim" data-note="n2">every MCQ distractor cites a real misconception node<sup>2</sup></span>, and
+        <span class="claim" data-note="n3">twelve simulated students screen each item<sup>3</sup></span>
+        before it is allowed near a question paper.
+      </div>
+
+      <aside class="margin-rail reveal">
+        <div class="eyebrow">Marginalia</div>
+        <p class="note" id="n1"><sup>1</sup> Tuned against a committed labelled fixture: “Ohm's law”/“V&nbsp;=&nbsp;IR” embed at <b>0.855</b>; the closest false positives, “variance”/“covariance” at <b>0.764</b>, sit below the line.</p>
+        <p class="note" id="n2"><sup>2</sup> Sourced from sentences the critic actually marked <i>contradicted</i> — real material, never invented. A distractor that can't cite one is dropped.</p>
+        <p class="note" id="n3"><sup>3</sup> Labelled <i>screening</i>, never calibration — twelve students is nowhere near enough for a calibration claim, and the wording is not allowed to drift.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ═════ targets ═════ -->
+  <section class="band">
+    <div class="band-head"><span class="eyebrow">§&nbsp;05&nbsp;&nbsp;What comes off the press</span></div>
+    <div class="targets">
+      <article class="target reveal"><h3>Booklet</h3><p>Every contract slot, Mermaid visuals rendered at build time, source figures cropped by stored bbox, and a bibliography walked from the citation edges.</p></article>
+      <article class="target reveal"><h3>Cheat sheet</h3><p>A pure template over each concept's own source span — so it makes zero model calls, asserted on the cache-miss counter.</p></article>
+      <article class="target reveal"><h3>Question paper</h3><p>Greedy selection against a blueprint of marks, Bloom mix and unit weightage. An infeasible blueprint names its binding constraint.</p></article>
+      <article class="target target-dark reveal"><h3>Answer key</h3><p>Mirrors the paper's selection and reads each numeric item's stored execution result rather than recomputing anything.</p></article>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="closing reveal">
+      <div>
+        <h2>A build with any error-severity diagnostic produces no PDF at all.</h2>
+        <p>The certificate still gets written either way — it is the artifact that explains why.</p>
+      </div>
+      <a class="btn" href="#/certificate">
+        See the certificate
+        <svg width="15" height="10" viewBox="0 0 15 10" fill="none" aria-hidden="true"><path d="M0 5h13M9 1l4 4-4 4" stroke="currentColor" stroke-width="1.3"/></svg>
+      </a>
+    </div>
+  </section>
+</main>
+
+<!-- ═════ graph ═════ -->
+<main id="view-graph" class="view app-view" hidden>
+  <div class="app-grid">
+    <aside class="app-rail">
+      <div class="eyebrow">Index</div>
+      <div id="concept-index" class="index-list"></div>
+      <div class="rail-foot" id="graph-stats"></div>
+    </aside>
+    <section class="app-stage">
+      <div id="graph-canvas" class="graph-canvas"></div>
+      <div class="legend">
+        <span><i class="dot-node"></i>Contract complete</span>
+        <span><i class="dot-node partial"></i>Partial</span>
+        <span><i class="rule-swatch"></i>Prerequisite of</span>
+      </div>
+    </section>
+    <aside class="app-margin" id="concept-detail"></aside>
+  </div>
+</main>
+
+<!-- ═════ quiz ═════ -->
+<main id="view-quiz" class="view app-view" hidden>
+  <div class="quiz-grid">
+    <section class="quiz-stage" id="quiz-stage"></section>
+    <aside class="app-margin" id="quiz-ledger"></aside>
+  </div>
+</main>
+
+<!-- ═════ certificate ═════ -->
+<main id="view-certificate" class="view app-view" hidden>
+  <div id="certificate-body" class="cert-body"></div>
+</main>
+
+<footer class="footer">
+  <span>CourseC — a course compiler</span>
+  <span>Fixture chapter: OpenStax Astronomy 2e, CC BY 4.0</span>
+  <span>§&nbsp;001</span>
+</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>

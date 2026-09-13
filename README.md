@@ -211,6 +211,19 @@ Five scenarios, each scored against the specific diagnostic code its invariant p
 
 A scenario that raises an unexpected exception is reported as its own `error` status, distinct from `fail` (ran clean, didn't catch its defect — the harness's own bug): one flaky or environment-gated scenario should never look identical to a real regression, and `run_demo()` never lets one scenario's exception end the run for the rest. `coursec demo [pdf]` prints a PASS/FAIL/ERROR line with measured counts per scenario and writes `build/demo_report.html`; it exits non-zero unless every scenario passed.
 
+### `web` — the frontend, and a read-mostly API under it
+
+`coursec web` serves a real frontend (`src/coursec/web/static/`) over a FastAPI surface (`src/coursec/web/api.py`) that reads a built Concept Graph. The visual language is **Editorial Ink**: warm paper, one oxblood accent with two semantic hues at matched OKLCH lightness (moss for *held*, ochre for *partial*), Instrument Serif over Newsreader over IBM Plex Mono — and **the margin as a first-class column**, because marginalia is exactly what this compiler's output is. A claim in the body lights its own source note in the margin; a concept's citations render as superscript page marks next to the sentence they support.
+
+Four surfaces, all on real rows rather than mock JSON:
+
+- **Overview** — the landing page, with the ten passes drawn as a press line that a single token travels while each stage inks in.
+- **Graph** — the prerequisite DAG laid out by depth, straight from `prerequisite_of` edges; pick a concept and its four contract slots, citations, sandbox execution result and exact `(file, page, char range, sha256)` provenance open in the margin.
+- **Quiz** — D7's adaptive loop over HTTP: the item is chosen by lowest BKT posterior, the key is never sent to the browser until an answer is in, and a miss surfaces both the misconception the chosen distractor encodes and the root-cause walk to the deepest still-weak prerequisite.
+- **Certificate** — the invariant ledger. **This one is recomputed, never replayed**: a build's `DiagnosticSink` is not persisted, so the API derives each row from the IR — `Verdict` rows, failed `ExecResult` rows, `Item.status`, `ItemStats.quarantined` — and says so in its own `derived_from` field rather than implying it read a log it never saw.
+
+The database is resolved per request, so a build running against the same path appears without a restart, and every endpoint answers `{"available": false}` with the command to fix it rather than 500-ing when nothing has been compiled yet. No build step and no framework: the page is plain HTML, CSS and ES modules served from the package, and everything drawn from the API is escaped before it reaches the DOM — concept names and lesson sentences come out of a PDF someone else wrote.
+
 ## Grounding, concretely
 
 The two guarantees above ("empty dossier ⇒ refuses" and "critic never sees the dossier") are each backed by a unit test that doesn't depend on model behavior:
@@ -254,6 +267,8 @@ Without a network-connected search provider, retrieval stops at "no search backe
 
 Once a build has produced `build/coursec.db`, `uv run coursec quiz build/coursec.db` runs an adaptive quiz from the terminal (BKT-driven item selection, mastery updates, root-cause readout on a miss); `uv run coursec serve build/coursec.db` does the same thing as a Streamlit app.
 
+`uv run coursec web build/coursec.db` serves the frontend at http://127.0.0.1:8000 — the landing page works with no database at all, and the graph, quiz and certificate views fill in as soon as one exists.
+
 `uv run coursec demo` runs the adversarial demo harness against the fixture chapter (or any PDF you pass it) and reports, per scenario, whether every invariant above is actually caught in a real pipeline run — see [`demo`](#demo--the-harness-adversarial-fixtures-end-to-end) above.
 
 ## Testing philosophy
@@ -269,7 +284,7 @@ Four kinds of test, and every pass writes whichever apply:
 make check   # ruff check . && pytest -q
 ```
 
-200+ tests, 100% branch coverage on `src/coursec/core/` (the coverage target is deliberately scoped there — [see below](#status) for why the rest isn't graded the same way). D7's UI is included in that count, not exempted from it: `tests/test_quiz_app.py` drives `ui/quiz_app.py` for real through `streamlit.testing.v1.AppTest` rather than skipping it as "just a UI."
+230+ tests, 100% branch coverage on `src/coursec/core/` (the coverage target is deliberately scoped there — [see below](#status) for why the rest isn't graded the same way). D7's UI is included in that count, not exempted from it: `tests/test_quiz_app.py` drives `ui/quiz_app.py` for real through `streamlit.testing.v1.AppTest` rather than skipping it as "just a UI."
 
 ## Project layout
 
@@ -302,6 +317,9 @@ src/coursec/
 ├── viz/graph_html.py        # pyvis concept-graph render
 ├── ui/quiz_app.py            # Streamlit adaptive-quiz UI, over passes/learn.py
 ├── demo/harness.py           # D8: adversarial fixtures through the real pipeline
+├── web/
+│   ├── api.py                 # FastAPI: read-mostly over the graph, + the quiz endpoints
+│   └── static/                 # Editorial Ink frontend — no build step, no framework
 └── emit/
     ├── contract.py            # the 5 MVP slots, per-concept status
     ├── mermaid.py               # Mermaid -> SVG (mermaid.ink, pluggable)
@@ -333,5 +351,6 @@ tests/                      # one file per pass, plus fixtures/
 | Emit | Typst rendering — booklet, cheat sheet, question paper, answer key, certificate | ✅ |
 | Learn | terminal + Streamlit adaptive quiz, Bayesian Knowledge Tracing mastery, root-cause readout | ✅ |
 | Demo harness | adversarial fixtures, end-to-end measured results | ✅ |
+| Web | FastAPI over the graph + the Editorial Ink frontend (overview, graph, quiz, certificate) | ✅ |
 
 The evidence pass has no configured search-API provider in this environment, so a live `coursec build` runs real retrieval mechanics (fetch, robots.txt, scoring, admission) against whatever URLs a `search` callable hands it, but ships no default search backend — wiring one in is the one piece needed to take this from "correct machinery" to "actually crawling the web" end to end.
