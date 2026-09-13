@@ -326,6 +326,34 @@ def quiz(
         raise typer.Exit(code=1)
 
 
+@app.command()
+def web(
+    db: Path = typer.Argument(
+        Path("build/coursec.db"),
+        help="Path to a built coursec.db. Resolved per request, so it may not exist yet.",
+    ),
+    host: str = typer.Option("127.0.0.1", help="Interface to bind."),
+    port: int = typer.Option(8000, help="Port to serve on."),
+) -> None:
+    """Serve the web frontend and its read-mostly API over `db`.
+
+    The landing page needs no database at all; the graph, quiz and
+    certificate views report "nothing compiled yet" rather than failing
+    when there isn't one, and pick a database up without a restart once
+    `coursec build` writes it.
+    """
+    import uvicorn
+
+    from coursec.web.api import app as web_app
+    from coursec.web.api import settings as web_settings
+
+    web_settings.db_path = db
+    typer.echo(f"coursec web: serving http://{host}:{port} over {db}")
+    if not db.exists():
+        typer.echo(f"  (no database at {db} yet — the app will say so and wait for one)")
+    uvicorn.run(web_app, host=host, port=port, log_level="info")
+
+
 DEMO_REPORT_PATH = Path("build/demo_report.html")
 
 
