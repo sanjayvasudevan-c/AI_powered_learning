@@ -24,6 +24,8 @@ Compiling instead of prompting buys three things a single prompt cannot:
 - **Passes that own their columns.** `ingest` only ever writes `Block`/`SourceSpan`. `compose` only ever writes `LessonBlock`. A pass writing outside its lane is a caught defect (`Graph.add` enforces this at runtime — see [Pass ownership](#pass-ownership)), not a refactor someone gets to next quarter.
 - **Diagnostics instead of vibes.** Every pass reports through a structured `Diagnostic` (severity, code, message) rather than printing or swallowing problems. An error-severity diagnostic is a build failure, full stop.
 
+**A six-page overview** — the thesis, the invariants and what each one is enforced by, the stack and why, and an explicit list of what is *not* claimed — is at [`docs/overview.pdf`](docs/overview.pdf). It is typeset by `emit/typst_util.py`, the same code path that renders the booklets, and `make overview` rebuilds it byte-identically from [`docs/overview.typ`](docs/overview.typ).
+
 ## Table of contents
 
 - [The invariants](#the-invariants)
@@ -336,6 +338,11 @@ data/
 
 design/                     # Editorial Ink source: one .dc.html per artboard,
                             # plus canvas.json — see design/README.md
+
+docs/
+├── overview.typ            # the project overview, in Typst
+├── overview.pdf             # built by `make overview` — reproducible, and
+└── build_overview.py         # tested against its source in test_overview.py
 
 tests/                      # one file per pass, plus fixtures/
 ```
