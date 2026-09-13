@@ -334,6 +334,9 @@ data/
 ├── syllabus.yaml            # hand-authored curriculum for the fixture chapter
 └── sources.yaml              # tier1/tier2/blocklist domains (data, not prompt text)
 
+design/                     # Editorial Ink source: one .dc.html per artboard,
+                            # plus canvas.json — see design/README.md
+
 tests/                      # one file per pass, plus fixtures/
 ```
 

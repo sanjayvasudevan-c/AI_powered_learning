@@ -1,0 +1,26 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1440, "h": 3160, "title": "Landing" },
+    { "file": "Identity.dc.html", "x": 1560, "y": 0, "w": 1000, "h": 900, "title": "Identity — mark, palette, type" },
+    { "file": "Graph.dc.html", "x": 1560, "y": 1020, "w": 1440, "h": 900, "title": "Concept graph explorer" },
+    { "file": "Quiz.dc.html", "x": 1560, "y": 2040, "w": 1440, "h": 900, "title": "Adaptive quiz" },
+    { "file": "Certificate.dc.html", "x": 1560, "y": 3060, "w": 1440, "h": 900, "title": "Build certificate" }
+  ],
+  "annotations": [
+    {
+      "id": "direction",
+      "x": 0,
+      "y": -150,
+      "w": 560,
+      "text": "EDITORIAL INK\nWarm paper, ink black, one oxblood accent. The margin is a first-class column: citations, diagnostics and provenance live there, exactly where marginalia belong.\n\nMotion: ink settles — a wipe from the left, then a rise out of blur. Nothing bounces."
+    },
+    {
+      "id": "app-screens",
+      "x": 1560,
+      "y": -150,
+      "w": 420,
+      "text": "The three app surfaces, all wired to the real Concept Graph — not mock JSON. Copy and numbers here follow the fixture chapter (OpenStax Astronomy 2e)."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

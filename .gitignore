@@ -24,3 +24,7 @@ __pycache__/
 htmlcov/
 .venv/
 *.egg-info/
+
+# Seeded design canvas — ~2.5MB of editor payload baked around design/*.dc.html.
+# A build artifact of `seed-canvas.mjs`, regenerable; see design/README.md.
+design/coursec-editorial-ink.html
