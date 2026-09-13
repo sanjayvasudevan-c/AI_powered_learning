@@ -75,7 +75,7 @@ Everything the compiler knows lives in one SQLite database, as SQLModel tables. 
 | `Item` | One assessment item (mcq/numeric/short/derivation/application) with its gate history |
 | `Misconception` | A named, specific piece of faulty reasoning an MCQ distractor encodes |
 | `ItemStats` | An item's `(discrimination, difficulty)` from the synthetic pilot, and whether it was quarantined |
-| `Mastery` | A student's per-concept mastery posterior *(D7, not yet built)* |
+| `Mastery` | A student's per-concept mastery posterior, from Bayesian Knowledge Tracing — one row per update, never overwritten |
 
 </details>
 
@@ -91,8 +91,8 @@ Everything the compiler knows lives in one SQLite database, as SQLModel tables. 
 | `evidenced_by` | `Concept → WebEvidence` **or** `LessonBlock → SourceSpan\|WebEvidence` — the same relationship at two pipeline stages | `evidence`, `compose` |
 | `contradicts` | `WebEvidence → Concept`: this evidence disagrees with the source | `evidence` |
 | `assesses` | `Item → Concept` or `Item → Misconception` | `assess` |
-| `remediates` | remediation content → the misconception it targets *(D7)* | `learn` |
-| `mastery_of` | `Mastery → Concept` *(D7)* | `learn` |
+| `remediates` | remediation content → the misconception it targets *(declared, unused — D7 shipped mastery tracking and root-cause diagnosis, not generated remediation content; see [`learn`](#learn--bkt-mastery-and-root-cause-propagation))* | `learn` |
+| `mastery_of` | `Mastery → Concept` *(declared, unused — `Mastery.concept_id` is a plain FK, the same shape `Item.concept_id` already uses; a redundant edge for the same fact wasn't worth adding)* | `learn` |
 
 </details>
 
@@ -115,8 +115,8 @@ OwnershipViolation: Block is owned by pass 'ingest', not 'understand'
 | `compose` | `LessonBlock`, `evidenced_by` | dossiers |
 | `verify` | `Verdict`, `ExecResult` | `LessonBlock` |
 | `assess` | `Item`, `Misconception`, `ItemStats` | `Concept`, `LessonBlock` |
-| `emit` *(D6)* | rendered targets | everything, read-only |
-| `learn` *(D7)* | `Mastery` | `Item`, responses |
+| `emit` | rendered targets | everything, read-only |
+| `learn` | `Mastery` | `Item`, responses |
 
 ## The pipeline, pass by pass
 
@@ -187,9 +187,15 @@ def test_identical_ir_and_fixed_timestamp_gives_byte_identical_pdf() -> None:
     assert first == second
 ```
 
-### `learn` — not yet built
+### `learn` — BKT mastery and root-cause propagation
 
-D7 (adaptive quiz UI, Bayesian Knowledge Tracing mastery, root-cause propagation to the deepest weak prerequisite) is the one remaining stage. See [Status](#status).
+`passes/learn.py` is deliberately split into a pure model and thin plumbing around it, the same separation `pilot.py` draws between `fit_2pl` and the pass that calls it. `bkt_update(prior, correct, params)` is one closed-form step of the standard two-state Bayesian Knowledge Tracing HMM — Bayes' rule against the observed response, then the learn-opportunity transition — with no I/O and no graph, so a property test can hold it to the textbook formula directly rather than trusting an integration test to notice a sign error. Every update appends a new `Mastery` row rather than overwriting the last, the same append-only convention `Verdict` uses for D4's critic: the *history* of a student's posterior is data, current mastery is just its latest row.
+
+A wrong answer on concept C doesn't stop at "C is weak" — `diagnose_root_cause` walks `prerequisite_of` edges upstream from C one hop at a time, following the weakest direct prerequisite as long as one is still below `WEAK_THRESHOLD`, and stops at the deepest concept in an unbroken chain of weakness. A solid prerequisite breaks the chain on purpose: its own weak ancestors aren't blamed for a failure the solid concept between them and C would already have caught. Ties are broken on `content_hash`, not the graph's random `id` — the same determinism discipline `structure.py`'s cycle-breaking applies.
+
+`select_next_item` picks the next question adaptively: the accepted `Item` on whichever concept this student's current mastery is lowest on, excluding items already asked this session. `coursec quiz path/to/coursec.db` runs this loop from the terminal; `coursec serve path/to/coursec.db` shells out to `streamlit run` on `ui/quiz_app.py`, a thin session-state wrapper around the same three functions — display and plumbing only, so the only new thing a bug could hide in is wiring, not logic. `ui/quiz_app.py` has its own test (`tests/test_quiz_app.py`) that clicks through it for real via `streamlit.testing.v1.AppTest`, not a mock of the UI layer.
+
+What D7 does *not* build: the `remediates` edge (linking generated remediation content to a `Misconception`) has no remediation-content generator behind it yet, and `Mastery` links to its `Concept` via a plain FK rather than the declared-but-unused `mastery_of` edge kind — see the edge-kind table's notes. The BKT parameters (`p_init`, `p_transit`, `p_slip`, `p_guess`) are illustrative defaults, not fit to any real cohort — the same "screening, not calibration" honesty the pilot insists on for its own numbers applies here too.
 
 ## Grounding, concretely
 
@@ -232,6 +238,8 @@ uv run coursec build path/to/chapter.pdf
 
 Without a network-connected search provider, retrieval stops at "no search backend configured" rather than fabricating results — the rest of the pipeline (composition, verification, assessment, rendering) still runs on whatever the source PDF and any evidence already in the graph provide.
 
+Once a build has produced `build/coursec.db`, `uv run coursec quiz build/coursec.db` runs an adaptive quiz from the terminal (BKT-driven item selection, mastery updates, root-cause readout on a miss); `uv run coursec serve build/coursec.db` does the same thing as a Streamlit app.
+
 ## Testing philosophy
 
 Four kinds of test, and every pass writes whichever apply:
@@ -245,7 +253,7 @@ Four kinds of test, and every pass writes whichever apply:
 make check   # ruff check . && pytest -q
 ```
 
-180+ tests, 100% branch coverage on `src/coursec/core/` (the coverage target is deliberately scoped there — [see below](#status) for why the rest isn't graded the same way).
+200+ tests, 100% branch coverage on `src/coursec/core/` (the coverage target is deliberately scoped there — [see below](#status) for why the rest isn't graded the same way). D7's UI is included in that count, not exempted from it: `tests/test_quiz_app.py` drives `ui/quiz_app.py` for real through `streamlit.testing.v1.AppTest` rather than skipping it as "just a UI."
 
 ## Project layout
 
@@ -273,8 +281,10 @@ src/coursec/
 │   ├── origin_linter.py                 # I2 enforcement
 │   ├── items.py                          # item + misconception generation
 │   ├── item_gates.py                      # the 4 blocking gates
-│   └── pilot.py                            # synthetic 2PL screening
+│   ├── pilot.py                            # synthetic 2PL screening
+│   └── learn.py                             # BKT mastery, root-cause propagation
 ├── viz/graph_html.py        # pyvis concept-graph render
+├── ui/quiz_app.py            # Streamlit adaptive-quiz UI, over passes/learn.py
 └── emit/
     ├── contract.py            # the 5 MVP slots, per-concept status
     ├── mermaid.py               # Mermaid -> SVG (mermaid.ink, pluggable)
@@ -304,7 +314,7 @@ tests/                      # one file per pass, plus fixtures/
 | Compose + verify | grounded generation, critique, computation | ✅ |
 | Assess | items, gates, synthetic pilot | ✅ |
 | Emit | Typst rendering — booklet, cheat sheet, question paper, answer key, certificate | ✅ |
-| Learn | Streamlit quiz, Bayesian Knowledge Tracing mastery, root-cause readout | ⬜ |
+| Learn | terminal + Streamlit adaptive quiz, Bayesian Knowledge Tracing mastery, root-cause readout | ✅ |
 | Demo harness | adversarial fixtures, end-to-end measured results | ⬜ |
 
 The evidence pass has no configured search-API provider in this environment, so a live `coursec build` runs real retrieval mechanics (fetch, robots.txt, scoring, admission) against whatever URLs a `search` callable hands it, but ships no default search backend — wiring one in is the one piece needed to take this from "correct machinery" to "actually crawling the web" end to end.
