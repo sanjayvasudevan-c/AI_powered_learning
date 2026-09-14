@@ -8,6 +8,9 @@ implementations, both over `passes/learn.py`: `quiz` is a terminal-driven
 adaptive session, `serve` shells out to `streamlit run` on `ui/quiz_app.py`.
 D8 adds `demo`, over `demo/harness.py`: adversarial fixtures run through
 the real pipeline, scored against the diagnostic each invariant promises.
+`build`'s `--backend` picks between the Anthropic API (default) and a local
+Ollama model via `core/backend_registry.py` — every pass takes its backend
+as an explicit argument, so this is a selector at one seam, not a rewrite.
 """
 
 from __future__ import annotations
@@ -21,6 +24,7 @@ from pathlib import Path
 import typer
 
 from coursec.core.anthropic_backend import anthropic_backend
+from coursec.core.backend_registry import KNOWN_BACKENDS, parse_model_map, resolve_backend
 from coursec.core.diagnostics import DiagnosticSink
 from coursec.core.graph import Graph
 from coursec.demo import harness as demo_harness
@@ -64,7 +68,21 @@ def _default_blueprint(accepted_items: list) -> Blueprint:
 
 
 @app.command()
-def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")) -> None:
+def build(
+    pdf: Path = typer.Argument(..., help="Source chapter PDF to compile."),
+    backend: str = typer.Option(
+        "anthropic",
+        help="LLM backend: 'anthropic' (needs ANTHROPIC_API_KEY) or 'ollama' (local, no key).",
+    ),
+    ollama_model_map: str = typer.Option(
+        "",
+        help=(
+            "Only with --backend ollama. 'claude-sonnet-5=<tag>,claude-haiku-4-5-20251001=<tag>' "
+            "— which local model stands in for the strong/cheap tier each pass already asks for. "
+            "Defaults to llama3.1 / llama3.2 (see core/ollama_backend.DEFAULT_MODEL_MAP)."
+        ),
+    ),
+) -> None:
     """Compile a source PDF into the Concept Graph and emit targets.
 
     Runs the full pipeline: ingest -> understand -> structure -> gap ->
@@ -74,6 +92,26 @@ def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")
     """
     if not pdf.exists():
         typer.echo(f"coursec build: no such file: {pdf}", err=True)
+        raise typer.Exit(code=1)
+
+    if backend == "anthropic":
+        # `anthropic_backend` stays a plain module-global lookup (not routed
+        # through resolve_backend) specifically so tests can monkeypatch
+        # `coursec.cli.anthropic_backend` the way they already do.
+        llm_backend = anthropic_backend
+    elif backend == "ollama":
+        try:
+            model_map = parse_model_map(ollama_model_map) if ollama_model_map else None
+        except ValueError as exc:
+            typer.echo(f"coursec build: --ollama-model-map: {exc}", err=True)
+            raise typer.Exit(code=1) from exc
+        llm_backend = resolve_backend("ollama", ollama_model_map=model_map)
+        typer.echo(f"coursec build: using local Ollama models {llm_backend.model_map}")
+    else:
+        typer.echo(
+            f"coursec build: unknown --backend {backend!r} — expected one of {KNOWN_BACKENDS}",
+            err=True,
+        )
         raise typer.Exit(code=1)
 
     BUILD_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -90,7 +128,7 @@ def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")
 
         try:
             concepts, section_by_concept = understand_pass.understand(
-                blocks, graph, sink, backend=anthropic_backend
+                blocks, graph, sink, backend=llm_backend
             )
         except RuntimeError as exc:
             typer.echo(f"understand: {exc}", err=True)
@@ -109,7 +147,7 @@ def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")
 
         try:
             prerequisite_edges, part_of_edges = structure_pass.structure(
-                graph, concepts, section_by_concept, sink, backend=anthropic_backend
+                graph, concepts, section_by_concept, sink, backend=llm_backend
             )
         except RuntimeError as exc:
             typer.echo(f"structure: {exc}", err=True)
@@ -140,7 +178,7 @@ def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")
             lesson_blocks = []
             for concept in concepts:
                 lesson_blocks.extend(
-                    compose_pass.compose_concept(graph, concept, sink, backend=anthropic_backend)
+                    compose_pass.compose_concept(graph, concept, sink, backend=llm_backend)
                 )
         except RuntimeError as exc:
             typer.echo(f"compose: {exc}", err=True)
@@ -149,7 +187,7 @@ def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")
         try:
             numeric_origin_violations = 0
             for block in lesson_blocks:
-                verify_pass.verify_lesson_block(graph, block, sink, backend=anthropic_backend)
+                verify_pass.verify_lesson_block(graph, block, sink, backend=llm_backend)
                 verify_pass.run_compute_check(graph, block, sink)
                 numeric_origin_violations += origin_linter.lint_lesson_block(graph, block, sink)
         except RuntimeError as exc:
@@ -176,7 +214,7 @@ def build(pdf: Path = typer.Argument(..., help="Source chapter PDF to compile.")
             total_rejected = 0
             for concept in concepts:
                 accepted, rejected = item_gates.assess_concept(
-                    graph, concept, sink, backend=anthropic_backend
+                    graph, concept, sink, backend=llm_backend
                 )
                 accepted_items.extend(accepted)
                 total_rejected += rejected

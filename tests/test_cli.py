@@ -83,6 +83,70 @@ def test_build_on_real_fixture_runs_ingest_through_structure(
     assert (tmp_path / "certificate.html").exists()
 
 
+def test_build_unknown_backend_exits_non_zero_without_touching_the_network(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr("coursec.cli.BUILD_DB_PATH", tmp_path / "coursec.db")
+
+    result = runner.invoke(app, ["build", str(FIXTURE.resolve()), "--backend", "chatgpt"])
+
+    assert result.exit_code != 0
+    assert "unknown --backend 'chatgpt'" in result.output
+    assert "anthropic" in result.output and "ollama" in result.output
+
+
+def test_build_ollama_model_map_rejects_malformed_entry_before_any_pass_runs(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr("coursec.cli.BUILD_DB_PATH", tmp_path / "coursec.db")
+
+    result = runner.invoke(
+        app,
+        ["build", str(FIXTURE.resolve()), "--backend", "ollama", "--ollama-model-map", "garbage"],
+    )
+
+    assert result.exit_code != 0
+    assert "not 'anthropic_id=local_tag'" in result.output
+
+
+def test_build_with_ollama_backend_routes_the_whole_pipeline_through_it(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """The real point: `--backend ollama` is not just accepted, every pass
+    that would have called Anthropic calls the local model instead — proven
+    by driving the pipeline on a backend that only understands Ollama-shaped
+    requests, wired in via the exact resolve_backend() call `build` makes."""
+    import httpx
+
+    from coursec.core.ollama_backend import OllamaBackend
+
+    def ollama_handler(request: httpx.Request) -> httpx.Response:
+        body = json.loads(request.content)
+        assert body["model"] in ("llama3.1", "llama3.2"), body["model"]
+        if "source_index" in body["prompt"]:
+            return httpx.Response(200, json={"response": "[]"})
+        return httpx.Response(
+            200, json={"response": json.dumps({"prerequisite": "neither", "confidence": 0.5})}
+        )
+
+    def fake_resolve_backend(name, *, ollama_model_map=None):
+        assert name == "ollama"
+        mock_client = httpx.Client(transport=httpx.MockTransport(ollama_handler))
+        return OllamaBackend(model_map=ollama_model_map, client=mock_client)
+
+    monkeypatch.setattr("coursec.cli.resolve_backend", fake_resolve_backend)
+    monkeypatch.setattr("coursec.cli.BUILD_DB_PATH", tmp_path / "coursec.db")
+    monkeypatch.setattr("coursec.cli.GRAPH_HTML_PATH", tmp_path / "graph.html")
+    monkeypatch.setattr("coursec.cli.CERTIFICATE_PATH", tmp_path / "certificate.html")
+    monkeypatch.setattr("coursec.cli.EMIT_WORK_DIR", tmp_path / "emit")
+
+    result = runner.invoke(app, ["build", str(FIXTURE.resolve()), "--backend", "ollama"])
+
+    assert result.exit_code == 0, result.output
+    assert "using local Ollama models" in result.output
+    assert "understand:" in result.output
+
+
 def _fake_backend_with_one_concept(model: str, prompt: str, params: dict) -> str:
     if "source_index" in prompt:
         if "[0]" in prompt:
