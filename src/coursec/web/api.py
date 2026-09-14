@@ -28,12 +28,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Form, UploadFile
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from sqlmodel import select
 
+from coursec.core.anthropic_backend import anthropic_backend
+from coursec.core.backend_registry import KNOWN_BACKENDS, parse_model_map, resolve_backend
 from coursec.core.diagnostics import DiagnosticSink
 from coursec.core.graph import Graph
 from coursec.core.models import (
@@ -53,6 +55,7 @@ from coursec.core.models import (
 )
 from coursec.emit.contract import GENERATIVE_SLOTS, compute_contract_status
 from coursec.passes import learn as learn_pass
+from coursec.web import build_jobs
 
 STATIC_DIR = Path(__file__).parent / "static"
 DEFAULT_DB_PATH = Path("build/coursec.db")
@@ -585,6 +588,101 @@ def _has_mastery_row(graph: Graph, concept_id: str, student_id: str) -> bool:
         ).first()
         is not None
     )
+
+
+# ---------------------------------------------------------------------------
+# build — upload a chapter, run the real pipeline, watch it happen
+#
+# `anthropic_backend` is imported as a plain name (not routed through
+# `resolve_backend`) for the "anthropic" case specifically so tests can
+# monkeypatch `coursec.web.api.anthropic_backend` — the same reason
+# cli.py's `build` command does the same thing.
+# ---------------------------------------------------------------------------
+
+
+@app.post("/api/build")
+async def start_build(
+    file: UploadFile,
+    backend: str = Form("anthropic"),
+    ollama_model_map: str = Form(""),
+) -> Any:
+    if file.filename and not file.filename.lower().endswith(".pdf"):
+        return JSONResponse(
+            status_code=400, content={"error": f"expected a .pdf file, got {file.filename!r}"}
+        )
+
+    if backend == "anthropic":
+        llm_backend = anthropic_backend
+    elif backend == "ollama":
+        try:
+            model_map = parse_model_map(ollama_model_map) if ollama_model_map else None
+        except ValueError as exc:
+            return JSONResponse(status_code=400, content={"error": str(exc)})
+        llm_backend = resolve_backend("ollama", ollama_model_map=model_map)
+    else:
+        return JSONResponse(
+            status_code=400,
+            content={"error": f"unknown backend {backend!r} — expected one of {KNOWN_BACKENDS}"},
+        )
+
+    pdf_bytes = await file.read()
+    if not pdf_bytes:
+        return JSONResponse(status_code=400, content={"error": "uploaded file is empty"})
+
+    job = build_jobs.start_build(
+        pdf_bytes, file.filename or "chapter.pdf", backend=llm_backend, backend_name=backend
+    )
+    return {"available": True, "build_id": job.id, "status": job.status}
+
+
+@app.get("/api/build/{build_id}")
+def build_status(build_id: str) -> Any:
+    job = build_jobs.get_job(build_id)
+    if job is None:
+        return JSONResponse(status_code=404, content={"error": "no such build"})
+    return {
+        "available": True,
+        "id": job.id,
+        "filename": job.filename,
+        "backend": job.backend_name,
+        "status": job.status,
+        "error": job.error,
+        "emitted": job.emitted,
+        "log": job.log,
+        "targets": sorted(job.targets),
+        "has_graph": job.db_path is not None,
+    }
+
+
+@app.post("/api/build/{build_id}/activate")
+def activate_build(build_id: str) -> Any:
+    """Points the rest of the API (`/api/graph`, `/api/certificate`,
+    `/api/quiz/*`) at this build's database — a deliberate switch rather
+    than an automatic one, since two people previewing different uploads
+    on the same server should not silently steal each other's view."""
+    job = build_jobs.get_job(build_id)
+    if job is None:
+        return JSONResponse(status_code=404, content={"error": "no such build"})
+    if job.db_path is None:
+        return JSONResponse(
+            status_code=409, content={"error": "this build has no graph yet (still running)"}
+        )
+    settings.db_path = job.db_path
+    return {"available": True, "activated": build_id}
+
+
+@app.get("/api/build/{build_id}/targets/{name}")
+def build_target(build_id: str, name: str) -> Any:
+    job = build_jobs.get_job(build_id)
+    if job is None:
+        return JSONResponse(status_code=404, content={"error": "no such build"})
+    path = job.targets.get(name)
+    if path is None or not path.exists():
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"no {name!r} target on this build (have: {sorted(job.targets)})"},
+        )
+    return FileResponse(path, media_type="application/pdf", filename=f"{name}.pdf")
 
 
 # ---------------------------------------------------------------------------
