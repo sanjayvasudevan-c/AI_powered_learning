@@ -98,12 +98,25 @@ def test_activating_a_build_points_the_rest_of_the_api_at_it(
     assert graph["concepts"] == []
 
 
-def test_a_real_worked_example_error_still_leaves_a_queryable_graph(
+def test_a_real_extraction_failure_still_leaves_a_queryable_graph(
     client: TestClient, monkeypatch
 ) -> None:
     """The point of `job.db_path` being set right after ingest: a later
-    stage's failure — or, here, an I2 violation caught by verify — doesn't
-    erase the concepts and structure that were already built.
+    stage's failure doesn't erase the concepts and structure that were
+    already built.
+
+    The evidence pass fails here by design, not by accident: this project
+    ships no search backend by default, and both the CLI (see
+    tests/test_cli.py::test_build_reaches_evidence_and_fails_loudly_with_no_search_backend)
+    and this web build (`build_jobs.py`) wire `evidence.no_search_backend`
+    explicitly rather than fabricate one. So this test can never reach a
+    later-stage (e.g. I2) violation through the real endpoint — an earlier
+    version of this test assumed it could and only appeared to pass
+    because a network failure at the embedding step happened to intervene
+    first, never actually exercising this code path. What it can prove for
+    real is the thing that matters: extraction ran, concepts and structure
+    were committed, evidence then failed, and that already-built graph is
+    still there afterward.
 
     Needs at least one real extracted concept, which routes through
     understand's canonicalization step and its local embedding model — the
@@ -111,49 +124,16 @@ def test_a_real_worked_example_error_still_leaves_a_queryable_graph(
     blocks for 10 pre-existing tests elsewhere in this suite (see
     tests/test_understand.py, tests/test_syllabus.py). Tolerated here the
     same way tests/test_demo.py tolerates it for its own network-dependent
-    scenario: "failed for a network reason" passes, any other failure does
-    not — a real regression in this test's own logic still fails it."""
+    scenario: "failed for a network reason" passes, any other failure that
+    isn't the expected "no search backend" one does not — a real
+    regression in this test's own logic still fails it."""
     _NETWORK_ERROR_TOKENS = ("ProxyError", "ConnectionError", "Timeout", "httpx", "httpcore")
 
     def backend(model: str, prompt: str, params: dict) -> str:
         if "source_index" in prompt:
-            if "[0]" in prompt:
-                return json.dumps(
-                    [
-                        {
-                            "name": "a formula concept",
-                            "type": "formula",
-                            "salience": 0.9,
-                            "source_index": 0,
-                        }
-                    ]
-                )
-            return "[]"
-        if "DOSSIER:" in prompt:
-            import re
-
-            ids = (
-                re.findall(r"\[(SPAN:[a-f0-9]+)\]", prompt)
-                + re.findall(r"\[(EVID:[a-f0-9]+)\]", prompt)
-            )[:1]
-            if not ids:
-                return json.dumps({"refused": True, "reason": "no grounding"})
-            if "worked_example" in prompt:
-                return json.dumps(
-                    {
-                        "refused": False,
-                        "sentences": [{"text": "m*a with m=2, a=3 gives 5.", "evidence_ids": ids}],
-                        "computation": {
-                            "formula": "m*a", "substitutions": {"m": 2.0, "a": 3.0},
-                            "claimed_result": 5.0,  # wrong: really 6.0
-                        },
-                    }
-                )
             return json.dumps(
-                {"refused": False, "sentences": [{"text": "A sentence.", "evidence_ids": ids}]}
+                [{"name": "a concept", "type": "definition", "salience": 0.9, "source_index": 0}]
             )
-        if "checking whether a sentence is entailed" in prompt:
-            return json.dumps({"classification": "entailed"})
         return json.dumps({"prerequisite": "neither", "confidence": 0.5})
 
     monkeypatch.setattr(web_api, "anthropic_backend", backend)
@@ -167,14 +147,14 @@ def test_a_real_worked_example_error_still_leaves_a_queryable_graph(
     ):
         return  # environment-gated, not a regression — see the docstring
 
-    assert status["status"] == "succeeded", status["log"]  # the build itself didn't crash
-    assert status["emitted"] is False  # but I2 blocked emission
-    assert any("error" in line and "compute_divergence" in line for line in status["log"])
+    assert status["status"] == "failed", status["log"]
+    assert "no search backend" in (status["error"] or ""), status["log"]
+    assert status["has_graph"] is True  # concepts survived the later failure
 
     client.post(f"/api/build/{build_id}/activate")
-    certificate = client.get("/api/certificate").json()
-    i2 = next(row for row in certificate["ledger"] if row["code"] == "I2")
-    assert i2["held"] is False
+    graph = client.get("/api/graph").json()
+    assert graph["available"] is True
+    assert len(graph["concepts"]) >= 1
 
 
 # ── validation and errors ────────────────────────────────────────────────
