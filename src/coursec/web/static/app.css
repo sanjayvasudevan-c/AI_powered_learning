@@ -82,19 +82,6 @@ b { font-weight: 500; font-family: var(--mono); font-size: .92em; }
                      to   { opacity: 1; transform: translateY(0);    filter: blur(0); } }
 @keyframes marginSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes drawLine { to { stroke-dashoffset: 0; } }
-/* The full translate, not just X: a CSS `transform` REPLACES an SVG element's
-   `transform` attribute rather than composing with it, so animating X alone
-   drops the token's y and parks it off the line. The attribute stays on the
-   element as the reduced-motion resting position. 90 → 990 because that is
-   where the line actually runs; the stage highlights are staggered to a tenth
-   of the cycle each, so any other distance drifts the token off its stage. */
-@keyframes travel {
-  0%   { transform: translate(90px, 110px); opacity: 0; }
-  4%   { opacity: 1; }
-  96%  { opacity: 1; }
-  100% { transform: translate(990px, 110px); opacity: 0; }
-}
-@keyframes stageInk { 0%, 100% { opacity: .3; } 8%, 22% { opacity: 1; } }
 @keyframes barFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 /* Opacity only. Scaling an SVG <g> needs `transform-box: fill-box` to scale
    in place, and where that isn't honoured the node flies in from the SVG
@@ -161,29 +148,66 @@ b { font-weight: 500; font-family: var(--mono); font-size: .92em; }
        transition: background .3s ease, transform .3s var(--ease); }
 .btn:hover { background: var(--accent); color: var(--paper); transform: translateY(-1px); }
 
-/* ── hero ─────────────────────────────────────────────────────────── */
+/* ── compile — the working app's front door ──────────────────────── */
 
-.hero { display: grid; grid-template-columns: 168px minmax(0, 772px) 1fr;
-        padding: 92px var(--gutter) 0; }
+.compile { padding: 68px var(--gutter) 0; max-width: 900px; }
 
-.folio { font-family: var(--mono); font-size: 11px; letter-spacing: .16em;
-         color: var(--ink-4); padding-top: 16px; text-transform: uppercase; }
-.folio-quiet { color: var(--ink-5); }
-.folio-quiet:first-of-type { margin-top: 6px; }
-
-.hero-body h1 { font-family: var(--display); font-size: clamp(52px, 7.4vw, 108px);
-                line-height: .92; letter-spacing: -1.6px; }
+.compile-title { font-family: var(--display); font-size: clamp(40px, 6vw, 68px);
+                  line-height: .96; letter-spacing: -1.2px; }
 .dot { color: var(--accent); font-style: normal; }
 
-.lede { font-size: clamp(18px, 1.6vw, 23px); line-height: 1.52; color: var(--ink-2);
-        margin: 36px 0 0; max-width: 640px; text-wrap: pretty; }
+.lede { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.52; color: var(--ink-2);
+        margin: 20px 0 0; max-width: 640px; text-wrap: pretty; }
 
-.cta-row { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; margin-top: 40px; }
+.compile-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px;
+                gap: 28px; margin-top: 40px; align-items: stretch; }
+
+.dropzone { display: flex; flex-direction: column; align-items: center;
+            justify-content: center; gap: 14px; text-align: center;
+            border: 1.5px dashed var(--rule); padding: 40px 24px; cursor: pointer;
+            color: var(--ink-3); min-height: 220px;
+            transition: border-color .25s ease, background .25s ease, color .25s ease; }
+.dropzone:hover, .dropzone:focus-visible { border-color: var(--ink-4); color: var(--ink); }
+.dropzone.drag { border-color: var(--accent); background: rgba(122, 46, 46, .035); color: var(--ink); }
+.dz-text { font-size: 16px; }
+.dz-filename { font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
+
+.compile-options { display: flex; flex-direction: column; justify-content: space-between; }
+.option-group { display: flex; flex-direction: column; gap: 12px; }
+.radio-row { display: flex; align-items: flex-start; gap: 10px; font-size: 14.5px;
+             color: var(--ink-2); cursor: pointer; }
+.radio-row input { margin-top: 4px; accent-color: var(--accent); }
+.radio-row .muted { display: block; font-size: 12px; color: var(--ink-4); font-style: normal; }
+.ollama-fields { margin-left: 22px; display: flex; flex-direction: column; gap: 8px; }
+.ollama-fields[hidden] { display: none; }
+.ollama-fields input { border: 1px solid var(--rule); background: var(--paper);
+                        padding: 9px 11px; font-family: var(--mono); font-size: 12px; color: var(--ink); }
+.ollama-fields input:focus { outline: none; border-color: var(--ink); }
+.field-hint { font-size: 11.5px; line-height: 1.5; color: var(--ink-4); margin: 0; }
+.field-hint code { font-family: var(--mono); }
+
+.compile-options .btn { margin-top: 18px; justify-content: center; width: 100%; }
+.compile-options .btn:disabled { background: var(--rule); color: var(--ink-4); cursor: not-allowed; transform: none; }
+
+.build-console { margin-top: 34px; border: 1px solid var(--rule); background: var(--panel); }
+.console-head { display: flex; align-items: center; justify-content: space-between;
+                gap: 16px; padding: 12px 18px; border-bottom: 1px solid var(--rule); }
+.console-status { font-family: var(--mono); font-size: 11px; letter-spacing: .14em;
+                   color: var(--ink-3); }
+.console-status.ok { color: var(--moss); }
+.console-status.warn { color: var(--ochre); }
+.console-status.bad { color: var(--accent); }
+.console-log { margin: 0; padding: 16px 18px; max-height: 320px; overflow-y: auto;
+               font-family: var(--mono); font-size: 12.5px; line-height: 1.7;
+               color: var(--ink-2); white-space: pre-wrap; }
+.console-actions { padding: 4px 18px 20px; }
+.console-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.console-cta .btn { padding: 12px 18px; font-size: 11px; }
+.target-downloads { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 16px; }
 
 .margin-rail { padding-left: 56px; border-left: 1px solid var(--rule);
                display: flex; flex-direction: column; gap: 24px;
                font-size: 15px; line-height: 1.45; color: var(--ink-3); }
-.hero .margin-rail { padding-top: 20px; }
 .margin-rail .eyebrow { margin-bottom: 2px; }
 
 /* ── bands ────────────────────────────────────────────────────────── */
@@ -197,17 +221,7 @@ b { font-weight: 500; font-family: var(--mono); font-size: .92em; }
            text-transform: uppercase; color: var(--ink-4); }
 .aside-italic { font-family: var(--body); font-style: italic; font-size: 17px; color: var(--ink-3); }
 
-/* ── press line ───────────────────────────────────────────────────── */
-
-.pressline-wrap { overflow-x: auto; margin-top: 10px; }
-.pressline { display: block; width: 1240px; height: 238px; color: var(--ink); }
 .svg-micro { font-family: var(--mono); font-size: 9.5px; letter-spacing: 1.4px; fill: var(--ink-4); }
-.svg-label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 1.3px; fill: var(--ink); }
-.svg-folio { font-family: var(--display); font-size: 11px; fill: var(--ink-4); }
-
-.pline { stroke-dasharray: 900; stroke-dashoffset: 900; animation: drawLine 1.8s .3s var(--ease) forwards; }
-.token { animation: travel 11s 1.4s linear infinite; }
-.stage { animation: stageInk 11s 1.4s linear infinite; }
 
 /* ── invariants ───────────────────────────────────────────────────── */
 
@@ -422,9 +436,7 @@ b { font-weight: 500; font-family: var(--mono); font-size: .92em; }
 
 @media (max-width: 1180px) {
   :root { --gutter: 48px; }
-  .hero { grid-template-columns: minmax(0, 1fr); gap: 34px; }
-  .hero .folio { padding-top: 0; display: flex; gap: 18px; }
-  .hero .folio-quiet:first-of-type { margin-top: 0; }
+  .compile-grid { grid-template-columns: minmax(0, 1fr); }
   .margin-rail { padding-left: 0; padding-top: 22px; border-left: 0; border-top: 1px solid var(--rule); }
   .ground-grid { grid-template-columns: minmax(0, 1fr); gap: 30px; }
   .inv-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
@@ -444,7 +456,7 @@ b { font-weight: 500; font-family: var(--mono); font-size: .92em; }
   body { font-size: 16px; }
   .masthead { padding: 18px var(--gutter) 16px; }
   .nav { gap: 16px; font-size: 10.5px; }
-  .hero { padding-top: 52px; }
+  .compile { padding-top: 40px; }
   .band { padding-top: 54px; }
   .dropcap { font-size: 58px; padding-right: 10px; }
   .measure { font-size: 18px; }

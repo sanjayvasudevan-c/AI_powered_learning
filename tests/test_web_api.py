@@ -178,10 +178,10 @@ def test_every_read_endpoint_reports_unavailable_rather_than_failing(client, url
     assert "coursec build" in body["reason"]
 
 
-def test_landing_page_serves_without_any_database(client) -> None:
+def test_home_page_serves_without_any_database(client) -> None:
     response = client.get("/")
     assert response.status_code == 200
-    assert "A course" in response.text
+    assert "Compile a chapter" in response.text
     assert "compiler" in response.text
 
 

@@ -41,29 +41,11 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
 const $ = (sel) => document.querySelector(sel);
 const STUDENT = 'web';
 
-/* ── the press line: ten passes, drawn from data ───────────────────── */
-
-const PASSES = [
-  'INGEST', 'UNDERSTAND', 'STRUCTURE', 'GAP', 'EVIDENCE',
-  'COMPOSE', 'VERIFY', 'ASSESS', 'EMIT', 'LEARN',
-];
-
-function drawPressLine() {
-  const host = document.querySelector('.pressline .stages');
-  if (!host) return;
-  host.innerHTML = PASSES.map((name, i) => {
-    const x = 90 + i * 100;
-    const above = i % 2 === 0;
-    const labelY = above ? 86 : 140;
-    const folioY = above ? 72 : 155;
-    const folio = String(i + 1).padStart(2, '0');
-    return `<g class="stage" style="animation-delay:${(1.4 + i * 1.1).toFixed(1)}s">
-      <line x1="${x}" y1="101" x2="${x}" y2="119" stroke="currentColor" stroke-width="1.2"/>
-      <text class="svg-label" x="${x}" y="${labelY}" text-anchor="middle">${name}</text>
-      <text class="svg-folio" x="${x}" y="${folioY}" text-anchor="middle">${folio}</text>
-    </g>`;
-  }).join('');
-}
+const API_BUILD = {
+  start:    (formData) => fetch('/api/build', { method: 'POST', body: formData }).then((r) => r.json()),
+  status:   (id) => get(`/api/build/${id}`),
+  activate: (id) => fetch(`/api/build/${id}/activate`, { method: 'POST' }).then((r) => r.json()),
+};
 
 /* ── reveal on scroll ──────────────────────────────────────────────── */
 
@@ -474,10 +456,166 @@ async function renderCertificate() {
     </aside>`;
 }
 
+/* ═══ compile — upload a PDF, run the real pipeline, watch it happen ══ */
+
+let chosenFile = null;
+let activeBuildId = null;
+let pollHandle = null;
+
+function initCompileForm() {
+  const form = $('#compile-form');
+  if (!form) return; // not on this view this load
+
+  const dropzone = $('#dropzone');
+  const fileInput = $('#file-input');
+  const dzText = $('#dz-text');
+  const dzFilename = $('#dz-filename');
+  const compileBtn = $('#compile-btn');
+  const backendRadios = document.querySelectorAll('input[name="backend"]');
+  const ollamaFields = $('#ollama-fields');
+
+  const setFile = (file) => {
+    if (!file) return;
+    if (!/\.pdf$/i.test(file.name)) {
+      dzText.textContent = 'That is not a .pdf — drop a PDF chapter';
+      return;
+    }
+    chosenFile = file;
+    dzText.hidden = true;
+    dzFilename.hidden = false;
+    dzFilename.textContent = `${file.name} · ${(file.size / 1024).toFixed(0)} KB`;
+    compileBtn.disabled = false;
+  };
+
+  fileInput.addEventListener('change', () => setFile(fileInput.files[0]));
+
+  ['dragover', 'dragenter'].forEach((evt) =>
+    dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('drag'); }));
+  ['dragleave', 'dragend'].forEach((evt) =>
+    dropzone.addEventListener(evt, () => dropzone.classList.remove('drag')));
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('drag');
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    setFile(file);
+  });
+
+  backendRadios.forEach((radio) =>
+    radio.addEventListener('change', () => {
+      ollamaFields.hidden = document.querySelector('input[name="backend"]:checked').value !== 'ollama';
+    }));
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!chosenFile) return;
+    submitBuild();
+  });
+}
+
+async function submitBuild() {
+  const backend = document.querySelector('input[name="backend"]:checked').value;
+  const modelMap = $('#ollama-model-map').value.trim();
+  const compileBtn = $('#compile-btn');
+  compileBtn.disabled = true;
+
+  const formData = new FormData();
+  formData.append('file', chosenFile);
+  formData.append('backend', backend);
+  if (modelMap) formData.append('ollama_model_map', modelMap);
+
+  const console_ = $('#build-console');
+  const log = $('#console-log');
+  const status = $('#console-status');
+  const filenameEl = $('#console-filename');
+  const actions = $('#console-actions');
+  console_.hidden = false;
+  actions.hidden = true;
+  actions.innerHTML = '';
+  log.textContent = '';
+  status.textContent = 'STARTING';
+  status.className = 'console-status';
+  filenameEl.textContent = chosenFile.name;
+  console_.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  const started = await API_BUILD.start(formData);
+  if (!started.available) {
+    status.textContent = 'REJECTED';
+    status.classList.add('bad');
+    log.textContent = started.error || 'the build could not start';
+    compileBtn.disabled = false;
+    return;
+  }
+
+  activeBuildId = started.build_id;
+  pollBuild(activeBuildId);
+}
+
+function pollBuild(buildId) {
+  let shownLines = 0;
+  if (pollHandle) clearInterval(pollHandle);
+
+  const tick = async () => {
+    const job = await API_BUILD.status(buildId);
+    if (!job.available) return;
+
+    const log = $('#console-log');
+    const status = $('#console-status');
+    if (job.log.length > shownLines) {
+      log.textContent += job.log.slice(shownLines).join('\n') + '\n';
+      shownLines = job.log.length;
+      log.scrollTop = log.scrollHeight;
+    }
+
+    if (job.status === 'running') {
+      status.textContent = 'RUNNING';
+      return;
+    }
+
+    clearInterval(pollHandle);
+    $('#compile-btn').disabled = false;
+
+    if (job.status === 'succeeded') {
+      status.textContent = job.emitted ? 'COMPILED' : 'COMPILED · NO PDF';
+      status.classList.add(job.emitted ? 'ok' : 'warn');
+      await API_BUILD.activate(buildId);
+      rendered.delete('/graph'); rendered.delete('/quiz'); rendered.delete('/certificate');
+      showBuildChip();
+      showBuildActions(job);
+    } else {
+      status.textContent = 'FAILED';
+      status.classList.add('bad');
+      if (job.error) log.textContent += `\n[error] ${job.error}\n`;
+    }
+  };
+
+  pollHandle = setInterval(tick, 700);
+  tick();
+}
+
+function showBuildActions(job) {
+  const actions = $('#console-actions');
+  const links = [
+    ['#/graph', 'Open the graph'],
+    ['#/quiz', 'Take the quiz'],
+    ['#/certificate', 'Read the certificate'],
+  ].map(([href, label]) => `<a class="btn" href="${href}">${esc(label)}</a>`).join('');
+
+  const downloads = job.emitted
+    ? `<div class="target-downloads">${job.targets.map((name) =>
+        `<a class="link-grow" href="/api/build/${job.id}/targets/${name}" download>
+          ${esc(name.replace(/_/g, ' '))}
+        </a>`).join('')}</div>`
+    : '';
+
+  actions.innerHTML = `<div class="console-cta">${links}</div>${downloads}`;
+  actions.hidden = false;
+}
+
 /* ═══ router ═══════════════════════════════════════════════════════ */
 
 const ROUTES = {
   '/':            { view: 'view-home',        render: null },
+  '/about':       { view: 'view-about',       render: null },
   '/graph':       { view: 'view-graph',       render: renderGraph },
   '/quiz':        { view: 'view-quiz',        render: renderQuiz },
   '/certificate': { view: 'view-certificate', render: renderCertificate },
@@ -504,10 +642,10 @@ async function showBuildChip() {
   chip.hidden = false;
   chip.textContent = s.available
     ? `${s.concepts} concepts · ${s.prerequisite_edges} edges · ${s.coverage_pct}% covered`
-    : 'no chapter compiled';
+    : 'no chapter compiled yet';
 }
 
-drawPressLine();
+initCompileForm();
 watchReveals();
 wireClaims();
 showBuildChip();
